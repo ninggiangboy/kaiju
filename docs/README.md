@@ -91,6 +91,23 @@ Viết ADR khi một quyết định thoả **ít nhất một** điều kiện 
 Không viết ADR cho lựa chọn cục bộ trong một module, hoặc cho những thứ đổi lại
 được trong một buổi.
 
+### Khi quyết định thực tế lệch khỏi tài liệu
+
+Tài liệu mô tả các quyết định đưa ra **trước** khi implement. Quá trình implement
+sẽ có lúc chứng minh một quyết định nào đó là sai hoặc không khả thi. Khi đó:
+
+- **Cập nhật tài liệu trong cùng commit** với code đi chệch, không để lại sau
+- **Không xoá và không ẩn quyết định cũ.** ADR đã `Accepted` thì viết ADR mới và
+  đánh dấu cái cũ là superseded; tài liệu thiết kế thì giữ lại phát biểu cũ trong
+  một ghi chú `> **Đã thay đổi (YYYY-MM-DD):**` nêu rõ cách cũ, cách mới và lý do
+- Yêu cầu hay feature bị bỏ thì **giữ nguyên ID**, đổi trạng thái và ghi lý do
+
+Lịch sử của một quyết định — kể cả quyết định sai — là thông tin có giá trị. Sửa
+tài liệu như thể quyết định cũ chưa từng tồn tại thì lần sau sẽ tranh luận lại
+đúng vấn đề đó.
+
+Hướng dẫn đầy đủ kèm bảng chọn cơ chế: [`CLAUDE.md`](../CLAUDE.md).
+
 ### Đánh dấu chỗ chưa chốt
 
 Dùng blockquote, không đoán và không để trống:
