@@ -1,0 +1,25 @@
+# Gộp theo tuần. Từng pull request một cho mỗi thư viện nhỏ là cách nhanh nhất
+# để không ai còn đọc chúng nữa.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule: { interval: weekly }
+    groups:
+      actions: { patterns: ["*"] }
+
+  - package-ecosystem: gradle
+    directory: /backend
+    schedule: { interval: weekly }
+    groups:
+      backend: { patterns: ["*"] }
+
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule: { interval: weekly }
+    groups:
+      frontend: { patterns: ["*"] }
+
+  - package-ecosystem: docker
+    directory: /infra/docker
+    schedule: { interval: weekly }

@@ -1,0 +1,343 @@
+# Quy trình chính. Chạy trên mỗi pull request và mỗi lần đẩy lên nhánh chính.
+#
+# Hai luật chi phối toàn bộ tệp này:
+#
+#   1. Chỉ chạy phần liên quan. Sửa tài liệu không được kích hoạt bộ kiểm thử
+#      tích hợp. Đây là cái giá đã biết trước của việc để mọi thứ trong một
+#      repository.
+#   2. Công việc bị BỎ QUA không được tính là thành công (CON-71). Đây là cái
+#      bẫy của mọi pipeline lọc theo đường dẫn: kết hợp với một bộ lọc viết
+#      sai, nó là cách một thay đổi backend merge được mà chưa chạy test nào.
+#
+# Mọi script gọi ở đây chạy được từ máy cá nhân bằng một lệnh (CON-72).
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, dev]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  JAVA_VERSION: "26"
+  NODE_VERSION: "22"
+
+jobs:
+  # --------------------------------------------------------------------
+  changes:
+    name: Phát hiện thư mục thay đổi
+    runs-on: ubuntu-latest
+    outputs:
+      docs: ${{ steps.filter.outputs.docs }}
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      infra: ${{ steps.filter.outputs.infra }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docs:
+              - 'docs/**'
+              - 'CLAUDE.md'
+              - '.github/scripts/check-docs.py'
+            backend:
+              - 'backend/**'
+              - 'infra/docker/backend.Dockerfile'
+            frontend:
+              - 'frontend/**'
+              - 'infra/docker/frontend.Dockerfile'
+            infra:
+              - 'infra/**'
+              - '.github/workflows/**'
+
+  # --------------------------------------------------------------------
+  docs:
+    name: Tài liệu
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Liên kết nội bộ và neo tiêu đề, định danh feature không trùng, mọi phụ
+      # thuộc trỏ tới định danh có thật, và không có DDL nào lọt vào docs/ —
+      # phân tích mô hình dữ liệu đang hoãn, nên DDL trong tài liệu nghĩa là có
+      # người đã quyết định mà không ghi lại.
+      - run: python3 .github/scripts/check-docs.py
+
+  # --------------------------------------------------------------------
+  backend-build:
+    name: Backend — biên dịch
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: gradle/actions/setup-gradle@v4
+      - run: ./gradlew assemble
+        working-directory: backend
+
+  backend-unit:
+    name: Backend — kiểm thử đơn vị
+    needs: [changes, backend-build]
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: gradle/actions/setup-gradle@v4
+      - run: ./gradlew test
+        working-directory: backend
+
+  backend-boundaries:
+    name: Backend — biên giới module và thư viện bị cấm
+    needs: [changes, backend-build]
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: gradle/actions/setup-gradle@v4
+      # Ba kiểm tra khác nhau, và chỉ cái đầu tiên do công cụ có sẵn lo:
+      #   - một module gọi vào phần nội bộ của module khác
+      #   - truy vấn bảng của module khác   -> công cụ KHÔNG bắt được (CON-55)
+      #   - thư viện bị cấm trên classpath  -> tạo ra outbox thứ hai (CON-56)
+      - run: ./gradlew moduleBoundaryTest tablePrefixTest classpathGuardTest
+        working-directory: backend
+
+  backend-integration:
+    name: Backend — kiểm thử tích hợp
+    needs: [changes, backend-build]
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: gradle/actions/setup-gradle@v4
+      # Chạy trên cơ sở dữ liệu thật trong container: bảo mật mức dòng, phân
+      # vùng, khoá dòng và cơ chế thông báo đều không giả lập được.
+      - run: ./gradlew integrationTest
+        working-directory: backend
+
+  backend-pooled:
+    name: Backend — kiểm thử tích hợp qua bộ gộp kết nối
+    needs: [changes, backend-integration]
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    # Cùng bộ test, khác đường đi tới cơ sở dữ liệu. Không kiểm tra thêm logic
+    # nghiệp vụ nào — nó kiểm tra rằng code không dựa vào trạng thái ở phạm vi
+    # phiên (CON-62) và kết nối lắng nghe được định tuyến riêng (CON-25).
+    #
+    # Đây là KJ-PLT-23, cách tự động DUY NHẤT bắt được hai vi phạm đó.
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: kaiju
+          POSTGRES_USER: kaiju
+          POSTGRES_PASSWORD: kaiju
+        options: >-
+          --health-cmd "pg_isready -U kaiju" --health-interval 5s
+          --health-timeout 3s --health-retries 20
+        ports: ["5432:5432"]
+      pgbouncer:
+        image: edoburu/pgbouncer:latest
+        env:
+          DB_HOST: postgres
+          DB_PORT: "5432"
+          DB_USER: kaiju
+          DB_PASSWORD: kaiju
+          POOL_MODE: transaction
+          AUTH_TYPE: scram-sha-256
+          # CỐ TÌNH NHỎ. Pool rộng trả lại đúng kết nối cũ cho cùng một client,
+          # nên trạng thái phiên rò rỉ vẫn sống sót và test vẫn xanh. Vi phạm
+          # chỉ lộ khi nhiều client tranh nhau vài kết nối server.
+          DEFAULT_POOL_SIZE: "5"
+          MAX_CLIENT_CONN: "100"
+        ports: ["6432:6432"]
+    env:
+      # Đường ghi/đọc thường đi QUA bộ gộp...
+      KAIJU_DB_URL: jdbc:postgresql://localhost:6432/kaiju
+      # ...còn kết nối lắng nghe đi THẲNG. Ở chế độ gộp theo giao dịch, cơ chế
+      # lắng nghe không bao giờ hoạt động qua bộ gộp.
+      KAIJU_DB_LISTEN_URL: jdbc:postgresql://localhost:5432/kaiju
+      KAIJU_DB_USER: kaiju
+      KAIJU_DB_PASSWORD: kaiju
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: gradle/actions/setup-gradle@v4
+      # Song song là bắt buộc, không phải để nhanh: chạy tuần tự qua bộ gộp
+      # gần như không kiểm tra gì cả.
+      - run: ./gradlew integrationTest -Dkaiju.test.externalDatabase=true --max-workers=4
+        working-directory: backend
+
+  backend-migration:
+    name: Backend — migration tương thích ngược
+    needs: [changes, backend-build]
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: gradle/actions/setup-gradle@v4
+      # Chạy migration MỚI trên cơ sở dữ liệu mà phiên bản ứng dụng CŨ đang
+      # dùng, rồi chạy test của bản cũ. Bắt được thay đổi phá vỡ trong khoảng
+      # thời gian hai phiên bản chạy song song — và đó chính là điều kiện để
+      # quay lui an toàn.
+      - run: ./gradlew migrationCompatibilityTest
+        working-directory: backend
+
+  # --------------------------------------------------------------------
+  frontend:
+    name: Frontend
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - run: npm run typecheck
+        working-directory: frontend
+      # Gồm luật RIÊNG của dự án: cấm Server Action cho mutation nghiệp vụ và
+      # cấm lấy dữ liệu nghiệp vụ trong server component (CON-35, CON-36).
+      # Không có chúng thì cả hai chỉ là câu văn trong tài liệu.
+      - run: npm run lint
+        working-directory: frontend
+      - run: npm test
+        working-directory: frontend
+      # Có lỗi chỉ xuất hiện khi dựng bản phát hành.
+      - run: npm run build
+        working-directory: frontend
+
+  # --------------------------------------------------------------------
+  infra:
+    name: Hạ tầng
+    needs: changes
+    if: needs.changes.outputs.infra == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Rẻ, và bắt được lỗi gõ sai vốn chỉ lộ ra lúc triển khai.
+      - run: make check-compose
+        working-directory: infra
+      - run: make check-k8s
+        working-directory: infra
+      - name: Cấu hình máy chủ trung gian
+        # Cả hai tệp, vì tệp của staging là lần đầu luồng đồng bộ đi qua TLS
+        # thật — và nó cũng là tệp ít người mở ra xem nhất.
+        run: |
+          docker run --rm -e KAIJU_DOMAIN=example.com -v "$PWD/proxy:/w" -w /w caddy:2-alpine \
+            sh -c 'caddy validate --config Caddyfile.dev --adapter caddyfile &&
+                   caddy validate --config Caddyfile.staging --adapter caddyfile'
+        working-directory: infra
+      - name: Script vận hành
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck infra/scripts/*.sh
+
+  # --------------------------------------------------------------------
+  gate:
+    name: Cổng
+    needs:
+      - changes
+      - docs
+      - backend-build
+      - backend-unit
+      - backend-boundaries
+      - backend-integration
+      - backend-pooled
+      - backend-migration
+      - frontend
+      - infra
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      # Đây là kiểm tra bắt buộc DUY NHẤT khai báo trong cấu hình bảo vệ nhánh.
+      # Thêm một công việc mới vào pipeline không cần sửa cấu hình đó.
+      #
+      # Luật: công việc nào lẽ ra phải chạy theo thư mục đã thay đổi mà kết
+      # thúc ở trạng thái khác `success` thì CHẶN. Trạng thái bị bỏ qua chỉ
+      # chấp nhận được khi thư mục tương ứng không thay đổi (CON-71).
+      - name: Xét kết quả
+        env:
+          CHANGED_DOCS: ${{ needs.changes.outputs.docs }}
+          CHANGED_BACKEND: ${{ needs.changes.outputs.backend }}
+          CHANGED_FRONTEND: ${{ needs.changes.outputs.frontend }}
+          CHANGED_INFRA: ${{ needs.changes.outputs.infra }}
+        run: |
+          set -euo pipefail
+          fail=0
+
+          verdict() {   # <tên> <thư mục có đổi không> <kết quả>
+            local name="$1" changed="$2" result="$3"
+            if [[ "$changed" != "true" ]]; then
+              if [[ "$result" == "skipped" ]]; then
+                echo "  ─ $name: bỏ qua, thư mục không đổi"
+              else
+                echo "  ✗ $name: chạy dù thư mục không đổi ($result) — bộ lọc sai"
+                fail=1
+              fi
+            elif [[ "$result" == "success" ]]; then
+              echo "  ✓ $name"
+            else
+              echo "  ✗ $name: $result"
+              fail=1
+            fi
+          }
+
+          echo "Thư mục thay đổi: docs=$CHANGED_DOCS backend=$CHANGED_BACKEND frontend=$CHANGED_FRONTEND infra=$CHANGED_INFRA"
+          echo
+
+          verdict "Tài liệu"                    "$CHANGED_DOCS"     "${{ needs.docs.result }}"
+          verdict "Backend — biên dịch"         "$CHANGED_BACKEND"  "${{ needs['backend-build'].result }}"
+          verdict "Backend — đơn vị"            "$CHANGED_BACKEND"  "${{ needs['backend-unit'].result }}"
+          verdict "Backend — biên giới"         "$CHANGED_BACKEND"  "${{ needs['backend-boundaries'].result }}"
+          verdict "Backend — tích hợp"          "$CHANGED_BACKEND"  "${{ needs['backend-integration'].result }}"
+          verdict "Backend — qua bộ gộp"        "$CHANGED_BACKEND"  "${{ needs['backend-pooled'].result }}"
+          verdict "Backend — migration"         "$CHANGED_BACKEND"  "${{ needs['backend-migration'].result }}"
+          verdict "Frontend"                    "$CHANGED_FRONTEND" "${{ needs.frontend.result }}"
+          verdict "Hạ tầng"                     "$CHANGED_INFRA"    "${{ needs.infra.result }}"
+
+          echo
+          if [[ "${{ needs.changes.result }}" != "success" ]]; then
+            echo "✗ Không phát hiện được thư mục thay đổi — không có cơ sở để cho qua"
+            exit 1
+          fi
+          [[ $fail -eq 0 ]] && { echo "✓ Cổng mở"; exit 0; }
+          echo "✗ Cổng chặn"
+          exit 1

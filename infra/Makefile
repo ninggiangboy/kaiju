@@ -46,7 +46,7 @@ pooler: ## Chỉ bật bộ gộp kết nối, để chạy backend ngoài Docke
 ## --- Kiểm tra ------------------------------------------------------------
 
 .PHONY: check
-check: check-docs check-compose check-k8s ## Toàn bộ kiểm tra tĩnh, giống hệt CI
+check: check-docs check-compose check-k8s check-ci ## Toàn bộ kiểm tra tĩnh, giống hệt CI
 
 .PHONY: check-docs
 check-docs: ## Liên kết, neo tiêu đề, bảng feature, không có DDL trong docs/
@@ -64,6 +64,14 @@ check-compose: ## Cú pháp mọi tệp compose
 check-k8s: ## Bản kê khai của cả hai lớp phủ dựng được
 	kubectl kustomize k8s/overlays/staging  > /dev/null
 	kubectl kustomize k8s/overlays/production > /dev/null
+
+.PHONY: check-ci
+check-ci: ## Cú pháp các quy trình CI, cấu hình máy chủ trung gian, script vận hành
+	@command -v actionlint >/dev/null && (cd .. && actionlint) || echo "  (bỏ qua: chưa cài actionlint)"
+	@command -v shellcheck >/dev/null && shellcheck scripts/*.sh || echo "  (bỏ qua: chưa cài shellcheck)"
+	docker run --rm -e KAIJU_DOMAIN=example.com -v "$$PWD/proxy:/w" -w /w caddy:2-alpine \
+		sh -c 'caddy validate --config Caddyfile.dev --adapter caddyfile && \
+		       caddy validate --config Caddyfile.staging --adapter caddyfile' 2>&1 | tail -1
 
 .PHONY: smoke
 smoke: ## Kiểm tra sau triển khai, mặc định chạy với bậc 2

@@ -1,0 +1,117 @@
+# Dựng ảnh và triển khai.
+#
+# MỘT ảnh backend cho cả bốn vai trò (CON-66) — vai trò chọn lúc khởi động.
+# Thẻ luôn cố định và gắn với commit (CON-70): triển khai theo thẻ động nghĩa
+# là không biết bản nào đang chạy.
+
+name: Release
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      deploy_production:
+        description: Triển khai lên production (cần duyệt)
+        type: boolean
+        default: false
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  images:
+    name: Dựng ảnh
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.meta.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: meta
+        run: echo "tag=sha-$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: backend
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: infra/docker/backend.Dockerfile
+          push: true
+          # Thẻ theo commit luôn có. Thẻ phiên bản chỉ thêm khi gắn thẻ — và
+          # KHÔNG có thẻ `latest` ở bất kỳ đâu, vì không ai được triển khai
+          # theo nó.
+          tags: |
+            ghcr.io/${{ github.repository }}/backend:${{ steps.meta.outputs.tag }}
+            ${{ startsWith(github.ref, 'refs/tags/') && format('ghcr.io/{0}/backend:{1}', github.repository, github.ref_name) || '' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: infra/docker/frontend.Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/frontend:${{ steps.meta.outputs.tag }}
+            ${{ startsWith(github.ref, 'refs/tags/') && format('ghcr.io/{0}/frontend:{1}', github.repository, github.ref_name) || '' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Merge vào nhánh chính chỉ DỰNG ảnh. Triển khai lên staging cần một thẻ
+  # phiên bản — phát hành là một hành động có chủ ý, không phải hệ quả của
+  # việc merge.
+  staging:
+    name: Triển khai staging
+    needs: images
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - name: Triển khai
+        # Thứ tự bên trong script là bắt buộc (CON-69):
+        #   migration → worker và scheduler → api và realtime
+        # Tiến trình nền phải hiểu được định dạng sự kiện mới TRƯỚC KHI có ai
+        # sinh ra chúng.
+        run: |
+          echo "Chưa nối: cần bí mật truy cập máy chủ staging."
+          echo "Lệnh chạy trên máy chủ đó:"
+          echo "  KAIJU_IMAGE=ghcr.io/${{ github.repository }}/backend:${{ needs.images.outputs.tag }} \\"
+          echo "  infra/scripts/deploy-staging.sh"
+          exit 1
+
+  production:
+    name: Triển khai production
+    needs: [images, staging]
+    if: inputs.deploy_production
+    runs-on: ubuntu-latest
+    # Môi trường này có luật duyệt thủ công. Đây là cổng con người duy nhất
+    # trong toàn bộ quy trình.
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ghi thẻ ảnh vào bản kê khai
+        run: |
+          cd infra/k8s/overlays/production
+          kubectl kustomize . > /dev/null   # kiểm tra trước khi sửa
+          echo "Chưa nối: cần thông tin truy cập cụm."
+          echo "Các bước, theo đúng thứ tự (CON-68, CON-69):"
+          echo "  1. kubectl apply -f <công việc migration>  và chờ nó xong"
+          echo "  2. kubectl set image deploy/kaiju-worker deploy/kaiju-scheduler ..."
+          echo "  3. kubectl set image deploy/kaiju-api deploy/kaiju-realtime ..."
+          echo "  4. infra/scripts/smoke.sh https://<tên miền>"
+          exit 1

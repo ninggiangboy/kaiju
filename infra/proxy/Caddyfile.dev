@@ -3,7 +3,6 @@
 # Tệp này tồn tại vì MỘT dòng: `flush_interval -1` ở khối luồng đồng bộ. Thiếu
 # nó, delta bị giữ trong bộ đệm cho tới khi đầy, triệu chứng là "realtime không
 # chạy", và KHÔNG có lỗi nào ở bất kỳ đâu.
-
 {
 	admin off
 	auto_https off

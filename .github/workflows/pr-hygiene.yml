@@ -1,0 +1,36 @@
+# Thông điệp commit viết bằng tiếng Anh theo Conventional Commits, kể cả khi
+# nội dung tài liệu là tiếng Việt (CON-50).
+
+name: PR hygiene
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  title:
+    name: Tiêu đề pull request
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Kiểm tra dạng Conventional Commits
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          set -euo pipefail
+          pattern='^(feat|fix|docs|refactor|test|chore|perf|build|ci|infra)(\([a-z0-9-]+\))?!?: .+'
+          if [[ ! "$TITLE" =~ $pattern ]]; then
+            echo "✗ Tiêu đề không đúng dạng: $TITLE"
+            echo "  Ví dụ: docs: add the phased roadmap"
+            exit 1
+          fi
+          # Tiếng Anh: bắt các ký tự có dấu của tiếng Việt.
+          if LC_ALL=C grep -qP '[À-ỹ]' <<<"$TITLE"; then
+            echo "✗ Tiêu đề phải viết bằng tiếng Anh (CON-50): $TITLE"
+            exit 1
+          fi
+          echo "✓ $TITLE"

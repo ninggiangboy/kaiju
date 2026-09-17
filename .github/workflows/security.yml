@@ -1,0 +1,76 @@
+# Chạy theo lịch, và chạy thêm khi tệp khai báo phụ thuộc thay đổi.
+#
+# Tách khỏi quy trình chính vì nó không nên chặn merge: lỗ hổng mới được công
+# bố trong một thư viện không phải lỗi của pull request đang mở.
+
+name: Security
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"
+  push:
+    paths:
+      - "backend/**/*.gradle*"
+      - "backend/gradle/**"
+      - "frontend/package-lock.json"
+      - "infra/docker/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  secrets:
+    name: Bí mật lọt vào lịch sử
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # Quét TOÀN BỘ lịch sử, không chỉ thay đổi mới: một bí mật đã bị đẩy
+        # lên thì coi như đã lộ, kể cả khi commit sau đã xoá nó đi.
+        with: { fetch-depth: 0 }
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dependencies:
+    name: Lỗ hổng trong phụ thuộc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Quét hệ thống tệp
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: sarif
+          output: trivy.sarif
+          severity: CRITICAL,HIGH
+      - uses: github/codeql-action/upload-sarif@v3
+        with: { sarif_file: trivy.sarif }
+
+  code:
+    name: Phân tích mã tĩnh
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [java-kotlin, javascript-typescript]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Có mã nguồn ngôn ngữ này không
+        id: present
+        run: |
+          case "${{ matrix.language }}" in
+            java-kotlin)            [[ -d backend  ]] && echo "yes=true" >> "$GITHUB_OUTPUT" ;;
+            javascript-typescript)  [[ -d frontend ]] && echo "yes=true" >> "$GITHUB_OUTPUT" ;;
+          esac
+          true
+      - if: steps.present.outputs.yes == 'true'
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+      - if: steps.present.outputs.yes == 'true'
+        uses: github/codeql-action/autobuild@v3
+      - if: steps.present.outputs.yes == 'true'
+        uses: github/codeql-action/analyze@v3
