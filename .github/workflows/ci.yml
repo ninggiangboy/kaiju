@@ -292,6 +292,12 @@ jobs:
         working-directory: infra
       - run: make check-k8s
         working-directory: infra
+      # Dependabot bumps the base image in the Dockerfile and has no idea that
+      # JAVA_VERSION and NODE_VERSION exist. Accepting such a bump on its own
+      # leaves CI testing on one major version while the shipped image runs
+      # another - a runtime failure in an environment, never a red build.
+      - run: make check-versions
+        working-directory: infra
       - name: Reverse proxy configuration
         # Both files, because the staging one is where the sync stream first
         # travels over real TLS - and it is also the file nobody opens.

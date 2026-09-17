@@ -152,6 +152,12 @@ văn trong tài liệu.
 Kiểm tra cú pháp tệp compose và bản kê khai của nền tảng điều phối. Rẻ, và bắt
 được lỗi gõ sai vốn chỉ lộ ra lúc triển khai.
 
+| Kiểm tra | Ngăn lỗi gì |
+|---|---|
+| Cú pháp compose, bản kê khai, cấu hình máy chủ trung gian, script vận hành | Lỗi gõ sai chỉ lộ ra lúc triển khai |
+| Định dạng và cú pháp của stack hạ tầng, cú pháp playbook | Như trên, cho OpenTofu và Ansible |
+| **Phiên bản nền của CI khớp ảnh nền của container** | Công cụ nâng phụ thuộc chỉ sửa `FROM` trong Dockerfile — nó không biết `JAVA_VERSION` và `NODE_VERSION` trong `ci.yml` tồn tại. Nhận một bản nâng như vậy nghĩa là CI biên dịch và chạy test trên một phiên bản, còn ảnh phát hành chạy trên phiên bản khác. Lỗi loại này hiện ra ở môi trường thật, không bao giờ hiện ra thành một lần build đỏ |
+
 ### Bảo mật
 
 Chạy theo lịch hằng tuần, và chạy thêm khi tệp khai báo phụ thuộc thay đổi.

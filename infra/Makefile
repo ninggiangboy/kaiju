@@ -76,11 +76,15 @@ db-status: ## Show which changesets are applied and which are pending
 # production is two things that will disagree about it.
 
 .PHONY: check
-check: check-docs check-compose check-k8s check-ci check-tofu check-ansible ## Every static check, exactly as CI runs them
+check: check-docs check-versions check-compose check-k8s check-ci check-tofu check-ansible ## Every static check, exactly as CI runs them
 
 .PHONY: check-docs
 check-docs: ## Links, heading anchors, the feature table, and no DDL under docs/
 	python3 ../.github/scripts/check-docs.py
+
+.PHONY: check-versions
+check-versions: ## The CI toolchain and the container base images agree on a version
+	python3 ../.github/scripts/check-runtime-versions.py
 
 .PHONY: check-compose
 check-compose: ## Syntax of every compose file
