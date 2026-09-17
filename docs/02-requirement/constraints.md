@@ -45,7 +45,7 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-82 | Merge dùng **merge commit ở cả ba cấp**; squash merge và rebase merge bị tắt ở cấp repository. Cả hai đều sinh mã băm mới, làm nhánh nguồn không còn là tổ tiên của nhánh đích — thứ mà toàn bộ cơ chế thăng cấp dựa vào | [ADR-0016](../adr/0016-git-branching-workflow.md) |
 | CON-83 | Ba nhánh môi trường **không bao giờ** bị rebase, force-push, xoá, hay nhận cherry-pick. Nhánh làm việc thì được rebase thoải mái khi chưa merge | [git-flow.md](../04-system-design/git-flow.md#điều-cấm) |
 | CON-84 | `rollback/*` là nhánh duy nhất được mở pull request thẳng vào một nhánh môi trường. Kèm nghĩa vụ **bắt buộc**: commit revert phải được đưa về `dev`, vì lần thăng cấp sau sẽ không mang các commit đã bị lùi trở lại | [ADR-0016](../adr/0016-git-branching-workflow.md) |
-| CON-85 | Mỗi README phải được cập nhật **trong cùng commit** với thay đổi làm nó sai (`README.md`, `.github/README.md`, `infra/README.md`). Quy ước nào người mới cần để đẩy code thì phải nằm ngay trong repository — `CONTRIBUTING.md`, mẫu pull request, hook `pre-push` — chứ không chỉ nằm trong tài liệu thiết kế | [git-flow.md](../04-system-design/git-flow.md) |
+| CON-85 | Mỗi README phải được cập nhật **trong cùng commit** với thay đổi làm nó sai (`README.md`, `.github/CI.md`, `infra/README.md`). Quy ước nào người mới cần để đẩy code thì phải nằm ngay trong repository — `CONTRIBUTING.md`, mẫu pull request, hook `pre-push` — chứ không chỉ nằm trong tài liệu thiết kế | [git-flow.md](../04-system-design/git-flow.md) |
 
 > **Ghi chú (2026-09-17) — CON-68.** Bản trước của ràng buộc này chỉ áp dụng cho
 > bậc `production`, và chấp nhận việc bậc 1–3 chạy migration lúc ứng dụng khởi
