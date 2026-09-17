@@ -21,6 +21,9 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-04 | Redis chỉ dùng cho cache, phát tán thông điệp, khoá phân tán, giới hạn tần suất và trạng thái tạm. Mất Redis thì hệ thống chậm chứ không sai | [ADR-0003](../adr/0003-redis-scope.md) |
 | CON-05 | Không dùng message broker ngoài và không dùng cơ chế bắt thay đổi ở tầng cơ sở dữ liệu | [ADR-0005](../adr/0005-outbox-db-job.md) |
 | CON-06 | Repository có đúng bốn thư mục cấp cao: `docs/`, `backend/`, `frontend/`, `infra/` | Quyết định của chủ dự án |
+| CON-61 | Định danh của thực thể do **client sinh**, kiểu định danh duy nhất có thành phần thời gian; server chỉ kiểm tra chứ không tự sinh | [infrastructure.md](../04-system-design/infrastructure.md#định-danh-do-client-sinh) |
+| CON-62 | Biến phiên cho cách ly tenant chỉ đặt ở **phạm vi giao dịch**; khoá tư vấn nếu dùng phải là loại gắn với giao dịch | [infrastructure.md](../04-system-design/infrastructure.md#nếu-về-sau-thêm-bộ-gộp-kết-nối) |
+| CON-63 | Tệp đính kèm lưu ở kho lưu trữ đối tượng, không lưu trong cơ sở dữ liệu; cơ sở dữ liệu chỉ giữ siêu dữ liệu | [infrastructure.md](../04-system-design/infrastructure.md#lưu-trữ-đối-tượng) |
 
 ## Kiến trúc
 

@@ -78,6 +78,7 @@ Vietnamese; this table is the index into it.
 | Anything that grants or removes access | [uc-member-invite.md](docs/03-features/usecases/uc-member-invite.md) + [realtime-and-sync.md — revocation](docs/04-system-design/realtime-and-sync.md#khi-quyền-bị-thu-hồi) |
 | Writing tests | [testing-strategy.md](docs/04-system-design/testing-strategy.md) |
 | Docker, proxy config, deployment, metrics, logging | [observability-and-ops.md](docs/04-system-design/observability-and-ops.md) |
+| Adding a dependency, or standing up an infrastructure component | [infrastructure.md](docs/04-system-design/infrastructure.md) |
 | Performance, availability or security targets | [non-functional.md](docs/02-requirement/non-functional.md) |
 
 ### Red flags — stop and read first

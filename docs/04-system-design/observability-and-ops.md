@@ -3,7 +3,7 @@
 Nội dung của `infra/`, cách cấu hình theo vai trò ứng dụng, và những chỉ số phải
 đo được để biết hệ thống có đang khoẻ hay không.
 
-**Liên quan:** [architecture.md](architecture.md) · [events-and-outbox.md](events-and-outbox.md) · [realtime-and-sync.md](realtime-and-sync.md) · [non-functional.md](../02-requirement/non-functional.md)
+**Liên quan:** [infrastructure.md](infrastructure.md) · [architecture.md](architecture.md) · [events-and-outbox.md](events-and-outbox.md) · [realtime-and-sync.md](realtime-and-sync.md) · [non-functional.md](../02-requirement/non-functional.md)
 
 ---
 

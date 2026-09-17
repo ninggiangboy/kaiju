@@ -21,6 +21,7 @@ và chỉ ra cách áp dụng, không lặp lại phần biện luận.
 | [realtime-and-sync.md](realtime-and-sync.md) | Sync engine hai đầu: nhật ký thay đổi, giao thức SSE, mutation, hoà giải xung đột |
 | [frontend.md](frontend.md) | Kiến trúc bên trong `frontend/`: local-first, sync engine phía client |
 | [identity-and-permission.md](identity-and-permission.md) | Cơ chế magic link, phiên, mô hình danh tính hai tầng, mặt nạ quyền |
+| [infrastructure.md](infrastructure.md) | Thành phần hạ tầng cần thiết, khi nào cần, mất thì sao, và các nhóm thư viện phụ thuộc |
 | [observability-and-ops.md](observability-and-ops.md) | Nội dung `infra/`, nhật ký, chỉ số, cấu hình, vận hành |
 | [testing-strategy.md](testing-strategy.md) | Các tầng kiểm thử và những thứ bắt buộc phải có test riêng |
 

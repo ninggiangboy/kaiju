@@ -33,11 +33,11 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 
 | Phase | Tên | Số feature | TODO | IN_PROGRESS | DONE |
 |---|---|---|---|---|---|
-| 0 | Nền tảng | 51 | 51 | 0 | 0 |
+| 0 | Nền tảng | 52 | 52 | 0 | 0 |
 | 1 | Identity & Workspace | 33 | 33 | 0 | 0 |
 | 2 | Project | 12 | 12 | 0 | 0 |
 | 3 | Issue | 16 | 16 | 0 | 0 |
-| 4 | Collaboration | 15 | 15 | 0 | 0 |
+| 4 | Collaboration | 16 | 16 | 0 | 0 |
 | 5 | Workflow | 11 | 11 | 0 | 0 |
 | 6 | Custom field | 8 | 8 | 0 | 0 |
 | 7 | Search | 10 | 10 | 0 | 0 |
@@ -50,7 +50,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | 14 | Automation | 10 | 10 | 0 | 0 |
 | 15 | Bulk & Import | 7 | 7 | 0 | 0 |
 | 16 | Integration | 10 | 10 | 0 | 0 |
-| | **Tổng** | **227** | **227** | **0** | **0** |
+| | **Tổng** | **229** | **229** | **0** | **0** |
 
 ---
 
@@ -80,6 +80,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | KJ-PLT-18 | Enforce quyền sở hữu bảng theo module: tiền tố tên bảng và test quét | KJ-PLT-04, KJ-PLT-06 | TODO | Công cụ kiểm tra biên giới **không** bắt được luật này |
 | KJ-PLT-19 | Test chặn thư viện bị cấm xuất hiện trên classpath | KJ-PLT-01 | TODO | Tránh có hai cơ chế chuyển tiếp sự kiện chạy song song |
 | KJ-PLT-20 | Chốt phiên bản nền và khung package của toàn backend | | TODO | Java 26, Spring Boot 4.x, Gradle 9.4+. Làm trước KJ-PLT-01 |
+| KJ-PLT-21 | Sinh định danh ở client và kiểm tra ở server | KJ-SYN-16 | TODO | Điều kiện để tạo bản ghi khi offline |
 
 ### Events & Outbox
 
@@ -232,6 +233,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | KJ-COL-13 | Thông báo trong ứng dụng | KJ-EVT-08 | TODO | Phải chống trùng |
 | KJ-COL-14 | Thông báo email có gom nhóm | KJ-COL-13, KJ-IDN-11 | TODO | Rủi ro gửi trùng cao nhất |
 | KJ-COL-15 | Cấu hình thông báo theo project và cá nhân | KJ-COL-14 | TODO | Tuỳ chọn thuộc hồ sơ workspace |
+| KJ-COL-16 | Tích hợp kho lưu trữ đối tượng: tải lên và tải xuống bằng liên kết có chữ ký | KJ-COL-07 | TODO | Tệp không đi qua backend |
 
 ---
 
