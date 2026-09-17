@@ -1,6 +1,7 @@
 # ADR-0014: Hạ tầng khai báo bằng OpenTofu, Ansible và Argo CD; bậc 4 triển khai theo GitOps
 
-- **Trạng thái:** Accepted
+- **Trạng thái:** Accepted — phần cơ chế thăng cấp được thay thế bởi [ADR-0015](0015-branch-per-environment.md)
+- **Đã thay đổi (2026-09-18):** quyết định bốn lớp công cụ và GitOps vẫn giữ nguyên. Riêng cách thăng cấp thì không: thay vì mọi môi trường cùng đọc một nhánh và sửa thẻ ảnh trong overlay của từng môi trường, **mỗi môi trường nay là một nhánh riêng**. Lý do ở [ADR-0015](0015-branch-per-environment.md)
 - **Ngày:** 2026-09-18
 - **Liên quan:** [ADR-0005](0005-outbox-db-job.md), [ADR-0013](0013-explicit-two-way-migration.md), [environments.md](../04-system-design/environments.md), [ci-cd.md](../04-system-design/ci-cd.md)
 

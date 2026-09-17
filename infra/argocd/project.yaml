@@ -9,7 +9,7 @@ metadata:
 spec:
   description: Kaiju - tier 4
   sourceRepos:
-    - https://github.com/OWNER/kaiju.git
+    - https://github.com/ninggiangboy/kaiju.git
   destinations:
     - server: https://kubernetes.default.svc
       namespace: kaiju

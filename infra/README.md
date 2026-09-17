@@ -119,18 +119,27 @@ able to change production is two things that will disagree about it.
 
 ### How a change reaches production
 
+**One environment per branch** (`CON-77`). Promotion is a pull request from one
+branch into the next:
+
 ```
-merge to main        → build an image, tag it with the commit. Nothing deploys.
-push a version tag   → Ansible deploys tier 3, then a pull request is opened
-                       that bumps the image tag in the production overlay
-merge that PR        → Argo CD reconciles. THIS is the deployment.
-git revert that PR   → rollback
+dev ──PR──> staging ──PR──> production
 ```
 
-The merged pull request is the approval gate, and it shows exactly which tag is
-replacing which. Argo CD enforces the mandatory order (`CON-69`) with sync
-waves: migration as a `PreSync` hook, then `worker` and `scheduler`, then `api`
-and `realtime`.
+| | |
+|---|---|
+| merge to `dev` | Build an image, pin the tag in `k8s/base`, open the promotion PR. Nothing deploys |
+| merge into `staging` | **This is the staging deployment.** Ansible updates the tier 3 VPS; Argo CD reconciles the tier 4 staging namespace |
+| merge into `production` | **This is the production deployment.** Argo CD reconciles |
+| `git revert` that merge | Rollback |
+
+The merged pull request is the approval gate, and its diff is exactly what is
+about to happen — the tag change *and* any manifest change travelling with it.
+Argo CD enforces the mandatory order (`CON-69`) with sync waves: migration as a
+`PreSync` hook, then `worker` and `scheduler`, then `api` and `realtime`.
+
+The three environment branches are long-lived: never deleted, never
+force-pushed. They are the record of what each environment is at.
 
 > **Not wired up yet.** No cloud account, no cluster, no host. The manifests,
 > stacks and playbooks are written and checked; none has been applied.

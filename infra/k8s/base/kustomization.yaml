@@ -25,12 +25,19 @@ labels:
     pairs:
       app.kubernetes.io/part-of: kaiju
 
-# Each OVERLAY pins its own tag, because environments advance independently
-# (CON-77). The placeholder below is never deployed: it is not a valid pushed
-# tag, so an overlay that forgot to pin fails to pull instead of quietly running
-# something unknown. NEVER use a moving tag (CON-70).
+# THE DEPLOYED VERSION OF WHATEVER BRANCH THIS IS.
+#
+# One environment per branch (CON-77): `dev` carries the newest build, and a
+# promotion is a pull request from one environment branch to the next, which
+# carries this value with it. The diff of that pull request is exactly the tag
+# change - which is what makes merging it a reviewable deployment.
+#
+# Tags are immutable and bound to a commit (CON-70): `sha-<short>`, or `v<x.y.z>`
+# on a released tag. Never `latest`, `dev` or any other moving tag.
 images:
   - name: kaiju-backend
-    newTag: REPLACED_BY_OVERLAY
+    newName: ghcr.io/ninggiangboy/kaiju/backend
+    newTag: REPLACED_BY_PIPELINE
   - name: kaiju-frontend
-    newTag: REPLACED_BY_OVERLAY
+    newName: ghcr.io/ninggiangboy/kaiju/frontend
+    newTag: REPLACED_BY_PIPELINE

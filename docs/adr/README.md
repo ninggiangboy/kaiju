@@ -27,7 +27,8 @@ hiểu vì sao hệ thống trông như hiện tại thay vì trông như cách 
 | [0011](0011-account-vs-member.md) | Tách account toàn cục khỏi member theo workspace | Accepted |
 | [0012](0012-shared-schema-tenancy-rls.md) | Multi-tenancy shared-schema kèm Row Level Security | Accepted |
 | [0013](0013-explicit-two-way-migration.md) | Migration chạy tường minh và đi được hai chiều, không chạy lúc ứng dụng khởi động | Accepted |
-| [0014](0014-declarative-infra-gitops.md) | Hạ tầng khai báo bằng OpenTofu, Ansible và Argo CD; bậc 4 triển khai theo GitOps | Accepted |
+| [0014](0014-declarative-infra-gitops.md) | Hạ tầng khai báo bằng OpenTofu, Ansible và Argo CD; bậc 4 triển khai theo GitOps | Accepted — cơ chế thăng cấp thay bởi [0015](0015-branch-per-environment.md) |
+| [0015](0015-branch-per-environment.md) | Mỗi môi trường là một nhánh, thăng cấp bằng pull request giữa các nhánh | Accepted |
 
 ---
 

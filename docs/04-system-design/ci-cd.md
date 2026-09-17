@@ -198,11 +198,17 @@ Dựng **một ảnh duy nhất cho backend** — bốn vai trò dùng chung ả
 
 ### Đường đi lên các bậc
 
+**Mỗi môi trường là một nhánh** ([ADR-0015](../adr/0015-branch-per-environment.md)):
+
+```
+dev ──PR──> staging ──PR──> production
+```
+
 | Sự kiện | Hành động | Thứ thi hành |
 |---|---|---|
-| Merge vào nhánh phát triển | Dựng ảnh, gắn thẻ theo commit. **Không triển khai tự động** | — |
-| Gắn thẻ phiên bản | Dựng ảnh, gắn thẻ phiên bản, triển khai lên `staging` | Ansible |
-| Merge pull request đổi thẻ ảnh trong overlay | Triển khai lên `production` | Argo CD |
+| Merge vào `dev` | Dựng ảnh, ghim thẻ vào `k8s/base`, mở pull request thăng cấp. **Không triển khai** | — |
+| Merge pull request vào `staging` | Triển khai bậc 3, rồi mở pull request thăng cấp tiếp | Ansible + Argo CD |
+| Merge pull request vào `production` | Triển khai bậc 4 | Argo CD |
 
 Bậc 1 và bậc 2 không nằm trong đường đi này — chúng chạy trên máy cá nhân và không
 có gì để triển khai.
@@ -211,13 +217,18 @@ Hai bậc dùng **hai cơ chế khác nhau**, vì bậc 3 chạy compose trên m
 còn bậc 4 chạy trên cụm. Trình tự nghiệp vụ thì giống hệt nhau; chỉ khác thứ thi
 hành nó.
 
-> **Đã thay đổi (2026-09-18):** trước đây cổng vào `production` là một lần **duyệt
-> thủ công trong giao diện pipeline**, và pipeline tự phát lệnh vào cụm. Nay trạng
-> thái mong muốn của bậc 4 nằm trong git: pipeline mở một pull request sửa thẻ ảnh
-> trong overlay, và **merge pull request đó chính là hành động triển khai**. Lý do
-> đổi: một nút duyệt không nói cho ai biết đang đi từ thẻ nào sang thẻ nào, còn một
-> diff thì nói — và trạng thái đang chạy không còn chỉ tồn tại bên trong cụm. Xem
-> [ADR-0014](../adr/0014-declarative-infra-gitops.md).
+> **Đã thay đổi (2026-09-18):** hai lần, trong cùng một ngày.
+>
+> Trước đó cổng vào `production` là một lần **duyệt thủ công trong giao diện
+> pipeline**, và pipeline tự phát lệnh vào cụm. [ADR-0014](../adr/0014-declarative-infra-gitops.md)
+> thay nó bằng GitOps: pipeline mở pull request sửa thẻ ảnh trong overlay, và merge
+> pull request đó là hành động triển khai.
+>
+> [ADR-0015](../adr/0015-branch-per-environment.md) giữ nguyên GitOps nhưng đổi cách
+> thăng cấp: **mỗi môi trường là một nhánh**. Lý do là cơ chế cũ chỉ thăng cấp được
+> thẻ ảnh — mọi thay đổi khác, như sửa manifest hay đổi ngưỡng mở rộng, có hiệu lực
+> ở mọi môi trường cùng lúc mà không qua bước thăng cấp nào. Nó cũng chặn `staging`
+> sau thẻ phát hành, khiến bậc 3 luôn bắt lỗi muộn hơn thời điểm nó cần bắt.
 
 ### Thứ tự triển khai
 

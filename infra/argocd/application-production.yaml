@@ -11,8 +11,10 @@ metadata:
 spec:
   project: kaiju
   source:
-    repoURL: https://github.com/OWNER/kaiju.git
-    targetRevision: main
+    repoURL: https://github.com/ninggiangboy/kaiju.git
+    # The branch IS the environment. Promoting is a pull request into this
+    # branch; Argo CD reconciles whatever is at its head.
+    targetRevision: production
     path: infra/k8s/overlays/production
   destination:
     server: https://kubernetes.default.svc
