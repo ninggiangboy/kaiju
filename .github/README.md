@@ -1,45 +1,46 @@
 # .github/
 
-Quy trình tích hợp liên tục. Thiết kế và lý do từng kiểm tra tồn tại:
-[ci-cd.md](../docs/04-system-design/ci-cd.md).
+The continuous integration pipeline. The design, and why each check exists, is
+documented in [ci-cd.md](../docs/04-system-design/ci-cd.md) (Vietnamese, like
+everything under `docs/`).
 
-| Tệp | Chạy khi |
+| File | Runs when |
 |---|---|
-| `workflows/ci.yml` | Mỗi pull request và mỗi lần đẩy lên `main` hoặc `dev` |
-| `workflows/release.yml` | Đẩy lên `main` (chỉ dựng ảnh) và mỗi thẻ phiên bản (dựng và triển khai) |
-| `workflows/security.yml` | Hằng tuần, và khi tệp khai báo phụ thuộc thay đổi |
-| `workflows/pr-hygiene.yml` | Mỗi lần sửa tiêu đề pull request |
-| `scripts/check-docs.py` | Trong `ci.yml`, và bằng tay: `make -C infra check-docs` |
+| `workflows/ci.yml` | Every pull request and every push to `main` or `dev` |
+| `workflows/release.yml` | Pushes to `main` (build only) and every version tag (build and deploy) |
+| `workflows/security.yml` | Weekly, and whenever a dependency manifest changes |
+| `workflows/pr-hygiene.yml` | Every time a pull request title is edited |
+| `scripts/check-docs.py` | Inside `ci.yml`, and by hand: `make -C infra check-docs` |
 
 ---
 
-## Hai điều dễ làm sai
+## Two things that are easy to get wrong
 
-### Cổng là kiểm tra bắt buộc duy nhất
+### The Gate is the only required check
 
-Cấu hình bảo vệ nhánh chỉ khai báo **`Cổng`**, không khai báo từng công việc.
-Nhờ vậy thêm một kiểm tra mới vào pipeline không phải sửa cấu hình đó.
+Branch protection declares **`Gate`** and nothing else. That way, adding a new
+check to the pipeline never means editing that configuration.
 
-### Công việc bị bỏ qua là THẤT BẠI
+### A skipped job is a FAILURE
 
-Trừ khi thư mục tương ứng không thay đổi (`CON-71`). Mặc định của phần lớn cấu
-hình CI coi công việc bị bỏ qua là đã qua; kết hợp với một bộ lọc đường dẫn viết
-sai, đó là cách một thay đổi backend merge được mà chưa chạy test nào.
+Unless its directory did not change (`CON-71`). Most CI configurations treat a
+skipped job as passing; combined with a path filter that is wrong, that is how a
+backend change merges without a single test having run.
 
-Cổng cũng chặn theo chiều ngược lại: một công việc **chạy** dù thư mục của nó
-không đổi cũng là bộ lọc sai, và cũng bị báo.
+The Gate also blocks in the other direction: a job that **ran** although its
+directory was unchanged is a broken filter too, and it is reported.
 
 ---
 
-## Chạy tại chỗ
+## Running locally
 
-Mọi kiểm tra tĩnh chạy được từ máy cá nhân (`CON-72`):
+Every static check runs from a developer machine (`CON-72`):
 
 ```bash
 make -C infra check
 ```
 
-Riêng phần cú pháp của chính các quy trình:
+The workflow files themselves:
 
 ```bash
 actionlint
@@ -47,13 +48,13 @@ actionlint
 
 ---
 
-## Trạng thái
+## Current state
 
-Các công việc backend và frontend **bị bỏ qua cho tới khi `backend/` và
-`frontend/` tồn tại** — bộ lọc đường dẫn không khớp gì, nên chúng không chạy và
-cổng tính đó là hợp lệ. Hôm nay chỉ `Tài liệu` và `Hạ tầng` thật sự chạy.
+The backend and frontend jobs **stay skipped until `backend/` and `frontend/`
+exist** — the path filters match nothing, so they do not run and the Gate counts
+that as legitimate. Today only `Documentation` and `Infrastructure` actually run.
 
-Hai bước triển khai trong `release.yml` cố ý **dừng với mã lỗi** và in ra đúng
-lệnh cần chạy: chúng cần bí mật truy cập máy chủ và cụm, vốn chưa tồn tại. Để
-chúng "thành công" mà không làm gì là cách tệ nhất — nó báo triển khai xong
-trong khi không có gì được triển khai.
+The two deploy steps in `release.yml` deliberately **exit non-zero** and print
+the exact commands instead: they need host and cluster credentials that do not
+exist yet. Letting them "succeed" while doing nothing is the worst available
+outcome — it reports a deployment that never happened.

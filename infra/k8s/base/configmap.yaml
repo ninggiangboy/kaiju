@@ -1,9 +1,9 @@
-# Chỉ cấu hình không bí mật. Bí mật đến từ cơ chế bí mật của nền tảng và được
-# gắn vào qua `envFrom.secretRef: kaiju-secrets` — xem README của thư mục này.
+# Non-secret configuration only. Secrets come from the platform's secret
+# storage and are attached through `envFrom.secretRef: kaiju-secrets`.
 #
-# Tên biến nói lên TÍNH CHẤT, không nói lên NƠI CHỐN (CON-67): không có biến
-# nào tên kiểu KAIJU_IS_PROD, vì nhánh code rẽ theo tên môi trường là nhánh
-# không bao giờ được kiểm thử ở nơi nó thật sự chạy.
+# Variable names describe a PROPERTY, not a PLACE (CON-67): nothing here is
+# named like KAIJU_IS_PROD, because a branch on the environment name is a
+# branch that is never exercised where it actually runs.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -14,8 +14,8 @@ data:
   KAIJU_OBJECT_STORAGE_PATH_STYLE: "false"
   KAIJU_MIGRATE_ON_STARTUP: "false"
 
-  # Chuẩn mở, không tên sản phẩm nào (CON-64). Đổi hệ thống thu thập chỉ là đổi
-  # địa chỉ này.
+  # Open standard, no product name (CON-64). Switching collection backends is
+  # just changing this address.
   OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
   OTEL_TRACES_SAMPLER: "parentbased_traceidratio"
   OTEL_TRACES_SAMPLER_ARG: "0.1"

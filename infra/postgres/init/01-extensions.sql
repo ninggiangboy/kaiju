@@ -1,13 +1,14 @@
--- Chạy một lần khi khởi tạo cụm cơ sở dữ liệu ở bậc 1 và bậc 2.
+-- Runs once when the database cluster is initialised at tiers 1 and 2.
 --
--- Chỉ bật phần mở rộng. KHÔNG định nghĩa cấu trúc bảng ở đây — cấu trúc thuộc
--- về migration trong backend/, và mô hình dữ liệu vẫn đang chờ phân tích.
+-- Extensions only. Do NOT define table structure here - structure belongs to
+-- the migrations under backend/, and the data model is still pending analysis.
 --
--- Không cần phần mở rộng sinh định danh: định danh do client sinh (CON-61).
+-- No identifier-generating extension is needed: identifiers come from the
+-- client (CON-61).
 
--- So sánh chuỗi không phân biệt hoa thường, cho email và slug. Cần từ Phase 1.
+-- Case-insensitive string comparison, for email and slugs. Needed from phase 1.
 CREATE EXTENSION IF NOT EXISTS citext;
 
--- So khớp chuỗi gần đúng, cho gợi ý tìm kiếm. Cần từ Phase 7; bật sẵn vì nó
--- không tốn gì khi không dùng.
+-- Fuzzy string matching, for search suggestions. Needed from phase 7; enabled
+-- up front because it costs nothing while unused.
 CREATE EXTENSION IF NOT EXISTS pg_trgm;

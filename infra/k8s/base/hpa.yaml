@@ -1,11 +1,11 @@
-# Mỗi vai trò mở rộng theo một tín hiệu KHÁC nhau — đó là lý do tách bốn đối
-# tượng triển khai ngay từ đầu.
+# Each role scales on a DIFFERENT signal - that is why there are four separate
+# Deployments in the first place.
 #
-# > Chưa chốt: `realtime` đúng ra phải mở rộng theo SỐ KẾT NỐI ĐỒNG BỘ ĐANG MỞ
-# > và `worker` theo ĐỘ TRỄ HÀNG ĐỢI SỰ KIỆN, chứ không phải theo CPU. Cả hai
-# > cần bộ chuyển đổi chỉ số tuỳ biến. Dùng CPU là bản tạm và phải đổi trước
-# > khi có tải thật: một realtime giữ mười nghìn kết nối nhàn rỗi gần như không
-# > tốn CPU, nên quy tắc dưới đây sẽ không bao giờ kích hoạt đúng lúc.
+# UNSETTLED: `realtime` should really scale on OPEN SYNC CONNECTIONS and
+# `worker` on EVENT QUEUE LAG, not on CPU. Both need a custom metrics adapter.
+# CPU is a placeholder and must be replaced before real load arrives: a realtime
+# replica holding ten thousand idle connections uses almost no CPU, so the rule
+# below will never fire at the right moment.
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -36,7 +36,8 @@ spec:
         name: cpu
         target: { type: Utilization, averageUtilization: 60 }
   behavior:
-    # Thu nhỏ chậm: mỗi bản bị gỡ là một loạt client mất kết nối và phải bắt kịp.
+    # Scale down slowly: every removed replica drops a batch of clients that
+    # then have to catch up.
     scaleDown:
       stabilizationWindowSeconds: 600
       policies: [{ type: Pods, value: 1, periodSeconds: 300 }]

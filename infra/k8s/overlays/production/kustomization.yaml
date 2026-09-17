@@ -9,9 +9,10 @@ patches:
   - path: ingress-host.yaml
     target: { kind: Ingress }
 
-# Bí mật KHÔNG nằm trong repository. `kaiju-secrets` được tạo bởi cơ chế bí mật
-# của nền tảng (bộ điều khiển bí mật ngoài, hoặc `kubectl create secret` trong
-# bước triển khai có duyệt thủ công). Các khoá bắt buộc:
+# Secrets do NOT live in the repository. `kaiju-secrets` is created by the
+# platform's secret mechanism (an external secrets controller, or a
+# `kubectl create secret` inside the manually approved deploy step). Required
+# keys:
 #
 #   KAIJU_DB_URL              KAIJU_MAIL_HOST
 #   KAIJU_DB_LISTEN_URL       KAIJU_MAIL_PORT
@@ -23,5 +24,6 @@ patches:
 #   OTEL_EXPORTER_OTLP_ENDPOINT
 #   KAIJU_OBJECT_STORAGE_ACCESS_KEY / _SECRET_KEY
 #
-# CON-25: KAIJU_DB_LISTEN_URL phải trỏ THẲNG tới cơ sở dữ liệu. Nếu về sau có
-# bộ gộp kết nối ở bậc này, KAIJU_DB_URL đổi còn biến trên thì không.
+# CON-25: KAIJU_DB_LISTEN_URL must point DIRECTLY at the database. If a
+# connection pooler is ever added at this tier, KAIJU_DB_URL changes and this
+# one does not.

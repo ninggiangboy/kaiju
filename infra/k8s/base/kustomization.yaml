@@ -1,7 +1,8 @@
-# Bậc 4 — production.
+# Tier 4 - production.
 #
-# Bốn vai trò ứng dụng là bốn đối tượng triển khai riêng, mở rộng độc lập, dùng
-# CHUNG một ảnh (CON-66). Vai trò được chọn bằng biến môi trường KAIJU_ROLE.
+# The four application roles are four separate Deployments that scale
+# independently while SHARING one image (CON-66). The role is selected through
+# the KAIJU_ROLE environment variable.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -24,8 +25,8 @@ labels:
     pairs:
       app.kubernetes.io/part-of: kaiju
 
-# Thẻ ảnh do pipeline ghi đè bằng mã băm của commit. KHÔNG bao giờ dùng thẻ
-# động (CON-70) — triển khai theo thẻ động nghĩa là không biết bản nào đang chạy.
+# Image tags are overridden by the pipeline with the commit hash. NEVER use a
+# moving tag (CON-70) - deploying from one means not knowing what is running.
 images:
   - name: kaiju-backend
     newTag: REPLACED_BY_PIPELINE

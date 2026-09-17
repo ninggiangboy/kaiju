@@ -14,9 +14,9 @@ spec:
     metadata:
       labels: { app.kubernetes.io/name: kaiju-realtime }
     spec:
-      # Vai trò này giữ kết nối dài hạn. Thời gian tắt êm phải DÀI HƠN chu kỳ
-      # nhịp tim, để client kịp nhận tín hiệu đóng và nối lại chủ động thay vì
-      # phát hiện ra bằng thời gian chờ.
+      # This role holds long-lived connections. The shutdown grace period must
+      # EXCEED the heartbeat interval, so clients see the close and reconnect
+      # deliberately rather than discovering it through a timeout.
       terminationGracePeriodSeconds: 90
       containers:
         - name: app
@@ -32,8 +32,9 @@ spec:
           envFrom:
             - configMapRef: { name: kaiju-config }
             - secretRef: { name: kaiju-secrets }
-          # Khoẻ nghĩa là kết nối được cơ sở dữ liệu và Redis, VÀ đang đăng ký
-          # nhận phát tán — không đăng ký được thì client không nhận delta nào.
+          # Healthy means the database and Redis are reachable AND the
+          # broadcast subscription is live - without it no client receives a
+          # single delta.
           readinessProbe:
             httpGet: { path: /actuator/health/readiness, port: http }
             initialDelaySeconds: 10

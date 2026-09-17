@@ -1,9 +1,9 @@
-# CON-68: ở bậc 4, migration chạy như một công việc RIÊNG trước khi triển khai,
-# không chạy lúc ứng dụng khởi động. Nhiều bản cùng khởi động sẽ cùng chạy
-# migration — đó là lý do khác biệt so với ba bậc dưới.
+# CON-68: at tier 4, migrations run as a SEPARATE job before deployment, not at
+# application startup. Several replicas starting together would otherwise all
+# run migrations - that is what differs from the three tiers below.
 #
-# Tên công việc mang thẻ ảnh, nên mỗi lần phát hành là một công việc mới và
-# lịch sử giữ lại được.
+# The pipeline suffixes the job name with the image tag, so each release is a
+# new job and the history is preserved.
 apiVersion: batch/v1
 kind: Job
 metadata:

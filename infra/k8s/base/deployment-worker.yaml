@@ -26,9 +26,9 @@ spec:
           envFrom:
             - configMapRef: { name: kaiju-config }
             - secretRef: { name: kaiju-secrets }
-          # Khoẻ nghĩa là tiến trình chuyển tiếp đang chạy VÀ độ trễ hàng đợi
-          # dưới ngưỡng. Một worker vẫn sống nhưng hàng đợi tồn đọng một giờ
-          # thì KHÔNG khoẻ.
+          # Healthy means the relay process is running AND queue lag is below
+          # the threshold. A worker that is alive while the queue is an hour
+          # behind is NOT healthy.
           readinessProbe:
             httpGet: { path: /actuator/health/readiness, port: http }
             initialDelaySeconds: 10

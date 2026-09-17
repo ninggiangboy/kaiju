@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Kiểm tra tính toàn vẹn của docs/.
+"""Integrity checks for docs/.
 
-Chạy được từ máy cá nhân bằng một lệnh:  python3 .github/scripts/check-docs.py
-Không phụ thuộc thư viện ngoài.
+Runs from a developer machine with one command:
+    python3 .github/scripts/check-docs.py
+
+No third-party dependencies.
 """
 from __future__ import annotations
 
@@ -19,11 +21,12 @@ errors: list[str] = []
 
 
 def slug(heading: str) -> str:
-    """Neo tiêu đề theo cách GitHub sinh: bỏ ký tự không phải chữ/số/gạch/khoảng
-    trắng, hạ thường, mỗi khoảng trắng thành một gạch nối."""
+    """Build the anchor the way GitHub does: drop anything that is not
+    alphanumeric, a hyphen, an underscore or a space; lowercase it; then turn
+    every space into a single hyphen."""
     h = heading.strip()
     h = re.sub(r"`|\*|_", "", h)
-    h = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", h)  # link trong tiêu đề
+    h = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", h)  # a link inside the heading
     h = "".join(
         c for c in h if c.isalnum() or c in " -_" or unicodedata.combining(c)
     )
@@ -60,7 +63,7 @@ for path in MD:
             if dest.is_dir():
                 dest = dest / "README.md"
             if not dest.exists():
-                errors.append(f"{path.relative_to(ROOT)}: liên kết gãy -> {target}")
+                errors.append(f"{path.relative_to(ROOT)}: broken link -> {target}")
                 continue
         else:
             dest = path
@@ -70,17 +73,17 @@ for path in MD:
                 known = anchor_cache[dest] = anchors_of(dest)
             if known is not None and anchor not in known:
                 errors.append(
-                    f"{path.relative_to(ROOT)}: neo không tồn tại -> {target}"
+                    f"{path.relative_to(ROOT)}: anchor does not exist -> {target}"
                 )
 
-# Không có DDL trong docs/ — phân tích mô hình dữ liệu đang hoãn.
+# No DDL under docs/ - the data model analysis is deferred.
 DDL = re.compile(r"create\s+table|alter\s+table|@Entity|@Table", re.I)
 for path in DOCS.rglob("*.md"):
     for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
         if DDL.search(line):
-            errors.append(f"{path.relative_to(ROOT)}:{i}: DDL trong tài liệu")
+            errors.append(f"{path.relative_to(ROOT)}:{i}: DDL in documentation")
 
-# Bảng feature: định danh không trùng, mọi phụ thuộc trỏ tới định danh có thật.
+# Feature table: no duplicate identifiers, every dependency points at a real one.
 catalog = DOCS / "03-features" / "README.md"
 rows = re.findall(
     r"^\|\s*(KJ-[A-Z]+-\d+)\s*\|[^|]*\|([^|]*)\|", catalog.read_text(encoding="utf-8"), re.M
@@ -88,23 +91,23 @@ rows = re.findall(
 ids = [r[0] for r in rows]
 dupes = {i for i in ids if ids.count(i) > 1}
 for d in sorted(dupes):
-    errors.append(f"03-features/README.md: định danh trùng -> {d}")
+    errors.append(f"03-features/README.md: duplicate identifier -> {d}")
 known_ids = set(ids)
 for fid, deps in rows:
     for dep in re.findall(r"KJ-[A-Z]+-\d+", deps):
         if dep not in known_ids:
-            errors.append(f"03-features/README.md: {fid} phụ thuộc {dep} không tồn tại")
+            errors.append(f"03-features/README.md: {fid} depends on {dep}, which does not exist")
 
-# Ràng buộc: định danh CON không trùng.
+# Constraints: no duplicate CON identifiers.
 con_text = (DOCS / "02-requirement" / "constraints.md").read_text(encoding="utf-8")
 cons = re.findall(r"^\|\s*(CON-\d+)\s*\|", con_text, re.M)
 for c in sorted({c for c in cons if cons.count(c) > 1}):
-    errors.append(f"02-requirement/constraints.md: định danh trùng -> {c}")
+    errors.append(f"02-requirement/constraints.md: duplicate identifier -> {c}")
 
 if errors:
-    print(f"✗ {len(errors)} lỗi:")
+    print(f"FAIL: {len(errors)} problem(s):")
     for e in errors:
         print("  " + e)
     sys.exit(1)
 
-print(f"✓ {len(MD)} tài liệu, {len(ids)} feature, {len(cons)} ràng buộc — không có lỗi")
+print(f"PASS: {len(MD)} documents, {len(ids)} features, {len(cons)} constraints")

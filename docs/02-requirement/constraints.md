@@ -127,4 +127,5 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 |---|---|---|
 | CON-48 | Làm từng tính năng một, mỗi tính năng phải đầy đủ. Không làm sơ sài rồi bổ sung dần | [Brief](../01-brief/) |
 | CON-49 | Thứ tự phase do phụ thuộc kỹ thuật quyết định, không do độ khó hay mức độ hấp dẫn | [Brief](../01-brief/) |
-| CON-50 | Tài liệu viết bằng tiếng Việt, thuật ngữ kỹ thuật giữ tiếng Anh; thông điệp commit viết bằng tiếng Anh | Quyết định của chủ dự án |
+| CON-50 | Tài liệu trong `docs/` viết bằng tiếng Việt, thuật ngữ kỹ thuật giữ tiếng Anh. **Mọi thứ nằm ngoài `docs/` viết bằng tiếng Anh**, kể cả phần chú thích bên trong script và tệp cấu hình. Thông điệp commit viết bằng tiếng Anh | Quyết định của chủ dự án |
+| | *Ghi chú (2026-09-17): bản trước của ràng buộc này chỉ nói "tài liệu viết bằng tiếng Việt" mà không nêu ranh giới, nên `infra/` và `.github/` ban đầu được viết bằng tiếng Việt. Ranh giới đúng là thư mục `docs/`.* | |

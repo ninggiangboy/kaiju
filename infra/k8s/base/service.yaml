@@ -15,9 +15,9 @@ metadata:
 spec:
   selector: { app.kubernetes.io/name: kaiju-realtime }
   ports: [{ name: http, port: 80, targetPort: http }]
-  # Gắn phiên theo kết nối. Không bắt buộc, nhưng giảm số lần bootstrap lại:
-  # client nối lại rơi vào cùng một bản thì vị trí đồng bộ còn nguyên trong bộ
-  # nhớ của bản đó.
+  # Session affinity. Not required, but it reduces re-bootstraps: a reconnecting
+  # client landing on the same replica finds its sync position still in that
+  # replica's memory.
   sessionAffinity: ClientIP
   sessionAffinityConfig:
     clientIP: { timeoutSeconds: 10800 }

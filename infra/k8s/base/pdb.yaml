@@ -1,4 +1,4 @@
-# Không để nâng cấp nút gỡ hết bản của một vai trò cùng lúc.
+# Stop a node upgrade from evicting every replica of a role at once.
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:

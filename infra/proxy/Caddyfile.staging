@@ -1,7 +1,8 @@
-# Bậc 3 — TLS thật, tên miền thật. Chứng chỉ do Caddy tự xin và tự gia hạn.
+# Tier 3 - real TLS, real domain. Caddy obtains and renews the certificate.
 #
-# Giống Caddyfile.dev ở đúng chỗ quan trọng nhất: luồng đồng bộ không được đệm.
-# Khác ở chỗ đây là lần đầu tiên luồng đó đi qua TLS thật.
+# Identical to Caddyfile.dev where it matters most: the sync stream must not be
+# buffered. What differs is that here it travels over real TLS for the first
+# time.
 
 {$KAIJU_DOMAIN} {
 	log {
@@ -28,8 +29,8 @@
 		max_size 50MB
 	}
 
-	# Trang tiếp thị và trang nhận magic link — phần duy nhất được render ở
-	# phía máy chủ (ADR-0008).
+	# Marketing pages and the magic-link landing page - the only part rendered
+	# on the server (ADR-0008).
 	handle {
 		reverse_proxy frontend:3000
 	}

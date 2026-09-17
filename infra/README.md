@@ -1,110 +1,112 @@
 # infra/
 
-Bốn bậc môi trường và những gì cần để dựng chúng. Lý do từng bậc tồn tại và
-loại lỗi mà **chỉ bậc đó** bắt được nằm ở
-[environments.md](../docs/04-system-design/environments.md).
+The four environment tiers and what it takes to stand them up. Why each tier
+exists, and which class of failure **only that tier** catches, is documented in
+[environments.md](../docs/04-system-design/environments.md) (Vietnamese, like
+everything under `docs/`).
 
 ---
 
-## Bắt đầu
+## Getting started
 
 ```bash
 cd infra
-make up        # bậc 1 — đủ để chạy backend và bộ test
-make up-dev    # bậc 2 — thêm phần vận hành
-make check     # toàn bộ kiểm tra tĩnh, giống hệt CI
+make up        # tier 1 - enough to run the backend and the test suite
+make up-dev    # tier 2 - adds the operational layer
+make check     # every static check, exactly as CI runs them
 ```
 
-`make` không có tham số sẽ liệt kê mọi lệnh.
+`make` with no target lists every command.
 
 ---
 
-## Bốn bậc
+## The four tiers
 
-| Bậc | Dựng bằng | Chỉ nó bắt được |
+| Tier | Stood up by | What only it catches |
 |---|---|---|
-| `local-mini` | `compose/docker-compose.yml` | Mọi thứ **không** liên quan tới môi trường: logic, migration, biên giới module |
-| `dev` | thêm `compose/docker-compose.dev.yml` | Vi phạm trạng thái phiên, luồng đồng bộ bị đệm, chuỗi lần vết đứt, vai trò thiếu cấu hình khi chạy tách rời |
-| `staging` | `staging/docker-compose.yml` trên một VPS | Hành vi của **dịch vụ thật**: thư vào hộp thư rác, liên kết có chữ ký, TLS và tên miền thật |
-| `production` | `k8s/overlays/production` | Nhiều bản cùng vai trò: tranh chấp cấp số thứ tự, khoá chống chạy trùng, phát tán giữa nhiều bản, triển khai cuốn chiếu |
+| `local-mini` | `compose/docker-compose.yml` | Everything **unrelated** to the environment: logic, migrations, module boundaries |
+| `dev` | plus `compose/docker-compose.dev.yml` | Session-state violations, a buffered sync stream, a broken trace, a role missing config once split out |
+| `staging` | `staging/docker-compose.yml` on a VPS | The behaviour of **real services**: mail landing in spam, signed links, real TLS and a real domain |
+| `production` | `k8s/overlays/production` | Multiple replicas of one role: sequence contention, the anti-overlap lock, cross-replica broadcast, rolling deployment |
 
-**Cùng một ảnh chạy ở cả bốn** (`CON-66`). Vai trò chọn bằng `KAIJU_ROLE`, khác
-biệt còn lại nằm ở biến môi trường. Không có nhánh code nào rẽ theo tên môi
-trường (`CON-67`).
+**The same image runs in all four** (`CON-66`). The role is selected through
+`KAIJU_ROLE`; everything else that differs is an environment variable. Nothing
+branches on the environment name (`CON-67`).
 
 ---
 
-## Cổng ở máy phát triển
+## Ports on a developer machine
 
-| | Bậc 1 | Bậc 2 |
+| | Tier 1 | Tier 2 |
 |---|---|---|
-| Cơ sở dữ liệu | 5432 | 5432 (thẳng) và **6432** (qua bộ gộp) |
-| Máy chủ giao thức Redis | 6379 | 6379 |
-| Thư — giao diện web | **8025** | 8025 |
-| Lưu trữ đối tượng — giao diện | 9001 | 9001 |
-| Ứng dụng qua máy chủ trung gian | — | **8080** |
-| Quan sát hệ thống — giao diện | — | **3001** |
+| Database | 5432 | 5432 (direct) and **6432** (pooled) |
+| Redis-protocol server | 6379 | 6379 |
+| Mail — web interface | **8025** | 8025 |
+| Object storage — console | 9001 | 9001 |
+| App through the reverse proxy | — | **8080** |
+| Observability — interface | — | **3001** |
 
-Cổng quan sát là 3001 chứ không phải 3000 vì 3000 để dành cho Next.
-
----
-
-## Hai chi tiết dễ làm sai
-
-### `KAIJU_DB_URL` và `KAIJU_DB_LISTEN_URL` là hai biến khác nhau
-
-Ở bậc 1 chúng trỏ cùng một nơi, và **vẫn phải tách**. Ở bậc 2 trở đi, đường
-ghi/đọc thường đi qua bộ gộp kết nối còn kết nối lắng nghe thông báo đi **thẳng**
-tới cơ sở dữ liệu — ở chế độ gộp theo giao dịch, cơ chế lắng nghe không bao giờ
-hoạt động qua bộ gộp (`CON-25`).
-
-Viết tách ngay từ dòng code đầu tiên, không phải thêm vào lúc triển khai bộ gộp.
-
-### Tắt đệm cho luồng đồng bộ
-
-Đó là lý do tồn tại của `proxy/Caddyfile.*` và của chú thích
-`proxy-buffering: off` trong `k8s/base/ingress.yaml`. Cấu hình sai ở chỗ này
-**không sinh ra lỗi nào** — triệu chứng duy nhất là "realtime không chạy".
-
-`scripts/smoke.sh` có một kiểm tra dành riêng cho nó.
+Observability sits on 3001 rather than 3000 because 3000 is reserved for Next.
 
 ---
 
-## Bí mật
+## Two details that are easy to get wrong
 
-Không bí mật thật nào nằm trong repository, **kể cả cho bậc 1**.
+### `KAIJU_DB_URL` and `KAIJU_DB_LISTEN_URL` are two different variables
 
-| Bậc | Bí mật đến từ |
+At tier 1 they point at the same place, and they **still stay separate**. From
+tier 2 onward, ordinary reads and writes go through the connection pooler while
+the notification listener connects **directly** — under transaction pooling,
+listening never works through a pooler (`CON-25`).
+
+Write them apart from the first line of code, rather than retrofitting the
+split when the pooler arrives.
+
+### Buffering must be off for the sync stream
+
+That is the entire reason `proxy/Caddyfile.*` exists, and the reason for the
+`proxy-buffering: off` annotation in `k8s/base/ingress.yaml`. Getting it wrong
+produces **no error at all** — the only symptom is "realtime does not work".
+
+`scripts/smoke.sh` carries a check dedicated to it.
+
+---
+
+## Secrets
+
+No real secret lives in the repository, **not even for tier 1**.
+
+| Tier | Secrets come from |
 |---|---|
-| 1, 2 | Giá trị giả trong `env/*.env.example`; cụm cơ sở dữ liệu bị vứt đi mỗi lần dựng lại |
-| 3 | `/etc/kaiju/staging.env` trên máy chủ, quyền `600` |
-| 4 | Secret `kaiju-secrets` của nền tảng điều phối |
+| 1, 2 | Fake values in `env/*.env.example`; the database cluster is thrown away on every rebuild |
+| 3 | `/etc/kaiju/staging.env` on the host, mode `600` |
+| 4 | The orchestrator Secret `kaiju-secrets` |
 
-Thiếu một biến bắt buộc thì ứng dụng **dừng ngay lúc khởi động**. Chết sớm còn
-hơn chạy sai âm thầm.
+A missing required variable makes the application **stop at startup**. Failing
+early beats running wrong in silence.
 
 ---
 
-## Cây thư mục
+## Layout
 
 ```
 infra/
-├── Makefile                      # mọi lệnh, chạy được từ máy cá nhân
+├── Makefile                      # every command, all runnable locally
 ├── compose/
-│   ├── docker-compose.yml        # bậc 1
-│   └── docker-compose.dev.yml    # bậc 2, chồng lên bậc 1
+│   ├── docker-compose.yml        # tier 1
+│   └── docker-compose.dev.yml    # tier 2, layered on tier 1
 ├── staging/
-│   ├── docker-compose.yml        # bậc 3, một VPS
+│   └── docker-compose.yml        # tier 3, a single VPS
 ├── k8s/
-│   ├── base/                     # bậc 4, bốn vai trò + công việc migration
+│   ├── base/                     # tier 4, four roles + the migration job
 │   └── overlays/{staging,production}/
-├── docker/                       # Dockerfile của backend và frontend
-├── proxy/                        # Caddyfile.dev và Caddyfile.staging
-├── pgbouncer/                    # cấu hình bộ gộp, dùng chung với CI
-├── postgres/init/                # chỉ bật phần mở rộng, không có cấu trúc bảng
+├── docker/                       # backend and frontend Dockerfiles
+├── proxy/                        # Caddyfile.dev and Caddyfile.staging
+├── pgbouncer/                    # pooler configuration, shared with CI
+├── postgres/init/                # extensions only, no table structure
 ├── scripts/                      # deploy-staging.sh, smoke.sh
-└── env/                          # tệp mẫu cho cả bốn bậc, chỉ giá trị giả
+└── env/                          # samples for all four tiers, fake values only
 ```
 
-Quy trình CI và đường đi từ commit lên các bậc:
+The CI pipeline and the path from a commit to each tier:
 [ci-cd.md](../docs/04-system-design/ci-cd.md).

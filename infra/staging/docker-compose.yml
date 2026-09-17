@@ -1,20 +1,20 @@
-# Bậc 3 — staging, tất cả trên MỘT máy chủ.
+# Tier 3 - staging, everything on ONE host.
 #
-# Chỉ ứng dụng chạy trong container. Mọi thứ có trạng thái thì KHÔNG:
+# Only the application runs in containers. Anything with state does NOT:
 #
-#   PostgreSQL          cài thẳng trên máy chủ, hoặc dịch vụ quản lý sẵn
-#   Máy chủ Redis       cài thẳng trên máy chủ
-#   Gửi email           dịch vụ gửi thư giao dịch thật
-#   Lưu trữ đối tượng   dịch vụ tương thích S3 thật
-#   Quan sát hệ thống   đích thu thập thật
+#   PostgreSQL       installed on the host, or a managed service
+#   Redis server     installed on the host
+#   Mail             a real transactional mail service
+#   Object storage   a real S3-compatible service
+#   Observability    a real collection endpoint
 #
-# KHÔNG còn dịch vụ giả lập nào (CON-73). Đây là ranh giới định nghĩa bậc 3:
-# ba thứ dưới đây chỉ hỏng ở lần chạm đầu tiên với dịch vụ thật, và không có
-# bậc 3 thì lần chạm đầu tiên đó xảy ra ở production.
+# NO stand-in services remain (CON-73). That is the line that defines tier 3:
+# the three things below only break on first contact with a real service, and
+# without tier 3 that first contact happens in production.
 #
-#   1. xác thực tên miền gửi thư   -> "đăng nhập không hoạt động"
-#   2. chính sách kho lưu trữ      -> liên kết có chữ ký, chia sẻ nguồn gốc
-#   3. chuỗi chứng chỉ và tên miền -> luồng đồng bộ qua TLS thật
+#   1. sender domain authentication -> "signing in does not work"
+#   2. object storage policy        -> signed links, cross-origin config
+#   3. certificate chain and domain -> sync stream over real TLS
 #
 #   docker compose --env-file /etc/kaiju/staging.env \
 #                  -f infra/staging/docker-compose.yml up -d
@@ -22,7 +22,7 @@
 name: kaiju-staging
 
 x-app: &app
-  image: ${KAIJU_IMAGE:?KAIJU_IMAGE phải là thẻ cố định gắn với commit, không phải thẻ động}
+  image: ${KAIJU_IMAGE:?KAIJU_IMAGE must be an immutable tag bound to a commit, never a moving tag}
   env_file:
     - ${KAIJU_ENV_FILE:-/etc/kaiju/staging.env}
   restart: unless-stopped
@@ -33,9 +33,9 @@ x-app: &app
       max-file: "5"
 
 services:
-  # Chạy trước mọi vai trò, rồi thoát. Ở bậc 3 vẫn có thể chạy migration lúc
-  # ứng dụng khởi động, nhưng làm giống bậc 4 ngay từ đây để thứ tự triển khai
-  # (CON-69) được kiểm chứng ở nơi nó còn hỏng được mà không hại ai.
+  # Runs before every role, then exits. Tier 3 could still migrate at
+  # application startup, but doing it the tier 4 way from here means the
+  # deployment order (CON-69) gets exercised where it can still fail harmlessly.
   migrate:
     <<: *app
     command: ["--kaiju.migrate.only=true"]
@@ -65,8 +65,8 @@ services:
       KAIJU_MIGRATE_ON_STARTUP: "false"
       OTEL_SERVICE_NAME: kaiju-scheduler
 
-  # api và realtime lên SAU worker và scheduler: tiến trình nền phải hiểu được
-  # định dạng sự kiện mới trước khi có ai sinh ra chúng (CON-69).
+  # api and realtime come up AFTER worker and scheduler: background processes
+  # must understand the new event format before anything produces it (CON-69).
   api:
     <<: *app
     depends_on:
@@ -92,13 +92,13 @@ services:
       KAIJU_DB_POOL_SIZE: "5"
       KAIJU_MIGRATE_ON_STARTUP: "false"
       OTEL_SERVICE_NAME: kaiju-realtime
-    # Dài hơn chu kỳ nhịp tim, để client kịp nối lại chủ động.
+    # Longer than the heartbeat interval, so clients reconnect deliberately.
     stop_grace_period: 45s
     expose:
       - "8080"
 
   frontend:
-    image: ${KAIJU_FRONTEND_IMAGE:?thẻ cố định gắn với commit}
+    image: ${KAIJU_FRONTEND_IMAGE:?immutable tag bound to a commit}
     restart: unless-stopped
     expose:
       - "3000"
@@ -113,7 +113,7 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      KAIJU_DOMAIN: ${KAIJU_DOMAIN:?tên miền thật, cần cho chứng chỉ}
+      KAIJU_DOMAIN: ${KAIJU_DOMAIN:?a real domain, required for the certificate}
     volumes:
       - ../proxy/Caddyfile.staging:/etc/caddy/Caddyfile:ro
       - caddy-data:/data

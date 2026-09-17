@@ -1,13 +1,13 @@
-# Bậc 1 — local-mini
+# Tier 1 - local-mini
 #
-# Đủ để `./gradlew bootRun` chạy được và bộ test chạy được. Không có gì thuộc về
-# vận hành: không bộ gộp kết nối, không hệ thống quan sát, không máy chủ trung
-# gian, không tách vai trò ứng dụng. Cả bốn thứ đó làm việc gỡ lỗi khó hơn mà
-# không bắt được lỗi logic nào — chúng nằm ở bậc 2.
+# Enough for `./gradlew bootRun` to start and for the test suite to run. None of
+# the operational machinery lives here: no connection pooler, no observability
+# stack, no reverse proxy, no split application roles. All four make debugging
+# harder and none of them catch a logic bug - they belong to tier 2.
 #
 #   docker compose -f infra/compose/docker-compose.yml up -d
 #
-# Backend và frontend chạy NGOÀI Docker ở bậc này.
+# Backend and frontend run OUTSIDE Docker at this tier.
 
 name: kaiju
 
@@ -15,9 +15,9 @@ services:
   postgres:
     image: postgres:18-alpine
     command:
-      # Kiến trúc phụ thuộc vào cơ chế thông báo giữa các phiên và vào khoá dòng
-      # có bỏ qua dòng đã khoá; cả hai có sẵn, nhưng ngân sách kết nối thì phải
-      # đủ rộng cho bốn vai trò cộng kết nối lắng nghe riêng.
+      # The architecture depends on session notifications and on row locking
+      # that skips locked rows. Both come for free, but the connection budget
+      # has to be wide enough for four roles plus the dedicated listener.
       - -c
       - max_connections=200
       - -c
@@ -26,14 +26,15 @@ services:
       POSTGRES_DB: kaiju
       POSTGRES_USER: kaiju
       POSTGRES_PASSWORD: kaiju
-      # Cần cho việc xác thực qua bộ gộp kết nối ở bậc 2.
+      # Required for authentication through the connection pooler at tier 2.
       POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
     ports:
       - "5432:5432"
     volumes:
-      # PostgreSQL 18 đổi điểm gắn khuyến nghị: gắn ở /var/lib/postgresql chứ
-      # KHÔNG phải /var/lib/postgresql/data. Gắn ở đường dẫn cũ thì ảnh từ chối
-      # khởi động. Đường dẫn mới cho phép nâng cấp phiên bản tại chỗ về sau.
+      # PostgreSQL 18 moved the recommended mount point: mount at
+      # /var/lib/postgresql, NOT /var/lib/postgresql/data. The image refuses to
+      # start on the old path. The new one also allows an in-place major upgrade
+      # later on.
       - postgres-data:/var/lib/postgresql
       - ../postgres/init:/docker-entrypoint-initdb.d:ro
     healthcheck:
@@ -45,8 +46,8 @@ services:
   valkey:
     image: valkey/valkey:8-alpine
     command:
-      # Mất Redis thì hệ thống chậm đi, không sai dữ liệu (ADR-0003). Không bật
-      # lưu xuống đĩa, để cách chạy ở đây khớp với giả định đó.
+      # Losing Redis makes the system slower, never wrong (ADR-0003). Running
+      # without persistence here keeps the local setup honest about that.
       - valkey-server
       - --save
       - ""
@@ -61,15 +62,15 @@ services:
       retries: 20
 
   mailpit:
-    # Đăng nhập chỉ có magic link, nên thiếu dịch vụ này là không đăng nhập được.
-    # Giao diện xem thư: http://localhost:8025
+    # Magic link is the only way to sign in, so without this nobody can log in.
+    # Web interface: http://localhost:8025
     image: axllent/mailpit:latest
     environment:
       MP_SMTP_AUTH_ACCEPT_ANY: "1"
       MP_SMTP_AUTH_ALLOW_INSECURE: "1"
     ports:
       - "1025:1025"   # SMTP
-      - "8025:8025"   # giao diện web
+      - "8025:8025"   # web interface
     healthcheck:
       test: ["CMD", "/mailpit", "readyz"]
       interval: 5s
@@ -77,8 +78,9 @@ services:
       retries: 20
 
   minio:
-    # Chỉ dùng từ Phase 4, nhưng có sẵn từ đầu: thêm sau tốn công hơn là để đó.
-    # Giao diện quản trị: http://localhost:9001
+    # Only used from phase 4, but present from the start: adding it later costs
+    # more than leaving it running.
+    # Console: http://localhost:9001
     image: quay.io/minio/minio:latest
     command: server /data --console-address ":9001"
     environment:
@@ -104,7 +106,7 @@ services:
       /bin/sh -c "
       mc alias set kaiju http://minio:9000 kaiju kaiju-dev-secret &&
       mc mb --ignore-existing kaiju/kaiju-attachments &&
-      echo 'bucket sẵn sàng'
+      echo 'bucket ready'
       "
     restart: "no"
 

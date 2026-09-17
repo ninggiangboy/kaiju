@@ -29,8 +29,8 @@ spec:
           envFrom:
             - configMapRef: { name: kaiju-config }
             - secretRef: { name: kaiju-secrets }
-          # Khoẻ nghĩa là kết nối được cơ sở dữ liệu VÀ migration đã chạy xong.
-          # Một điểm kiểm tra chỉ trả về "còn sống" cho mọi vai trò là vô dụng.
+          # Healthy means the database is reachable AND migrations have
+          # finished. A probe that returns "alive" for every role is useless.
           readinessProbe:
             httpGet: { path: /actuator/health/readiness, port: http }
             initialDelaySeconds: 10

@@ -1,6 +1,7 @@
-;; Chỉ dùng ở bậc 1–2 và CI. Mật khẩu ở dạng rõ là CHỦ Ý: cả cụm cơ sở dữ liệu
-;; lẫn tài khoản này đều bị vứt đi mỗi lần dựng lại môi trường.
+;; Tiers 1-2 and CI only. The plaintext password is INTENTIONAL: both the
+;; database cluster and this account are thrown away every time the environment
+;; is rebuilt.
 ;;
-;; Bậc 3 và bậc 4 KHÔNG dùng tệp này — bí mật đến từ cơ chế bí mật của máy chủ
-;; hoặc của nền tảng điều phối.
+;; Tiers 3 and 4 do NOT use this file - secrets come from the host's secret
+;; storage or from the orchestrator's.
 "kaiju" "kaiju"

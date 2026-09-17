@@ -1,7 +1,8 @@
-# Chạy theo lịch, và chạy thêm khi tệp khai báo phụ thuộc thay đổi.
+# Runs on a schedule, and again whenever a dependency manifest changes.
 #
-# Tách khỏi quy trình chính vì nó không nên chặn merge: lỗ hổng mới được công
-# bố trong một thư viện không phải lỗi của pull request đang mở.
+# Kept out of the main pipeline because it must not block merges: a newly
+# disclosed vulnerability in a library is not the fault of whichever pull
+# request happens to be open.
 
 name: Security
 
@@ -22,23 +23,23 @@ permissions:
 
 jobs:
   secrets:
-    name: Bí mật lọt vào lịch sử
+    name: Secrets in history
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        # Quét TOÀN BỘ lịch sử, không chỉ thay đổi mới: một bí mật đã bị đẩy
-        # lên thì coi như đã lộ, kể cả khi commit sau đã xoá nó đi.
+        # Scan the WHOLE history, not just new changes: a secret that was ever
+        # pushed is compromised, even if a later commit removed it.
         with: { fetch-depth: 0 }
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   dependencies:
-    name: Lỗ hổng trong phụ thuộc
+    name: Dependency vulnerabilities
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Quét hệ thống tệp
+      - name: Filesystem scan
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: fs
@@ -50,7 +51,7 @@ jobs:
         with: { sarif_file: trivy.sarif }
 
   code:
-    name: Phân tích mã tĩnh
+    name: Static analysis
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -58,7 +59,7 @@ jobs:
         language: [java-kotlin, javascript-typescript]
     steps:
       - uses: actions/checkout@v4
-      - name: Có mã nguồn ngôn ngữ này không
+      - name: Is there any source for this language
         id: present
         run: |
           case "${{ matrix.language }}" in

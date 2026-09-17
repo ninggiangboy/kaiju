@@ -1,55 +1,56 @@
 #!/usr/bin/env bash
-# Kiểm tra sau triển khai. Chạy tự động ngay sau mỗi lần triển khai ở bậc 3 và
-# bậc 4, và chạy được bằng tay ở bậc 2.
+# Post-deployment checks. Run automatically right after every tier 3 and tier 4
+# deployment, and by hand against tier 2.
 #
 #   ./infra/scripts/smoke.sh https://staging.kaiju.example.com
 #
-# Kiểm tra thứ hai là kiểm tra đáng giá nhất: nó là cách tự động DUY NHẤT phát
-# hiện "realtime không chạy" — chế độ hỏng đặc trưng của kiến trúc này, vốn
-# không sinh ra lỗi nào ở bất kỳ đâu.
+# The second check is the most valuable of the three: it is the ONLY automatic
+# way to detect "realtime does not work" - this architecture's characteristic
+# failure mode, which produces no error anywhere.
 set -euo pipefail
 
-BASE="${1:?dùng: smoke.sh <base-url>}"
+BASE="${1:?usage: smoke.sh <base-url>}"
 fail=0
 
-step() { printf '\n▸ %s\n' "$1"; }
-ok()   { printf '  ✓ %s\n' "$1"; }
-bad()  { printf '  ✗ %s\n' "$1"; fail=1; }
+step() { printf '\n> %s\n' "$1"; }
+ok()   { printf '  PASS %s\n' "$1"; }
+bad()  { printf '  FAIL %s\n' "$1"; fail=1; }
 
-step "Sức khoẻ của từng vai trò"
-# Một điểm kiểm tra chung trả về "còn sống" cho mọi vai trò là vô dụng: worker
-# vẫn chạy nhưng hàng đợi tồn đọng một giờ thì nó KHÔNG khoẻ.
+step "Per-role health"
+# A shared probe that returns "alive" for every role is useless: a worker can be
+# running while its queue is an hour behind, and it is NOT healthy.
 for role in api realtime; do
   if curl -fsS --max-time 10 "$BASE/internal/health/$role" >/dev/null; then
     ok "$role"
   else
-    bad "$role không khoẻ"
+    bad "$role is not healthy"
   fi
 done
 
-step "Luồng đồng bộ không bị đệm"
-# Mở luồng và chờ nhịp tim đầu tiên. Nếu máy chủ trung gian đang đệm, phản hồi
-# không tới trong thời gian chờ dù ứng dụng hoàn toàn bình thường.
+step "Sync stream is not buffered"
+# Open the stream and wait for the first heartbeat. If the reverse proxy is
+# buffering, nothing arrives within the timeout even though the application is
+# perfectly fine.
 if timeout 20 curl -fsSN --max-time 20 \
       -H 'Accept: text/event-stream' \
       "$BASE/api/sync/stream?probe=1" 2>/dev/null \
     | head -c 1 | grep -q .; then
-  ok "nhận được byte đầu tiên trước khi luồng đóng"
+  ok "first byte arrived before the stream closed"
 else
-  bad "không nhận được gì — nhiều khả năng máy chủ trung gian đang đệm"
+  bad "nothing arrived - most likely the reverse proxy is buffering"
 fi
 
-step "Độ trễ hàng đợi sự kiện"
+step "Event queue lag"
 lag=$(curl -fsS --max-time 10 "$BASE/internal/metrics/outbox-lag-seconds" 2>/dev/null || echo "")
 if [[ -z "$lag" ]]; then
-  bad "không đọc được chỉ số — tiến trình chuyển tiếp có thể chưa khởi động"
+  bad "could not read the metric - the relay process may not have started"
 elif awk -v l="$lag" 'BEGIN{exit !(l < 60)}'; then
-  ok "độ trễ ${lag}s"
+  ok "lag ${lag}s"
 else
-  bad "độ trễ ${lag}s vượt ngưỡng"
+  bad "lag ${lag}s is over the threshold"
 fi
 
 printf '\n'
-[[ $fail -eq 0 ]] && { echo "✓ mọi kiểm tra sau triển khai đều qua"; exit 0; }
-echo "✗ có kiểm tra không qua — KHÔNG coi lần triển khai này là thành công"
+[[ $fail -eq 0 ]] && { echo "PASS: every post-deployment check succeeded"; exit 0; }
+echo "FAIL: a check did not pass - do NOT treat this deployment as successful"
 exit 1

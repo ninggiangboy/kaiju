@@ -1,20 +1,20 @@
-# Bậc 2 — dev  (chồng lên bậc 1)
+# Tier 2 - dev  (layered on top of tier 1)
 #
-# Thêm mọi thứ thuộc về VẬN HÀNH. Đây là nơi trả lời câu hỏi "cái này có chạy
-# được khi triển khai thật không", tách khỏi câu hỏi "cái này có đúng không".
+# Adds everything OPERATIONAL. This is where "will this work once deployed" gets
+# answered, separately from "is this correct".
 #
 #   docker compose -f infra/compose/docker-compose.yml \
 #                  -f infra/compose/docker-compose.dev.yml up -d
 #
-# Bốn thứ chỉ bậc này bắt được:
-#   1. Vi phạm CON-62 (trạng thái ở phạm vi phiên)      -> pgbouncer
-#   2. Luồng đồng bộ bị đệm, không sinh lỗi nào          -> caddy
-#   3. Chuỗi lần vết đứt ở ranh giới bất đồng bộ         -> lgtm
-#   4. Vai trò ứng dụng thiếu cấu hình khi chạy tách rời -> bốn service app
-
-# KHÔNG đặt lại `name`: tệp này CHỒNG LÊN bậc 1 chứ không dựng một môi trường
-# thứ hai. Đặt tên khác sẽ tạo bản sao của cơ sở dữ liệu và Redis, rồi tranh
-# cổng với bậc 1 đang chạy.
+# Four things only this tier catches:
+#   1. session-scoped state violations (CON-62)   -> pgbouncer
+#   2. a buffered sync stream, with no error      -> caddy
+#   3. a trace broken at an async boundary        -> lgtm
+#   4. a role missing config when split out       -> the four app services
+#
+# Deliberately no `name`: this file EXTENDS tier 1 rather than standing up a
+# second environment. A different project name would clone the database and
+# Redis, then fight the running tier 1 for ports.
 
 x-app: &app
   build:
@@ -31,15 +31,15 @@ x-app: &app
     lgtm:
       condition: service_started
   environment: &app-env
-    # --- Cơ sở dữ liệu ---------------------------------------------------
-    # Đường ghi/đọc thường đi QUA bộ gộp kết nối.
+    # --- Database --------------------------------------------------------
+    # Ordinary reads and writes go THROUGH the connection pooler.
     KAIJU_DB_URL: jdbc:postgresql://pgbouncer:6432/kaiju
-    # CON-25: kết nối lắng nghe thông báo đi THẲNG tới cơ sở dữ liệu. Ở chế độ
-    # gộp theo giao dịch, cơ chế lắng nghe không bao giờ hoạt động qua bộ gộp.
+    # CON-25: the notification listener connects DIRECTLY. Under transaction
+    # pooling, listening never works through a pooler.
     KAIJU_DB_LISTEN_URL: jdbc:postgresql://postgres:5432/kaiju
     KAIJU_DB_USER: kaiju
     KAIJU_DB_PASSWORD: kaiju
-    # --- Hạ tầng phụ trợ -------------------------------------------------
+    # --- Supporting infrastructure ---------------------------------------
     KAIJU_REDIS_URL: redis://valkey:6379
     KAIJU_MAIL_TRANSPORT: smtp
     KAIJU_MAIL_HOST: mailpit
@@ -51,7 +51,7 @@ x-app: &app
     KAIJU_OBJECT_STORAGE_SECRET_KEY: kaiju-dev-secret
     KAIJU_OBJECT_STORAGE_PATH_STYLE: "true"
     KAIJU_PUBLIC_URL: http://localhost:8080
-    # --- Quan sát: chỉ chuẩn mở, không tên sản phẩm nào (CON-64) ---------
+    # --- Observability: open standard only, no product name (CON-64) -----
     OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
     OTEL_EXPORTER_OTLP_PROTOCOL: grpc
     OTEL_TRACES_SAMPLER: always_on
@@ -63,8 +63,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    # Cấu hình đến từ tệp được gắn vào, không từ biến môi trường: CI dùng đúng
-    # tệp này, nên hai nơi không thể lệch nhau.
+    # Configuration comes from the mounted file, not from environment
+    # variables: CI uses this exact file, so the two cannot drift apart.
     ports:
       - "6432:6432"
     volumes:
@@ -78,25 +78,26 @@ services:
       start_period: 10s
 
   lgtm:
-    # Một container gói sẵn bộ thu thập theo chuẩn mở cùng kho chỉ số, kho nhật
-    # ký, kho lần vết và giao diện xem.
+    # One container bundling an open-standard collector with metric, log and
+    # trace stores and a viewing interface.
     #
-    # ⚠️ Nhà phát hành nói rõ đây KHÔNG dành cho môi trường thật: dữ liệu không
-    #    bền và không tính tới quy mô. Nó chỉ tồn tại ở bậc 1–2 và ở CI.
+    # WARNING: the publisher states this is NOT for production - the data is
+    #          not durable and it does not consider scale. It exists only at
+    #          tiers 1-2 and in CI.
     #
-    # Giao diện: http://localhost:3001
+    # Interface: http://localhost:3001
     image: grafana/otel-lgtm:latest
     ports:
-      - "3001:3000"   # 3000 để dành cho Next
+      - "3001:3000"   # 3000 is reserved for Next
       - "4317:4317"   # OTLP/gRPC
       - "4318:4318"   # OTLP/HTTP
     volumes:
       - lgtm-data:/data
 
   caddy:
-    # Máy chủ trung gian. Lý do tồn tại ở bậc này chỉ có một: chứng minh luồng
-    # đồng bộ KHÔNG bị đệm. Cấu hình sai ở chỗ đó không sinh ra lỗi nào — triệu
-    # chứng duy nhất là "realtime không chạy".
+    # The reverse proxy. It exists at this tier for exactly one reason: to
+    # prove the sync stream is NOT buffered. Getting that wrong produces no
+    # error at all - the only symptom is "realtime does not work".
     image: caddy:2-alpine
     depends_on:
       - api

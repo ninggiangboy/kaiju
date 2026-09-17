@@ -1,5 +1,5 @@
-# Next dùng như SPA shell (ADR-0008). Tiến trình này chỉ phục vụ trang tiếp thị
-# và trang nhận magic link; toàn bộ khu vực app render ở phía client.
+# Next is used as an SPA shell (ADR-0008). This process only serves marketing
+# pages and the magic-link landing page; the whole app area renders client-side.
 apiVersion: apps/v1
 kind: Deployment
 metadata:

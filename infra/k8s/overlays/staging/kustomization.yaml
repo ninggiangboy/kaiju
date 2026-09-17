@@ -9,26 +9,13 @@ patches:
   - path: ingress-host.yaml
     target: { kind: Ingress }
 
-# Bí mật KHÔNG nằm trong repository. `kaiju-secrets` được tạo bởi cơ chế bí mật
-# của nền tảng (bộ điều khiển bí mật ngoài, hoặc `kubectl create secret` trong
-# bước triển khai có duyệt thủ công). Các khoá bắt buộc:
+# Secrets do NOT live in the repository - see the production overlay for the
+# list of required keys in `kaiju-secrets`.
 #
-#   KAIJU_DB_URL              KAIJU_MAIL_HOST
-#   KAIJU_DB_LISTEN_URL       KAIJU_MAIL_PORT
-#   KAIJU_DB_USER             KAIJU_MAIL_USER
-#   KAIJU_DB_PASSWORD         KAIJU_MAIL_PASSWORD
-#   KAIJU_REDIS_URL           KAIJU_MAIL_FROM
-#   KAIJU_PUBLIC_URL          KAIJU_OBJECT_STORAGE_ENDPOINT
-#   KAIJU_TOKEN_SIGNING_KEY   KAIJU_OBJECT_STORAGE_BUCKET
-#   OTEL_EXPORTER_OTLP_ENDPOINT
-#   KAIJU_OBJECT_STORAGE_ACCESS_KEY / _SECRET_KEY
-#
-# CON-25: KAIJU_DB_LISTEN_URL phải trỏ THẲNG tới cơ sở dữ liệu. Nếu về sau có
-# bộ gộp kết nối ở bậc này, KAIJU_DB_URL đổi còn biến trên thì không.
-
-# Bậc 3 thường chạy bằng compose trên một VPS (xem infra/staging/). Lớp phủ này
-# chỉ dùng khi muốn dựng staging trên cùng cụm với production — hữu ích để thử
-# chính các bản kê khai, không phải để thử ứng dụng.
+# Tier 3 normally runs through compose on a single VPS (see infra/staging/).
+# This overlay is only for standing staging up on the same cluster as
+# production, which is useful for exercising the manifests themselves rather
+# than the application.
 replicas:
   - { name: kaiju-api, count: 1 }
   - { name: kaiju-realtime, count: 1 }

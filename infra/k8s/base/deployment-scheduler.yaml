@@ -4,9 +4,9 @@ metadata:
   name: kaiju-scheduler
   namespace: kaiju
 spec:
-  # Hai bản để sẵn sàng cao, nhưng chỉ MỘT bản làm việc tại một thời điểm —
-  # khoá phân tán quyết định bản nào. Vai trò này không mở rộng: thêm bản chỉ
-  # để không chết, không để chạy nhanh hơn.
+  # Two replicas for availability, but only ONE works at a time - a distributed
+  # lock decides which. This role does not scale: extra replicas exist so it
+  # does not die, not so it runs faster.
   replicas: 2
   selector:
     matchLabels: { app.kubernetes.io/name: kaiju-scheduler }
@@ -29,8 +29,8 @@ spec:
           envFrom:
             - configMapRef: { name: kaiju-config }
             - secretRef: { name: kaiju-secrets }
-          # Khoẻ nghĩa là giữ được khoá HOẶC đang chờ khoá — bản đang chờ vẫn
-          # hoàn toàn khoẻ mạnh.
+          # Healthy means holding the lock OR waiting for it - a waiting
+          # replica is perfectly healthy.
           readinessProbe:
             httpGet: { path: /actuator/health/readiness, port: http }
             initialDelaySeconds: 10

@@ -239,7 +239,8 @@ from it. A separate follow-up commit is a follow-up that does not happen.
 
 | | |
 |---|---|
-| Documentation language | Vietnamese, with technical terms kept in English |
+| Documentation language (`docs/`) | Vietnamese, with technical terms kept in English |
+| **Everything outside `docs/`** | **English, including comments inside scripts and configuration** — shell, Makefile, compose, Dockerfiles, orchestration manifests, CI workflows, and source |
 | This file | English only |
 | Code, identifiers, file names | English |
 | **Commit messages** | **English**, Conventional Commits |

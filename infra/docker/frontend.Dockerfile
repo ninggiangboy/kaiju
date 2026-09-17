@@ -1,6 +1,6 @@
-# Next dùng như SPA shell (ADR-0008): không Server Action cho mutation nghiệp
-# vụ, không lấy dữ liệu nghiệp vụ ở server component. Tiến trình Node ở đây chỉ
-# phục vụ trang tiếp thị và trang nhận magic link.
+# Next is used as an SPA shell (ADR-0008): no Server Actions for business
+# mutations, no business data fetching in server components. The Node process
+# here only serves marketing pages and the magic-link landing page.
 
 FROM node:22-alpine AS deps
 WORKDIR /src
