@@ -25,9 +25,40 @@ permissions:
   packages: write
 
 jobs:
+  # Neither application has been written yet - the repository is still
+  # documentation and infrastructure. Without this guard, `Build images` fails
+  # on every single push to `dev`, and a workflow that is permanently red is a
+  # workflow whose next failure nobody looks at.
+  #
+  # Keyed on the build file rather than the directory, and it removes itself the
+  # day that file lands - the same rule `Detect changed directories` in ci.yml
+  # uses, so the two cannot disagree about when an application exists.
+  sources:
+    name: Applications present
+    runs-on: ubuntu-latest
+    outputs:
+      present: ${{ steps.check.outputs.present }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: check
+        run: |
+          set -euo pipefail
+          missing=()
+          [[ -f backend/settings.gradle.kts ]] || missing+=("backend/settings.gradle.kts")
+          [[ -f frontend/package.json ]]      || missing+=("frontend/package.json")
+          if [[ ${#missing[@]} -eq 0 ]]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::nothing to build or deploy yet - missing ${missing[*]}"
+          fi
+
   images:
     name: Build images
-    if: github.ref_name == 'dev' || startsWith(github.ref, 'refs/tags/')
+    needs: sources
+    if: |
+      needs.sources.outputs.present == 'true' &&
+      (github.ref_name == 'dev' || startsWith(github.ref, 'refs/tags/'))
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.meta.outputs.tag }}
@@ -132,7 +163,8 @@ jobs:
   # reconciles the tier 4 staging namespace on its own.
   deploy-staging:
     name: Deploy staging
-    if: github.ref_name == 'staging'
+    needs: sources
+    if: needs.sources.outputs.present == 'true' && github.ref_name == 'staging'
     runs-on: ubuntu-latest
     environment: staging
     permissions:
