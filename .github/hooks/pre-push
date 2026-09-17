@@ -19,7 +19,13 @@ while read -r local_ref local_sha remote_ref remote_sha; do
     case "$branch" in
         staging|production) protected=yes ;;
         dev)                protected=dev ;;
-        *)                  continue ;;
+        *)
+            # A topic branch. Nothing to refuse - but a pushed branch with no
+            # pull request is invisible, so say it here, where the push happens.
+            echo "pre-push: '$branch' pushed. Open its pull request into 'dev' now"
+            echo "          - a branch without one is reviewed by no one."
+            continue
+            ;;
     esac
 
     # Deleting an environment branch. These three record what an environment

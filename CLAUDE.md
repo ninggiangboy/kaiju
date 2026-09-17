@@ -266,6 +266,7 @@ from it. A separate follow-up commit is a follow-up that does not happen.
 | Code, identifiers, file names | English |
 | **Commit messages** | **English**, Conventional Commits |
 | Commit granularity | One commit per stage of work; never one large commit at the end |
+| Pushing a branch | A push and its pull request are one step. Never leave a pushed branch without one — see [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 | Feature status | Lives only in the [feature catalog](docs/03-features/README.md); never duplicated elsewhere |
 | Unsettled points | Write `> **Chưa chốt:** …` rather than guessing |
 | Diagrams | Mermaid |
