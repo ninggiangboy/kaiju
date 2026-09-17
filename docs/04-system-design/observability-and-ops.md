@@ -22,12 +22,17 @@ infra/
 
 ### Môi trường phát triển
 
-| Dịch vụ | Vai trò |
-|---|---|
-| PostgreSQL | Nguồn sự thật |
-| Redis | Cache, phát tán, khoá |
-| Bộ bắt email | Nhận mọi email gửi ra và hiển thị trên giao diện web. **Bắt buộc** vì đăng nhập phụ thuộc hoàn toàn vào email |
-| Máy chủ trung gian | Tuỳ chọn, dùng khi cần kiểm chứng hành vi đệm của luồng đồng bộ |
+| Dịch vụ | Vai trò | Mặc định bật |
+|---|---|---|
+| PostgreSQL | Nguồn sự thật | ✅ |
+| Máy chủ giao thức Redis | Cache, phát tán, khoá | ✅ |
+| Bộ bắt email | Nhận mọi email gửi ra và hiển thị trên giao diện web. **Bắt buộc** vì đăng nhập phụ thuộc hoàn toàn vào email | ✅ |
+| Hệ thống quan sát gói sẵn | Nhận tín hiệu theo chuẩn mở, có sẵn giao diện xem chỉ số, nhật ký và lần vết | ✅ |
+| Lưu trữ đối tượng | Tệp đính kèm, từ Phase 4 | ✅ từ Phase 4 |
+| Bộ gộp kết nối | Bắt sớm vi phạm về trạng thái phiên | ❌ hồ sơ tuỳ chọn |
+| Máy chủ trung gian | Kiểm chứng hành vi đệm của luồng đồng bộ | ❌ hồ sơ tuỳ chọn |
+
+Chi tiết từng thành phần và lý do: [infrastructure.md](infrastructure.md).
 
 Chạy một lệnh là có đủ môi trường. Backend và frontend chạy ngoài Docker khi phát
 triển, để giữ vòng lặp sửa và chạy lại nhanh.

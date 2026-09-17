@@ -22,8 +22,10 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-05 | Không dùng message broker ngoài và không dùng cơ chế bắt thay đổi ở tầng cơ sở dữ liệu | [ADR-0005](../adr/0005-outbox-db-job.md) |
 | CON-06 | Repository có đúng bốn thư mục cấp cao: `docs/`, `backend/`, `frontend/`, `infra/` | Quyết định của chủ dự án |
 | CON-61 | Định danh của thực thể do **client sinh**, kiểu định danh duy nhất có thành phần thời gian; server chỉ kiểm tra chứ không tự sinh | [infrastructure.md](../04-system-design/infrastructure.md#định-danh-do-client-sinh) |
-| CON-62 | Biến phiên cho cách ly tenant chỉ đặt ở **phạm vi giao dịch**; khoá tư vấn nếu dùng phải là loại gắn với giao dịch | [infrastructure.md](../04-system-design/infrastructure.md#nếu-về-sau-thêm-bộ-gộp-kết-nối) |
+| CON-62 | Biến phiên cho cách ly tenant chỉ đặt ở **phạm vi giao dịch**; khoá tư vấn nếu dùng phải là loại gắn với giao dịch | [infrastructure.md](../04-system-design/infrastructure.md#bộ-gộp-kết-nối) |
 | CON-63 | Tệp đính kèm lưu ở kho lưu trữ đối tượng, không lưu trong cơ sở dữ liệu; cơ sở dữ liệu chỉ giữ siêu dữ liệu | [infrastructure.md](../04-system-design/infrastructure.md#lưu-trữ-đối-tượng) |
+| CON-64 | Ứng dụng chỉ phát tín hiệu quan sát theo chuẩn mở, không gắn với một sản phẩm giám sát cụ thể | [infrastructure.md](../04-system-design/infrastructure.md#nguyên-tắc-ứng-dụng-chỉ-nói-một-giao-thức) |
+| CON-65 | Ngữ cảnh lần vết phải được truyền qua siêu dữ liệu của sự kiện để chuỗi không đứt ở ranh giới bất đồng bộ | [infrastructure.md](../04-system-design/infrastructure.md#nguyên-tắc-ứng-dụng-chỉ-nói-một-giao-thức) |
 
 ## Kiến trúc
 

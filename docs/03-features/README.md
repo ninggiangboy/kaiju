@@ -33,7 +33,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 
 | Phase | Tên | Số feature | TODO | IN_PROGRESS | DONE |
 |---|---|---|---|---|---|
-| 0 | Nền tảng | 52 | 52 | 0 | 0 |
+| 0 | Nền tảng | 55 | 55 | 0 | 0 |
 | 1 | Identity & Workspace | 33 | 33 | 0 | 0 |
 | 2 | Project | 12 | 12 | 0 | 0 |
 | 3 | Issue | 16 | 16 | 0 | 0 |
@@ -50,7 +50,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | 14 | Automation | 10 | 10 | 0 | 0 |
 | 15 | Bulk & Import | 7 | 7 | 0 | 0 |
 | 16 | Integration | 10 | 10 | 0 | 0 |
-| | **Tổng** | **229** | **229** | **0** | **0** |
+| | **Tổng** | **232** | **232** | **0** | **0** |
 
 ---
 
@@ -81,6 +81,9 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | KJ-PLT-19 | Test chặn thư viện bị cấm xuất hiện trên classpath | KJ-PLT-01 | TODO | Tránh có hai cơ chế chuyển tiếp sự kiện chạy song song |
 | KJ-PLT-20 | Chốt phiên bản nền và khung package của toàn backend | | TODO | Java 26, Spring Boot 4.x, Gradle 9.4+. Làm trước KJ-PLT-01 |
 | KJ-PLT-21 | Sinh định danh ở client và kiểm tra ở server | KJ-SYN-16 | TODO | Điều kiện để tạo bản ghi khi offline |
+| KJ-PLT-22 | Phát tín hiệu quan sát theo chuẩn mở, gồm truyền ngữ cảnh lần vết qua bảng chuyển tiếp | KJ-PLT-12, KJ-EVT-01 | TODO | Thiếu thì chuỗi lần vết đứt đúng chỗ cần nhìn nhất |
+| KJ-PLT-23 | Công việc CI chạy bộ kiểm thử tích hợp qua bộ gộp kết nối | KJ-PLT-17, KJ-PLT-08 | TODO | Cách duy nhất bắt tự động vi phạm CON-62 |
+| KJ-PLT-24 | Định tuyến riêng cho kết nối lắng nghe thông báo, không qua bộ gộp | KJ-EVT-04 | TODO | Viết từ đầu, không thêm lúc triển khai bộ gộp |
 
 ### Events & Outbox
 

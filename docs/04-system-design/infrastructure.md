@@ -31,7 +31,8 @@ và xử lý khi hỏng. Vì vậy:
 | Hệ thống gửi email | 1 | ✅ **Đăng nhập phụ thuộc hoàn toàn** |
 | Lưu trữ đối tượng | 4 | ✅ Cho tệp đính kèm |
 | Quét mã độc cho tệp tải lên | 4 | ⚠️ Có điểm móc từ phase 4; bật thật khi mở cho người ngoài |
-| Hệ thống thu thập nhật ký và chỉ số | 0 ở mức tối thiểu, đầy đủ dần | ✅ |
+| Hệ thống thu thập nhật ký, chỉ số và lần vết | 0 | ✅ Kiến trúc bất đồng bộ gần như không gỡ lỗi được nếu thiếu lần vết |
+| Bộ gộp kết nối cơ sở dữ liệu | 0 ở môi trường phát triển và CI, chưa ở môi trường thật | ⚠️ Không phải để chịu tải, mà để **bắt sớm vi phạm** |
 | Máy chủ tìm kiếm riêng | Có thể **không bao giờ** | ❌ Chỉ khi tìm kiếm trên cơ sở dữ liệu không còn đủ |
 | Message broker | Không | ❌ [ADR-0005](../adr/0005-outbox-db-job.md) |
 | Kho dữ liệu thứ hai | Không | ❌ [ADR-0002](../adr/0002-postgres-only.md) |
@@ -98,9 +99,22 @@ tổng kết nối = Σ (số instance của mỗi vai trò × kích thước po
 Con số này phải nhỏ hơn giới hạn của máy chủ cơ sở dữ liệu. Đây là thứ hay bị
 quên cho tới khi thêm instance rồi mới thấy lỗi hết kết nối.
 
-### Nếu về sau thêm bộ gộp kết nối
+### Bộ gộp kết nối
 
-Chưa cần ở giai đoạn đầu, nhưng **phải biết trước** vì nó ảnh hưởng tới thiết kế:
+> **Đã thay đổi (2026-09-17):** bản đầu của tài liệu này xếp bộ gộp kết nối vào
+> nhóm "cố tình chưa thêm", chỉ xem xét khi ngân sách kết nối chạm giới hạn. Lý do
+> đó vẫn đúng **về mặt chịu tải**, nhưng bỏ sót một lý do khác và quan trọng hơn ở
+> giai đoạn này: nó là cách duy nhất bắt được vi phạm `CON-62` một cách tự động.
+
+Ở môi trường thật thì **chưa cần** — ngân sách kết nối hiện tại còn xa giới hạn.
+
+Nhưng nó có mặt **từ Phase 0 ở môi trường phát triển và CI**, không phải để chịu
+tải mà để **bắt sớm**. Lý do: các ràng buộc dưới đây là loại vi phạm hoàn toàn im
+lặng — code chạy đúng suốt nhiều tháng, rồi hỏng vào đúng ngày thêm bộ gộp kết nối
+vì lý do chịu tải, và lúc đó thì đã có hàng nghìn dòng code dựa vào giả định sai.
+
+| Cơ chế đang dùng | Ở chế độ gộp theo giao dịch |
+|---|---|
 
 | Cơ chế đang dùng | Ở chế độ gộp theo giao dịch |
 |---|---|
@@ -110,10 +124,23 @@ Chưa cần ở giai đoạn đầu, nhưng **phải biết trước** vì nó �
 | Khoá tư vấn ở mức phiên | ❌ Không hoạt động — phải dùng loại khoá ở mức giao dịch |
 | Đặt biến ở mức phiên | ❌ Không hoạt động |
 
-Hai hệ quả cần tuân thủ **ngay từ bây giờ**, vì sửa sau sẽ khó:
+Hai hệ quả cần tuân thủ **ngay từ bây giờ** (`CON-62`):
 
 - Chỉ đặt biến phiên bằng cơ chế **phạm vi giao dịch**, không bao giờ ở phạm vi phiên
 - Nếu cần khoá tư vấn thì dùng loại **gắn với giao dịch**
+
+#### Cách đưa vào
+
+| Nơi | Cách dùng |
+|---|---|
+| Môi trường phát triển | Một hồ sơ **tuỳ chọn** trong tệp compose. Mặc định **tắt** — bật mặc định sẽ làm mọi phiên gỡ lỗi khó hơn mà đổi lại rất ít |
+| CI | Một công việc riêng chạy **toàn bộ bộ kiểm thử tích hợp qua bộ gộp ở chế độ gộp theo giao dịch**. Đây là chỗ giá trị thật nằm ở đó |
+| Môi trường thật | Chưa dùng |
+
+Kết nối lắng nghe thông báo **phải đi thẳng tới cơ sở dữ liệu** kể cả khi có bộ
+gộp. Việc định tuyến riêng cho kết nối này phải được viết ngay từ Phase 0, không
+phải thêm vào lúc triển khai bộ gộp — và chạy CI qua bộ gộp chính là thứ chứng
+minh nó đã được viết đúng.
 
 ---
 
@@ -231,12 +258,62 @@ nguồn sự thật** — mất chỉ mục thì dựng lại được từ cơ 
 
 ## Quan sát hệ thống
 
-| Thành phần | Mức tối thiểu ở Phase 0 | Đầy đủ dần |
-|---|---|---|
-| Nhật ký | Ghi có cấu trúc ra đầu ra chuẩn | Thu thập tập trung, tìm kiếm được |
-| Chỉ số | Điểm cuối phơi bày chỉ số | Thu thập và vẽ biểu đồ, có cảnh báo |
-| Lần vết | Định danh tương quan trong nhật ký | Lần vết phân tán đầy đủ |
-| Kiểm tra sức khoẻ | Theo từng vai trò ứng dụng | |
+### Vì sao cần đủ cả ba tín hiệu ngay từ Phase 0
+
+Trong một ứng dụng thông thường, lần vết phân tán là thứ xa xỉ. **Ở đây thì
+không.** Một thao tác của người dùng đi qua bốn ranh giới bất đồng bộ trước khi
+tới được máy của người khác:
+
+```
+request → ghi và sinh sự kiện → tiến trình chuyển tiếp → phát tán → luồng đồng bộ
+```
+
+Câu hỏi "vì sao người này không nhận được thông báo" **không trả lời được bằng
+nhật ký của một tiến trình**. Phải lần được cả chuỗi. Vì thế lần vết ở đây thuộc
+nhóm bắt buộc, không phải nhóm làm sau.
+
+### Nguyên tắc: ứng dụng chỉ nói một giao thức
+
+Ứng dụng **chỉ phát tín hiệu theo chuẩn mở**, không gắn với sản phẩm nào. Hệ quả:
+đổi hệ thống thu thập chỉ là đổi địa chỉ đích, không phải sửa code.
+
+| Tín hiệu | Ứng dụng làm gì |
+|---|---|
+| Chỉ số | Đo bằng tầng trừu tượng của framework, xuất theo chuẩn mở |
+| Nhật ký | Ghi có cấu trúc, mang định danh tương quan và định danh workspace |
+| Lần vết | Sinh và truyền ngữ cảnh lần vết, **kể cả qua bảng chuyển tiếp sự kiện** |
+
+Mục cuối là mục cần chú ý: ngữ cảnh lần vết phải được nhét vào siêu dữ liệu của
+sự kiện, nếu không chuỗi bị đứt ngay tại ranh giới bất đồng bộ — đúng chỗ cần nhìn nhất.
+
+### Môi trường phát triển
+
+Dùng **một container duy nhất** gói sẵn bộ thu thập theo chuẩn mở cùng kho chỉ số,
+kho nhật ký, kho lần vết và giao diện xem. Chạy lên là có ngay biểu đồ và lần vết,
+không phải cấu hình gì.
+
+| | |
+|---|---|
+| Ưu | Một dòng trong tệp compose, dựng lại được bất cứ lúc nào |
+| Nhược | **Nhà phát hành nói rõ là không dành cho môi trường thật** — dữ liệu không bền, không tính tới quy mô |
+
+Vì vậy nó chỉ nằm ở môi trường phát triển và CI.
+
+### Môi trường thật
+
+> **Chưa chốt:** tự vận hành từng thành phần, hay dùng dịch vụ có sẵn.
+
+Quyết định này **để lại tới khi có môi trường thật đầu tiên**, và nó không chặn
+việc gì: vì ứng dụng chỉ phát theo chuẩn mở, cả hai hướng đều dùng được mà không
+phải sửa code. Hai hướng:
+
+| Hướng | Đánh đổi |
+|---|---|
+| Dịch vụ có sẵn | Không phải vận hành, có bậc miễn phí đủ cho dự án cá nhân; đổi lại dữ liệu ra ngoài và có giới hạn lưu giữ |
+| Tự vận hành | Kiểm soát hoàn toàn; đổi lại phải vận hành thêm vài dịch vụ, mỗi cái cần kho lưu trữ đối tượng riêng |
+
+Với quy mô dự án này, **dịch vụ có sẵn là lựa chọn hợp lý hơn** cho tới khi có lý
+do cụ thể để tự vận hành.
 
 Ba chỉ số sống còn và ngưỡng cảnh báo: [observability-and-ops.md](observability-and-ops.md#chỉ-số).
 
@@ -316,6 +393,7 @@ Bảng này quyết định thứ tự ưu tiên khi có sự cố.
 | Máy chủ trung gian | Không truy cập được từ bên ngoài | 🔴 Trọng yếu |
 | Lưu trữ đối tượng | Không tải lên hay tải xuống tệp được; phần còn lại hoạt động bình thường | 🟡 Suy giảm |
 | Hệ thống quan sát | Mất khả năng nhìn thấy, ứng dụng vẫn chạy | 🟡 Suy giảm |
+| Bộ gộp kết nối, khi đã dùng ở môi trường thật | Ứng dụng mất kết nối tới cơ sở dữ liệu | 🔴 Trọng yếu — đây là cái giá của việc thêm nó |
 | Máy chủ tìm kiếm, nếu có | Tìm kiếm lùi về cơ sở dữ liệu hoặc ngừng hoạt động | 🟢 Cục bộ |
 
 Điểm đáng chú ý: **hệ thống gửi email nằm cùng mức trọng yếu với cơ sở dữ liệu**.
@@ -330,7 +408,8 @@ phải được phản ánh trong cách giám sát chứ không chỉ trong tài
 |---|---|
 | Message broker | Không dự kiến — [ADR-0005](../adr/0005-outbox-db-job.md) |
 | Kho dữ liệu thứ hai | Không dự kiến — [ADR-0002](../adr/0002-postgres-only.md) |
-| Bộ gộp kết nối cơ sở dữ liệu | Khi ngân sách kết nối chạm giới hạn; kèm theo các hệ quả đã nêu ở trên |
+| Bộ gộp kết nối ở **môi trường thật** | Khi ngân sách kết nối chạm giới hạn. Ở môi trường phát triển và CI thì đã có, xem mục trên |
+| Hệ thống quan sát tự vận hành ở môi trường thật | Khi có lý do cụ thể để không dùng dịch vụ có sẵn |
 | Máy chủ tìm kiếm riêng | Khi có số đo chứng minh tìm kiếm trên cơ sở dữ liệu không đủ |
 | Mạng phân phối nội dung | Khi tải tệp đính kèm trở thành vấn đề về độ trễ |
 | Kho bí mật chuyên dụng | Khi có nhiều hơn một môi trường thật |
