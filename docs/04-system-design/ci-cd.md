@@ -167,8 +167,15 @@ Chạy theo lịch hằng tuần, và chạy thêm khi tệp khai báo phụ thu
 
 ## Cổng
 
-Một công việc duy nhất, chạy sau tất cả, và là **kiểm tra bắt buộc duy nhất** được
-khai báo trong cấu hình bảo vệ nhánh.
+Một công việc duy nhất, chạy sau tất cả, và là **kiểm tra bắt buộc duy nhất áp cho
+mọi nhánh** trong cấu hình bảo vệ nhánh.
+
+> **Đã thay đổi (2026-09-18):** trước đây câu này viết `Gate` là kiểm tra bắt buộc
+> *duy nhất*, không kèm điều kiện. Nay hai nhánh môi trường có thêm một kiểm tra bắt
+> buộc thứ hai là `Promotion order` (xem ngay bên dưới). Lý do ban đầu vẫn nguyên
+> giá trị và vẫn được giữ: thêm một công việc vào `ci.yml` **không** kéo theo việc
+> sửa cấu hình bảo vệ nhánh. Kiểm tra thứ hai này không nằm trong `ci.yml` và chỉ áp
+> cho `staging` với `production`.
 
 Nó áp dụng đúng một luật:
 
@@ -179,6 +186,21 @@ Nó áp dụng đúng một luật:
 Lý do viết tường minh như vậy: mặc định của phần lớn cấu hình CI coi công việc bị
 bỏ qua là đã qua. Kết hợp với lọc theo đường dẫn, đó là cách một thay đổi backend
 merge được mà chưa từng chạy một test nào — vì bộ lọc đường dẫn viết sai.
+
+### Thứ tự thăng cấp
+
+Một cổng thứ hai, nhỏ hơn, nằm trong `pr-hygiene.yml`: pull request vào
+`production` chỉ được đến từ `staging`, và vào `staging` chỉ được đến từ `dev`
+([ADR-0015](../adr/0015-branch-per-environment.md)).
+
+Nó nằm ở đây chứ không nằm trong cấu hình bảo vệ nhánh vì GitHub chỉ bắt được
+"nhánh này phải đi qua pull request", **không** nói được pull request ấy đến từ
+đâu. Thiếu nó thì một pull request thẳng từ `dev` vào `production` vẫn merge được
+và bỏ qua toàn bộ bậc 3.
+
+Hệ quả phải chấp nhận: **không có đường tắt cho bản vá khẩn**. Sửa gấp cho
+production vẫn phải đi `dev` → `staging` → `production`. Đó là chủ đích — bản vá
+khẩn là lúc dễ làm hỏng nhất, và cũng là lúc ít ai chịu chờ bậc 3 nhất.
 
 ---
 

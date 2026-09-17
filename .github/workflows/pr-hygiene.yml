@@ -34,3 +34,32 @@ jobs:
             exit 1
           fi
           echo "PASS: $TITLE"
+
+  # Environments are promoted in order (ADR-0015): dev -> staging -> production.
+  #
+  # This lives here rather than in branch protection because GitHub can require
+  # that a branch only take pull requests - it cannot say WHICH branch those may
+  # come from. Without this check, a pull request straight from `dev` into
+  # `production` is accepted and skips tier 3 entirely.
+  promotion:
+    name: Promotion order
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the source branch
+        env:
+          BASE: ${{ github.event.pull_request.base.ref }}
+          HEAD: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          case "$BASE" in
+            production) expected=staging ;;
+            staging)    expected=dev ;;
+            *)          echo "PASS: $BASE is not an environment branch"; exit 0 ;;
+          esac
+          if [[ "$HEAD" != "$expected" ]]; then
+            echo "FAIL: $BASE only accepts pull requests from '$expected', got '$HEAD'"
+            echo "  Environments are promoted in order: dev -> staging -> production."
+            echo "  A fix for production goes to dev first, then through staging."
+            exit 1
+          fi
+          echo "PASS: $HEAD -> $BASE"
