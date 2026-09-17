@@ -1,0 +1,56 @@
+# Tier 4. The deployed version lives in the overlay's `images:` block, so
+# deploying is a merged pull request and rolling back is `git revert` (CON-77).
+# No pipeline ever issues an imperative command against this cluster.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kaiju-production
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: kaiju
+  source:
+    repoURL: https://github.com/OWNER/kaiju.git
+    targetRevision: main
+    path: infra/k8s/overlays/production
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kaiju
+  syncPolicy:
+    # Automated is correct here BECAUSE the human gate is upstream: the gate is
+    # merging the pull request that changes the image tag, not clicking Sync.
+    automated:
+      prune: true
+      # Revert anything changed directly against the cluster. Drift is a bug:
+      # git is the only place the desired state is allowed to come from.
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - PruneLast=true
+    retry:
+      limit: 3
+      backoff: { duration: 30s, factor: 2, maxDuration: 5m }
+
+  # WITHOUT THIS, ARGO CD AND THE AUTOSCALER FIGHT.
+  #
+  # The manifests declare `replicas`, and the horizontal autoscaler changes that
+  # same field at runtime. With selfHeal on, Argo would see the autoscaled value
+  # as drift and reset it to the manifest value - undoing every scale-up, within
+  # seconds, silently, and only ever under real load.
+  #
+  # The replica count for an autoscaled role is owned by the autoscaler. The
+  # manifest value is only the starting point.
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      name: kaiju-api
+      jsonPointers: ["/spec/replicas"]
+    - group: apps
+      kind: Deployment
+      name: kaiju-realtime
+      jsonPointers: ["/spec/replicas"]
+    - group: apps
+      kind: Deployment
+      name: kaiju-worker
+      jsonPointers: ["/spec/replicas"]

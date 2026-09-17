@@ -1,0 +1,23 @@
+# Argo CD owns everything that runs inside the tier 4 cluster, and nothing else
+# (ADR-0014). OpenTofu must never create Kubernetes objects: if it did, the two
+# would contend for the same object and fight in a loop.
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: kaiju
+  namespace: argocd
+spec:
+  description: Kaiju - tier 4
+  sourceRepos:
+    - https://github.com/OWNER/kaiju.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: kaiju
+    - server: https://kubernetes.default.svc
+      namespace: kaiju-staging
+  # Nothing in this project needs a cluster-scoped resource. Keeping the list
+  # empty means a manifest that suddenly wants one fails loudly in review
+  # rather than quietly gaining cluster-wide reach.
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+    - { group: "*", kind: "*" }

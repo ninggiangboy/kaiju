@@ -237,8 +237,14 @@ chạy lúc ứng dụng khởi động, ở bất kỳ bậc nào — xem
 
 Ở bậc 4, thứ tự này **do engine cưỡng chế** chứ không còn là một chuỗi lệnh xếp
 cạnh nhau: migration là `PreSync` hook, `worker` và `scheduler` ở sync wave 1,
-`api` và `realtime` ở wave 2, kiểm tra sau triển khai ở `PostSync`. Ở bậc 3 nó vẫn
-là trình tự trong playbook, vì compose không có khái niệm tương đương.
+`api` và `realtime` ở wave 2. Ở bậc 3 nó vẫn là trình tự trong playbook, vì compose
+không có khái niệm tương đương.
+
+> **Chưa chốt:** kiểm tra sau triển khai ở bậc 4 chưa chạy được như một `PostSync`
+> hook. `scripts/smoke.sh` nằm ngoài thư mục gốc của overlay nên bộ dựng manifest
+> không nạp được nó vào một `ConfigMap` mà không nới lỏng ràng buộc nạp tệp — và
+> Argo CD cũng phải được cấu hình nới lỏng y hệt. Chép script thành bản thứ hai thì
+> vi phạm CON-72. Ở bậc 3 kiểm tra này vẫn chạy bình thường trong playbook.
 
 > **Đã thay đổi (2026-09-18):** trước đây thứ tự này chỉ được ghi thành chú thích
 > trong `deploy-staging.sh` và mấy dòng `echo` trong pipeline — tức là không có gì
