@@ -28,7 +28,7 @@ permissions:
 
 env:
   JAVA_VERSION: "26"
-  NODE_VERSION: "22"
+  NODE_VERSION: "26"
 
 jobs:
   # --------------------------------------------------------------------
