@@ -1,0 +1,7 @@
+# Tier 3 runs compose on a single VPS, so this stack exists for the REAL
+# services around it - a real database, real object storage, real mail (CON-73).
+domain            = "staging.kaiju.example.com"
+vpc_id            = "vpc-REPLACE"
+subnet_ids        = ["subnet-REPLACE", "subnet-REPLACE"]
+db_instance_class = "db.t4g.small"
+db_multi_az       = false

@@ -1,0 +1,7 @@
+domain            = "kaiju.example.com"
+vpc_id            = "vpc-REPLACE"
+subnet_ids        = ["subnet-REPLACE", "subnet-REPLACE"]
+db_instance_class = "db.t4g.medium"
+# A standby in a second availability zone. This is the one difference from
+# staging that costs real money and the one that matters.
+db_multi_az = true
