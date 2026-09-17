@@ -56,6 +56,20 @@ jobs:
             staging)    expected=dev ;;
             *)          echo "PASS: $BASE is not an environment branch"; exit 0 ;;
           esac
+          # A rollback is the one exemption (ADR-0016). It carries no new code -
+          # it puts the environment back in the state it was just running, so
+          # the reason this check exists does not apply to it. Making a rollback
+          # travel dev -> staging -> production would add two CI runs and a tier
+          # 3 deploy to the length of an incident.
+          #
+          # This covers revert only. An urgent FIX is new code, and new code has
+          # no exemption.
+          if [[ "$HEAD" == rollback/* ]]; then
+            echo "PASS: $HEAD is a rollback (ADR-0016)"
+            echo "  Remember step 4: bring the revert back to dev, or the next"
+            echo "  promotion will not restore these commits."
+            exit 0
+          fi
           if [[ "$HEAD" != "$expected" ]]; then
             echo "FAIL: $BASE only accepts pull requests from '$expected', got '$HEAD'"
             echo "  Environments are promoted in order: dev -> staging -> production."
@@ -63,3 +77,33 @@ jobs:
             exit 1
           fi
           echo "PASS: $HEAD -> $BASE"
+
+  # Branch naming (ADR-0016). The prefix set is the same one the title check
+  # uses, so a branch name and its pull request title always agree on the type.
+  #
+  # NOTE: this job cannot be a required check. `dev` takes a direct push from
+  # the release pipeline (the image-tag pin commit), and required status checks
+  # block direct pushes too - so requiring this would break the pipeline. It
+  # shows up red on the pull request and is not enforced beyond that.
+  branch:
+    name: Branch name
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the branch name
+        env:
+          HEAD: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          case "$HEAD" in
+            dev|staging|production)
+              echo "PASS: $HEAD is an environment branch (promotion)"; exit 0 ;;
+            dependabot/*|claude/*)
+              echo "PASS: $HEAD is generated, not hand-named"; exit 0 ;;
+          esac
+          pattern='^(feat|fix|docs|refactor|test|chore|perf|build|ci|infra|rollback)/[a-z0-9._-]+$'
+          if [[ ! "$HEAD" =~ $pattern ]]; then
+            echo "FAIL: branch name is not in the expected form: $HEAD"
+            echo "  Expected <type>/<slug>, for example feat/kj-sync-07-catch-up-cursor"
+            exit 1
+          fi
+          echo "PASS: $HEAD"
