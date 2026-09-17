@@ -82,6 +82,11 @@ check: check-docs check-versions check-compose check-k8s check-ci check-tofu che
 check-docs: ## Links, heading anchors, the feature table, and no DDL under docs/
 	python3 ../.github/scripts/check-docs.py
 
+.PHONY: hooks
+hooks: ## Point git at the tracked hooks; run once per clone
+	git -C .. config core.hooksPath .github/hooks
+	@echo "  pre-push installed - refuses a direct push to an environment branch"
+
 .PHONY: check-versions
 check-versions: ## The CI toolchain and the container base images agree on a version
 	python3 ../.github/scripts/check-runtime-versions.py

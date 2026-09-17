@@ -1,0 +1,62 @@
+#!/bin/sh
+#
+# Refuses a push that the branch protection on the server would refuse anyway,
+# and says so here instead of after the upload. It also carries the one rule the
+# server cannot express: `dev` takes direct pushes (the release pipeline needs
+# that), but a person should still arrive through a pull request.
+#
+# Install: make -C infra hooks
+# Bypass:  git push --no-verify   (deliberate, and visible in the reflog)
+#
+# The rules and the reasoning: CONTRIBUTING.md, docs/04-system-design/git-flow.md
+
+ZERO=0000000000000000000000000000000000000000
+status=0
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+    branch=${remote_ref#refs/heads/}
+
+    case "$branch" in
+        staging|production) protected=yes ;;
+        dev)                protected=dev ;;
+        *)                  continue ;;
+    esac
+
+    # Deleting an environment branch. These three record what an environment
+    # ran; losing one loses that record.
+    if [ "$local_sha" = "$ZERO" ]; then
+        echo "pre-push: refusing to delete '$branch' - environment branches are permanent."
+        status=1
+        continue
+    fi
+
+    # Rewriting history on an environment branch. Detected rather than assumed:
+    # if what the remote has is not an ancestor of what we are sending, this
+    # push drops commits the remote already published.
+    if [ "$remote_sha" != "$ZERO" ] && git cat-file -e "$remote_sha" 2>/dev/null; then
+        if ! git merge-base --is-ancestor "$remote_sha" "$local_sha" 2>/dev/null; then
+            echo "pre-push: refusing to rewrite '$branch' - this push is not a fast-forward."
+            echo "          Environment branches are never force-pushed or rebased."
+            status=1
+            continue
+        fi
+    fi
+
+    if [ "$protected" = "yes" ]; then
+        echo "pre-push: refusing to push straight to '$branch'."
+        echo "          Environments are promoted by pull request:"
+        echo "            dev --PR--> staging --PR--> production"
+        echo "          Rolling back is the exception - branch from '$branch' as"
+        echo "          rollback/<slug>, revert, and open a pull request into it."
+        status=1
+        continue
+    fi
+
+    # `dev` only warns. The release pipeline pushes the image-tag pin commit
+    # directly, so this cannot be a refusal without breaking it.
+    echo "pre-push: note - pushing straight to 'dev'."
+    echo "          Changes are meant to arrive by pull request from a <type>/<slug>"
+    echo "          branch. See CONTRIBUTING.md."
+done
+
+exit $status

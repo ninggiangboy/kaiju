@@ -15,7 +15,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 DOCS = ROOT / "docs"
-MD = sorted(DOCS.rglob("*.md")) + [ROOT / "CLAUDE.md"]
+# The three root files are checked too. They are the ones a newcomer reads
+# first, and a broken link there is the worst place to have one (CON-85).
+MD = sorted(DOCS.rglob("*.md")) + [
+    ROOT / "CLAUDE.md",
+    ROOT / "README.md",
+    ROOT / "CONTRIBUTING.md",
+]
 
 errors: list[str] = []
 
