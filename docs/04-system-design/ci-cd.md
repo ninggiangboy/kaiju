@@ -211,6 +211,12 @@ nhận trạng thái đó.
 định một mình. Nó khoá theo *tệp build* chứ không theo thư mục là có chủ đích —
 một thư mục khung rỗng không được bật lại các kiểm tra trước khi có thứ để kiểm tra.
 
+Quy trình phát hành dùng **đúng điều kiện đó**, vì cùng một lý do: chưa có mã
+nguồn thì việc dựng ảnh hỏng ở mọi lần đẩy lên `dev`, và một quy trình đỏ thường
+trực là quy trình mà lần hỏng thật tiếp theo sẽ không ai nhìn. Hai nơi khoá theo
+cùng một tệp để chúng không thể bất đồng về thời điểm một ứng dụng được coi là
+đã tồn tại.
+
 ### Thứ tự thăng cấp
 
 Một cổng thứ hai, nhỏ hơn, nằm trong `pr-hygiene.yml`: pull request vào
