@@ -41,6 +41,10 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-78 | Makefile và script trong `infra/scripts/` **không được ghi** vào trạng thái mong muốn của bậc 3-4. Chúng chỉ được đọc trạng thái và chỉ được thao tác ở bậc 1-2 | [ADR-0014](../adr/0014-declarative-infra-gitops.md) |
 | CON-79 | Mọi `Deployment` ở bậc 4 phải có **ràng buộc trải bản sao theo node** và một ngân sách gián đoạn. Thiếu ràng buộc trải, hai bản sao rơi vào cùng một node và ngân sách gián đoạn sẽ chặn việc rút tải node đó vĩnh viễn | [ADR-0014](../adr/0014-declarative-infra-gitops.md) |
 | CON-80 | Chiều đi xuống của migration **được phép ở bậc 3** qua đường có ghi vết, vì đó là nơi duy nhất kiểm chứng được phần lùi trước khi phải tin vào nó. Ở bậc 4 vẫn cấm theo CON-75 | [ADR-0014](../adr/0014-declarative-infra-gitops.md) |
+| CON-81 | Mọi thay đổi vào `dev` đi qua một **nhánh ngắn hạn cắt từ `dev`**, đặt tên `<type>/<slug>` với `type` thuộc đúng tập type của Conventional Commits. Ngoại lệ duy nhất là commit ghim thẻ ảnh do pipeline đẩy thẳng | [ADR-0016](../adr/0016-git-branching-workflow.md) |
+| CON-82 | Merge dùng **merge commit ở cả ba cấp**; squash merge và rebase merge bị tắt ở cấp repository. Cả hai đều sinh mã băm mới, làm nhánh nguồn không còn là tổ tiên của nhánh đích — thứ mà toàn bộ cơ chế thăng cấp dựa vào | [ADR-0016](../adr/0016-git-branching-workflow.md) |
+| CON-83 | Ba nhánh môi trường **không bao giờ** bị rebase, force-push, xoá, hay nhận cherry-pick. Nhánh làm việc thì được rebase thoải mái khi chưa merge | [git-flow.md](../04-system-design/git-flow.md#điều-cấm) |
+| CON-84 | `rollback/*` là nhánh duy nhất được mở pull request thẳng vào một nhánh môi trường. Kèm nghĩa vụ **bắt buộc**: commit revert phải được đưa về `dev`, vì lần thăng cấp sau sẽ không mang các commit đã bị lùi trở lại | [ADR-0016](../adr/0016-git-branching-workflow.md) |
 
 > **Ghi chú (2026-09-17) — CON-68.** Bản trước của ràng buộc này chỉ áp dụng cho
 > bậc `production`, và chấp nhận việc bậc 1–3 chạy migration lúc ứng dụng khởi

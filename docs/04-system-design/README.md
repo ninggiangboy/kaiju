@@ -23,6 +23,7 @@ và chỉ ra cách áp dụng, không lặp lại phần biện luận.
 | [identity-and-permission.md](identity-and-permission.md) | Cơ chế magic link, phiên, mô hình danh tính hai tầng, mặt nạ quyền |
 | [infrastructure.md](infrastructure.md) | Thành phần hạ tầng cần thiết, khi nào cần, mất thì sao, và các nhóm thư viện phụ thuộc |
 | [environments.md](environments.md) | Bốn bậc môi trường, mỗi bậc bắt được loại lỗi gì |
+| [git-flow.md](git-flow.md) | Quy trình nhánh: nhánh nào tồn tại, merge kiểu gì, thăng cấp và quay lui |
 | [ci-cd.md](ci-cd.md) | Quy trình tích hợp liên tục, cổng chặn merge, đường đi lên các bậc |
 | [observability-and-ops.md](observability-and-ops.md) | Nội dung `infra/`, nhật ký, chỉ số, cấu hình, vận hành |
 | [testing-strategy.md](testing-strategy.md) | Các tầng kiểm thử và những thứ bắt buộc phải có test riêng |

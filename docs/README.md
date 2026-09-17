@@ -24,7 +24,7 @@ với tên class, table và API trong code.
 Ngoài ra:
 
 - **[Glossary](glossary.md)** — từ điển thuật ngữ dùng chung. Đọc trước tiên.
-- **[ADR](adr/)** — 12 quyết định kiến trúc đã chốt, mỗi quyết định một file.
+- **[ADR](adr/)** — 16 quyết định kiến trúc đã chốt, mỗi quyết định một file.
 
 ---
 
@@ -34,7 +34,7 @@ Ngoài ra:
 
 1. [Glossary](glossary.md) — nắm từ vựng, đặc biệt cặp `account` / `member`
 2. [Brief](01-brief/) — hiểu dự án đang giải quyết gì và với nguyên tắc nào
-3. [ADR](adr/) — đọc lướt 12 quyết định để biết cái gì đã chốt và vì sao
+3. [ADR](adr/) — đọc lướt 16 quyết định để biết cái gì đã chốt và vì sao
 4. [System Design → README](04-system-design/) rồi [architecture.md](04-system-design/architecture.md)
 5. [Roadmap](03-features/roadmap.md) — biết đang ở đâu và sắp làm gì
 

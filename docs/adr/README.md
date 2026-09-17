@@ -29,6 +29,7 @@ hiểu vì sao hệ thống trông như hiện tại thay vì trông như cách 
 | [0013](0013-explicit-two-way-migration.md) | Migration chạy tường minh và đi được hai chiều, không chạy lúc ứng dụng khởi động | Accepted |
 | [0014](0014-declarative-infra-gitops.md) | Hạ tầng khai báo bằng OpenTofu, Ansible và Argo CD; bậc 4 triển khai theo GitOps | Accepted — cơ chế thăng cấp thay bởi [0015](0015-branch-per-environment.md) |
 | [0015](0015-branch-per-environment.md) | Mỗi môi trường là một nhánh, thăng cấp bằng pull request giữa các nhánh | Accepted |
+| [0016](0016-git-branching-workflow.md) | Nhánh làm việc ngắn hạn, merge commit ở mọi cấp, và một ngoại lệ cho quay lui | Accepted |
 
 ---
 

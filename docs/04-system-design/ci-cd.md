@@ -3,7 +3,7 @@
 Quy trình chạy trên mỗi pull request và mỗi lần phát hành: kiểm tra gì, theo thứ
 tự nào, chặn ở đâu, và triển khai lên bậc nào.
 
-**Liên quan:** [environments.md](environments.md) · [testing-strategy.md](testing-strategy.md) · [infrastructure.md](infrastructure.md) · [observability-and-ops.md](observability-and-ops.md)
+**Liên quan:** [git-flow.md](git-flow.md) · [environments.md](environments.md) · [testing-strategy.md](testing-strategy.md) · [infrastructure.md](infrastructure.md) · [observability-and-ops.md](observability-and-ops.md)
 
 ---
 
@@ -202,6 +202,16 @@ Hệ quả phải chấp nhận: **không có đường tắt cho bản vá kh�
 production vẫn phải đi `dev` → `staging` → `production`. Đó là chủ đích — bản vá
 khẩn là lúc dễ làm hỏng nhất, và cũng là lúc ít ai chịu chờ bậc 3 nhất.
 
+Kiểm tra này có **đúng một ngoại lệ**: nhánh tên `rollback/*` được vào thẳng nhánh
+môi trường. Nó chỉ mang commit revert, tức là không có code mới nào — chi tiết và
+bốn bước bắt buộc nằm ở [git-flow.md](git-flow.md#quay-lui).
+
+> **Đã thay đổi (2026-09-18):** khi mới thêm, kiểm tra này không có ngoại lệ nào.
+> Điều đó chặn luôn cả pull request quay lui, nghĩa là cơ chế an toàn quan trọng
+> nhất của bậc 4 không có đường thi hành. [ADR-0016](../adr/0016-git-branching-workflow.md)
+> miễn trừ `rollback/*`, và chỉ `rollback/*`. Bản vá khẩn vẫn không có ngoại lệ —
+> câu ngay phía trên vẫn nguyên giá trị.
+
 ---
 
 ## Phát hành và triển khai
@@ -301,6 +311,9 @@ bậc 4 nó **không được dùng**: sửa tiến bằng một migration mới
 Thay đổi phá vỡ cấu trúc dữ liệu phải chia làm ba bước qua ba lần phát hành: thêm
 cái mới → chuyển dữ liệu và chuyển code → xoá cái cũ. Trong ba lần đó, **chỉ lần
 thứ ba là không quay lui được**.
+
+Thao tác git cụ thể — `git revert -m 1` trên nhánh môi trường, và nghĩa vụ mang
+commit revert ấy về `dev` — nằm ở [git-flow.md](git-flow.md#quay-lui).
 
 ### Kiểm tra sau triển khai
 

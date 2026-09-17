@@ -82,6 +82,7 @@ Vietnamese; this table is the index into it.
 | Docker, proxy config, deployment, metrics, logging | [observability-and-ops.md](docs/04-system-design/observability-and-ops.md) |
 | Standing up or changing an environment | [environments.md](docs/04-system-design/environments.md) — four tiers, and what only that tier catches |
 | CI workflows, release, rollback | [ci-cd.md](docs/04-system-design/ci-cd.md) |
+| Branching, merging, promoting a change, rolling one back | [git-flow.md](docs/04-system-design/git-flow.md) |
 | Writing a database migration, or running one up or down | [data-access-and-tenancy.md — migration](docs/04-system-design/data-access-and-tenancy.md#migration) + [ADR-0013](docs/adr/0013-explicit-two-way-migration.md) |
 | Adding a dependency, or standing up an infrastructure component | [infrastructure.md](docs/04-system-design/infrastructure.md) |
 | Performance, availability or security targets | [non-functional.md](docs/02-requirement/non-functional.md) |
@@ -99,6 +100,8 @@ Vietnamese; this table is the index into it.
 | Create a package, move one, or add a module | [backend-modules.md](docs/04-system-design/backend-modules.md#quy-ước-package-bắt-buộc). Get this wrong and the boundary check silently verifies nothing |
 | Branch on the environment name in code | [environments.md](docs/04-system-design/environments.md). Forbidden — that branch is never exercised where it actually runs |
 | Deploy `api` before `worker` | [ci-cd.md](docs/04-system-design/ci-cd.md#thứ-tự-triển-khai) |
+| Force-push, rebase or cherry-pick onto `dev`, `staging` or `production` | [git-flow.md](docs/04-system-design/git-flow.md#điều-cấm). These branches record what an environment ran |
+| Roll back an environment | [git-flow.md](docs/04-system-design/git-flow.md#quay-lui). Step 4 — bringing the revert back to `dev` — is not optional |
 | Let the application run migrations at startup, in **any** tier | [ADR-0013](docs/adr/0013-explicit-two-way-migration.md). Migrations are always invoked explicitly |
 | Put a spinner in a main-flow interaction | [frontend.md](docs/04-system-design/frontend.md). It means the action is not optimistic yet |
 | Reuse a permission bit position | [ADR-0010](docs/adr/0010-bitmask-permission.md). Never do this |
@@ -188,6 +191,11 @@ These may not be violated. Full reasoning lives in the linked ADRs and in
     and they finish before the application comes up. The deployment order is
     migration → `worker` and `scheduler` → `api` and `realtime`
 34. Deployments always pin an immutable image tag bound to a commit, never a moving tag
+38. **Environment branches are never force-pushed, rebased, deleted or cherry-picked
+    into.** Every change reaches them by merge commit — squash and rebase merges are
+    disabled, because both break the ancestry that promotion depends on
+39. **`rollback/*` is the only branch that may open a pull request straight into an
+    environment branch**, and the revert it carries must then be brought back to `dev`
 35. A CI job that was **skipped counts as failed** unless its directory did not change
 36. `staging` uses no stand-in services — real mail, real object storage, real database
 37. **Every migration changeset carries a hand-written rollback**, and the down
