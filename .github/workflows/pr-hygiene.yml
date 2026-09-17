@@ -16,7 +16,7 @@ jobs:
     name: Pull request title
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Check the Conventional Commits form
         env:
           TITLE: ${{ github.event.pull_request.title }}
