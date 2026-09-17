@@ -236,15 +236,40 @@ Công cụ dùng là **Spring Modulith**, và **chỉ dùng cho việc kiểm tr
 
 ### Phiên bản nền
 
-| | |
-|---|---|
-| Spring Boot | Dòng 4.x |
-| Spring Modulith | Dòng 2.x — dòng này đi kèm Spring Boot 4 |
-| Java | 21 trở lên, bật virtual thread |
+| | | Ràng buộc |
+|---|---|---|
+| Java | **26** | Bật virtual thread |
+| Spring Boot | Dòng **4.x** | Dòng 4.1 hỗ trợ Java 17–26 |
+| Spring Modulith | Dòng **2.x** | Dòng đi kèm Spring Boot 4 |
+| Gradle | **9.4 trở lên** | Các bản cũ hơn **không chạy được** trên JVM 26 |
 
-Chốt phiên bản trước khi viết dòng code đầu tiên. Dòng 1.x của công cụ đi với
-Spring Boot 3 và có API khác; chọn nhầm dòng thì phần lớn hướng dẫn tìm được trên
-mạng sẽ không khớp.
+Chốt phiên bản trước khi viết dòng code đầu tiên. Dòng 1.x của công cụ kiểm tra
+biên giới đi với Spring Boot 3 và có API khác; chọn nhầm dòng thì phần lớn hướng
+dẫn tìm được trên mạng sẽ không khớp.
+
+#### Vì sao là Java 26 chứ không phải Java 27
+
+Java 26 là **bản mới nhất mà toàn bộ hệ công cụ chạy được** tại thời điểm chốt.
+Java 27 tuy đã phát hành nhưng:
+
+- Spring Boot 4.1 mới kiểm thử tới Java 26
+- **Gradle chưa chạy được trên JVM 27**, và bảng tương thích của nó cũng chưa có
+  dòng nào cho Java 27, kể cả ở cột toolchain
+
+Đây là hạn chế của công cụ build, không phải của Spring. Pin Java 27 ngay bây giờ
+nghĩa là Phase 0 không build được.
+
+#### Kế hoạch nâng phiên bản
+
+Java 26 là bản thường, không phải LTS, nên chỉ có khoảng sáu tháng cập nhật. Cần
+tính trước:
+
+| Việc | Khi nào |
+|---|---|
+| Nâng lên Java 27 | Khi Gradle công bố chạy được trên JVM 27 **và** Spring Boot xác nhận tương thích |
+| Nếu muốn dừng chạy theo bản mới | Lùi về bản LTS gần nhất; đây là quyết định cần một ADR vì nó đổi cam kết bảo trì |
+
+Ghi việc nâng phiên bản vào lịch, đừng chờ tới lúc hết hạn cập nhật bảo mật mới xử lý.
 
 ### Thư viện được phép và không được phép
 

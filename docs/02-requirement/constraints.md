@@ -15,7 +15,7 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 
 | ID | Ràng buộc | Nguồn |
 |---|---|---|
-| CON-01 | Backend là Spring Boot trên Java 21 trở lên, bật virtual thread | Quyết định của chủ dự án |
+| CON-01 | Backend là Spring Boot dòng 4.x chạy trên Java 26, bật virtual thread | Quyết định của chủ dự án, xem [phiên bản nền](../04-system-design/backend-modules.md#phiên-bản-nền) |
 | CON-02 | Frontend là Next.js | Quyết định của chủ dự án |
 | CON-03 | PostgreSQL là kho dữ liệu duy nhất. Không thêm kho dữ liệu nào khác làm nguồn sự thật | [ADR-0002](../adr/0002-postgres-only.md) |
 | CON-04 | Redis chỉ dùng cho cache, phát tán thông điệp, khoá phân tán, giới hạn tần suất và trạng thái tạm. Mất Redis thì hệ thống chậm chứ không sai | [ADR-0003](../adr/0003-redis-scope.md) |
@@ -97,7 +97,7 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 
 | ID | Ràng buộc | Nguồn |
 |---|---|---|
-| CON-51 | Phiên bản nền là Spring Boot dòng 4.x, và công cụ kiểm tra biên giới dùng dòng tương ứng với nó | [backend-modules.md](../04-system-design/backend-modules.md#phiên-bản-nền) |
+| CON-51 | Công cụ build phải ở phiên bản chạy được trên Java 26, và công cụ kiểm tra biên giới dùng dòng tương ứng với Spring Boot 4 | [backend-modules.md](../04-system-design/backend-modules.md#phiên-bản-nền) |
 | CON-52 | Mọi module nghiệp vụ là package **con trực tiếp** của package gốc ứng dụng, khớp một-một với Gradle module | [backend-modules.md](../04-system-design/backend-modules.md#quy-ước-package-bắt-buộc) |
 | CON-53 | Package gốc của mỗi module để trống; phần lộ ra ngoài nằm ở package `api` và phải được khai báo tường minh | [backend-modules.md](../04-system-design/backend-modules.md#quy-ước-package-bắt-buộc) |
 | CON-54 | Hạ tầng dùng chung nằm **ngoài** package gốc ứng dụng, để không trở thành một module nghiệp vụ | [backend-modules.md](../04-system-design/backend-modules.md#quy-ước-package-bắt-buộc) |

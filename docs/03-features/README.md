@@ -79,7 +79,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | KJ-PLT-17 | Bộ khung kiểm thử với Testcontainers | KJ-PLT-07 | TODO | |
 | KJ-PLT-18 | Enforce quyền sở hữu bảng theo module: tiền tố tên bảng và test quét | KJ-PLT-04, KJ-PLT-06 | TODO | Công cụ kiểm tra biên giới **không** bắt được luật này |
 | KJ-PLT-19 | Test chặn thư viện bị cấm xuất hiện trên classpath | KJ-PLT-01 | TODO | Tránh có hai cơ chế chuyển tiếp sự kiện chạy song song |
-| KJ-PLT-20 | Chốt phiên bản nền và khung package của toàn backend | | TODO | Làm trước KJ-PLT-01 |
+| KJ-PLT-20 | Chốt phiên bản nền và khung package của toàn backend | | TODO | Java 26, Spring Boot 4.x, Gradle 9.4+. Làm trước KJ-PLT-01 |
 
 ### Events & Outbox
 
