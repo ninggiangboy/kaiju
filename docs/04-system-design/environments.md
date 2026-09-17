@@ -148,10 +148,13 @@ riêng, mở rộng độc lập.
 | Nhiều `scheduler` cùng chạy một tác vụ | Khoá phân tán |
 | Nhiều `realtime` nhưng người dùng chỉ nối tới một | Phát tán qua Redis |
 | Cấp số thứ tự đồng bộ từ nhiều tiến trình | Giao dịch với mức cô lập đủ mạnh |
-| Migration chạy đồng thời từ nhiều bản | Chạy như một công việc riêng **trước** khi triển khai, không chạy lúc ứng dụng khởi động |
+| Migration chạy đồng thời từ nhiều bản | Chạy như một công việc riêng **trước** khi triển khai — giống hệt ba bậc dưới, chỉ khác là ở đây nó do pipeline gọi chứ không do người gọi |
 
-Điểm cuối là khác biệt về hành vi so với ba bậc dưới: ở bậc 1–3 migration chạy lúc
-ứng dụng khởi động cũng chấp nhận được, ở bậc 4 thì **không**.
+> **Đã thay đổi (2026-09-17):** trước đây tài liệu này viết rằng ở bậc 1–3
+> migration chạy lúc ứng dụng khởi động cũng chấp nhận được, chỉ bậc 4 là không.
+> Bây giờ **không bậc nào chạy migration lúc khởi động**. Cách cũ khiến đường chạy
+> ở bậc 4 gần như không bao giờ được diễn tập, và khiến không bậc nào điều khiển
+> được chiều đi xuống. Xem [ADR-0013](../adr/0013-explicit-two-way-migration.md).
 
 ### Yêu cầu với đối tượng vào ra
 
@@ -171,6 +174,24 @@ hiện ra bằng thời gian chờ.
 
 ---
 
+## Migration
+
+Cả bốn bậc gọi migration theo **cùng một cách**: vai trò `migrate` của chính ảnh
+container đã có, chạy một lần rồi thoát. Khác nhau chỉ ở chỗ **ai gọi**.
+
+| Bậc | Gọi bằng | Chiều đi xuống |
+|---|---|---|
+| `local-mini` | `make db-up`, `make db-down`, `make db-status` | Dùng thoải mái |
+| `dev` | Cùng các lệnh đó, chạy trong mạng của bậc 2 | Dùng thoải mái |
+| `staging` | Bước đầu tiên của script triển khai | Dè dặt |
+| `production` | Công việc chạy trước khi triển khai trong pipeline | **Không** |
+
+Không bậc nào chạy migration lúc ứng dụng khởi động, và không ứng dụng nào tự chạy
+nó. Chi tiết công cụ, quy ước script và phần lùi nằm ở
+[data-access-and-tenancy.md](data-access-and-tenancy.md#migration).
+
+---
+
 ## Bảng so sánh
 
 | | `local-mini` | `dev` | `staging` | `production` |
@@ -183,9 +204,10 @@ hiện ra bằng thời gian chờ.
 | Lưu trữ đối tượng | Container | Container | **Dịch vụ thật** | **Dịch vụ thật** |
 | Máy chủ trung gian | ❌ | ✅ không TLS | ✅ TLS thật | Đối tượng vào ra của nền tảng |
 | Quan sát hệ thống | ❌ | Container gói sẵn | Đích thu thập thật | Đích thu thập thật |
-| Migration | Lúc khởi động | Lúc khởi động | Lúc khởi động | **Công việc riêng trước khi triển khai** |
+| Migration | Lệnh tường minh | Lệnh tường minh | Công việc riêng trước khi triển khai | Công việc riêng trước khi triển khai |
+| Ai gọi migration | Người | Người | Script triển khai | Pipeline |
 | Dữ liệu mẫu | ✅ | ✅ | ❌ | ❌ |
-| Chạy migration lùi được | ✅ | ✅ | ❌ | ❌ |
+| Chạy migration lùi được | ✅ | ✅ | Dè dặt | ❌ — sửa tiến |
 
 ---
 

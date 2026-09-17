@@ -219,14 +219,24 @@ Lý do: tiến trình nền phải hiểu được định dạng sự kiện m�
 sinh ra chúng. Triển khai `api` trước nghĩa là trong vài chục giây, sự kiện định
 dạng mới được ghi vào bảng chuyển tiếp và bị xử lý bởi worker chưa biết định dạng đó.
 
-Ở bậc 4, migration chạy như một **công việc riêng trước khi triển khai**, không
-chạy lúc ứng dụng khởi động — nhiều bản cùng khởi động sẽ cùng chạy migration.
+Migration chạy như một **công việc riêng trước khi triển khai**. Nó không bao giờ
+chạy lúc ứng dụng khởi động, ở bất kỳ bậc nào — xem
+[ADR-0013](../adr/0013-explicit-two-way-migration.md).
+
+> **Đã thay đổi (2026-09-17):** trước đây quy tắc này chỉ áp dụng cho bậc 4, với
+> lý do nhiều bản cùng khởi động sẽ cùng chạy migration. Lý do đó vẫn đúng nhưng
+> chưa đủ: để đường chạy ở bậc 4 được diễn tập thay vì chỉ chạy thật lần đầu lúc
+> triển khai, cả bốn bậc phải gọi migration theo cùng một cách.
 
 ### Quay lui
 
 Quay lui = triển khai lại thẻ ảnh trước đó. Nó **chỉ an toàn khi migration tương
 thích ngược**, và đó chính là thứ công việc `Migration tương thích ngược` trong
 pipeline bảo vệ.
+
+**Quay lui không phải là chạy migration lùi.** Công cụ migration có chiều đi
+xuống, nhưng chiều đó không khôi phục dữ liệu đã bị xoá bởi chiều đi lên, nên ở
+bậc 4 nó **không được dùng**: sửa tiến bằng một migration mới, tương thích ngược.
 
 Thay đổi phá vỡ cấu trúc dữ liệu phải chia làm ba bước qua ba lần phát hành: thêm
 cái mới → chuyển dữ liệu và chuyển code → xoá cái cũ. Trong ba lần đó, **chỉ lần

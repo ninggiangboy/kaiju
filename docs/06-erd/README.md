@@ -17,7 +17,7 @@ kiến trúc và luồng nghiệp vụ.
 - Quan hệ và cardinality, chỉ rõ quan hệ nào nằm trong cùng aggregate
 - Chiến lược index cho từng bảng, kèm truy vấn mà index đó phục vụ
 - Partition cho các bảng append-only (change log, activity, outbox)
-- DDL hoặc Flyway migration tương ứng
+- DDL và changeset migration tương ứng, mỗi changeset kèm phần lùi
 - Chính sách RLS cho từng bảng
 
 ## Phụ thuộc vào

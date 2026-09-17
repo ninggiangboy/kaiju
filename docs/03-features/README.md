@@ -33,7 +33,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 
 | Phase | Tên | Số feature | TODO | IN_PROGRESS | DONE |
 |---|---|---|---|---|---|
-| 0 | Nền tảng | 63 | 63 | 0 | 0 |
+| 0 | Nền tảng | 66 | 66 | 0 | 0 |
 | 1 | Identity & Workspace | 33 | 33 | 0 | 0 |
 | 2 | Project | 12 | 12 | 0 | 0 |
 | 3 | Issue | 16 | 16 | 0 | 0 |
@@ -50,7 +50,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | 14 | Automation | 10 | 10 | 0 | 0 |
 | 15 | Bulk & Import | 7 | 7 | 0 | 0 |
 | 16 | Integration | 10 | 10 | 0 | 0 |
-| | **Tổng** | **240** | **240** | **0** | **0** |
+| | **Tổng** | **243** | **243** | **0** | **0** |
 
 ---
 
@@ -66,7 +66,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | KJ-PLT-04 | Kiểm tra biên giới module làm hỏng build | KJ-PLT-01 | TODO | Chỉ bắt được luật 1, xem ghi chú ở KJ-PLT-18 |
 | KJ-PLT-05 | Cấu hình Spring Data JDBC và converter kiểu JSON | KJ-PLT-01 | TODO | Thiếu là mọi thao tác ghi lỗi kiểu |
 | KJ-PLT-06 | Thiết lập jOOQ và bước sinh mã | KJ-PLT-05 | TODO | |
-| KJ-PLT-07 | Flyway và quy ước migration | KJ-PLT-05 | TODO | |
+| KJ-PLT-07 | Công cụ migration hai chiều và quy ước script | KJ-PLT-05 | TODO | Gọi tường minh qua vai trò `migrate`, không chạy lúc khởi động ([ADR-0013](../adr/0013-explicit-two-way-migration.md)) |
 | KJ-PLT-08 | Context workspace và biến phiên theo giao dịch | KJ-PLT-07 | TODO | Kể cả cho tiến trình nền |
 | KJ-PLT-09 | Bảo mật mức dòng và tiện ích áp dụng | KJ-PLT-08 | TODO | |
 | KJ-PLT-10 | Test bất biến schema quét siêu dữ liệu | KJ-PLT-09 | TODO | Bắt khoá ngoại vi phạm |
@@ -92,6 +92,9 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | KJ-PLT-30 | Dựng và phát hành ảnh container gắn thẻ theo commit | KJ-PLT-27 | TODO | Một ảnh backend cho cả bốn vai trò, xem CON-66 |
 | KJ-PLT-31 | Bản kê khai triển khai cho bậc 3 và bậc 4, gồm công việc migration chạy trước | KJ-PLT-30 | TODO | Thứ tự triển khai theo CON-69 |
 | KJ-PLT-32 | Kiểm tra sau triển khai: sức khoẻ từng vai trò, mở được luồng đồng bộ, độ trễ hàng đợi dưới ngưỡng | KJ-PLT-31 | TODO | Cách tự động duy nhất phát hiện "realtime không chạy" |
+| KJ-PLT-33 | Vai trò `migrate` chạy một lần rồi thoát, gồm lệnh lên, lệnh xuống và lệnh xem trạng thái | KJ-PLT-07 | TODO | Cùng ảnh container với bốn vai trò kia, xem CON-66 và CON-68 |
+| KJ-PLT-34 | Kiểm tra trong CI rằng mọi changeset đều có phần lùi, và chạy thử lên rồi xuống trên cơ sở dữ liệu sạch | KJ-PLT-33 | TODO | Enforce CON-74; phần lùi không chạy thử là phần lùi không tồn tại |
+| KJ-PLT-35 | Điểm kiểm tra sức khoẻ của `api` đối chiếu phiên bản schema với phiên bản ứng dụng | KJ-PLT-33 | TODO | Ứng dụng không tự chạy migration nên đây là chỗ duy nhất phát hiện schema còn cũ |
 
 ### Events & Outbox
 

@@ -26,6 +26,7 @@ hiểu vì sao hệ thống trông như hiện tại thay vì trông như cách 
 | [0010](0010-bitmask-permission.md) | Phân quyền bằng bitmask hai cấp | Accepted |
 | [0011](0011-account-vs-member.md) | Tách account toàn cục khỏi member theo workspace | Accepted |
 | [0012](0012-shared-schema-tenancy-rls.md) | Multi-tenancy shared-schema kèm Row Level Security | Accepted |
+| [0013](0013-explicit-two-way-migration.md) | Migration chạy tường minh và đi được hai chiều, không chạy lúc ứng dụng khởi động | Accepted |
 
 ---
 

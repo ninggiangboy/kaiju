@@ -214,15 +214,46 @@ tức là trả giá một lần bây giờ thay vì phải viết lại sau.
 
 ## Migration
 
+> **Đã thay đổi (2026-09-17):** trước đây công cụ là Flyway và migration chạy lúc
+> ứng dụng khởi động ở bậc 1–3, chỉ tách thành công việc riêng ở bậc 4. Bây giờ
+> công cụ là **Liquibase bản Community** và migration **không bao giờ chạy lúc
+> khởi động ở bất kỳ bậc nào**. Lý do: cần điều khiển được cả chiều đi xuống —
+> bản miễn phí của Flyway không có — và cần đường chạy ở bậc 4 được diễn tập mỗi
+> ngày thay vì chỉ chạy thật lần đầu lúc triển khai. Xem
+> [ADR-0013](../adr/0013-explicit-two-way-migration.md).
+
+Migration là **một thao tác được gọi tường minh**, không phải tác dụng phụ của
+lệnh khởi động, và gọi được **cả hai chiều**.
+
 | Quy ước | |
 |---|---|
-| Công cụ | Flyway, script đặt trong `backend/platform/persistence` |
+| Công cụ | Liquibase bản Community, script đặt trong `backend/platform/persistence` |
+| Định dạng | SQL thô. Phần trừu tượng XML/YAML không diễn đạt nổi chính sách bảo mật mức dòng và chỉ mục đặc thù, và cũng không cần |
+| Cách gọi | Vai trò `migrate` của chính ảnh container đã có, không phải binary riêng |
 | Đặt tên | Số phiên bản tăng dần, mô tả ngắn bằng tiếng Anh |
 | Không sửa script đã chạy | Sai thì viết script mới sửa lại |
+| **Phần lùi** | **Bắt buộc cho mọi changeset**, viết tay ngay cạnh phần đi lên. Bản Community không sinh giúp |
 | Tương thích ngược | Trong thời gian triển khai cuốn chiếu có hai phiên bản ứng dụng chạy song song |
 | Thay đổi phá vỡ | Chia làm ba bước qua ba lần phát hành: thêm cái mới → chuyển dữ liệu và chuyển code → xoá cái cũ |
 | Bảng mới | Bắt buộc có định danh workspace và bật bảo mật mức dòng ngay trong chính script tạo bảng |
 | Dữ liệu mẫu | Không nằm trong migration; nằm ở script riêng trong `infra/` |
+
+### Chiều đi xuống dùng ở đâu
+
+**Đi xuống không phải là khôi phục dữ liệu.** Lùi một migration đã bỏ cột sẽ dựng
+lại cột rỗng; dữ liệu trong đó đã mất và không có script nào lấy lại được.
+
+| Bậc | Đi xuống |
+|---|---|
+| `local-mini`, `dev` | Dùng thoải mái — đây chính là chỗ nó có giá trị: viết, chạy, thấy sai, lùi, sửa |
+| `staging` | Dè dặt, và chỉ khi biết chắc dữ liệu mất là dữ liệu bỏ đi được |
+| `production` | **Không**. Quay lui ở đây là sửa tiến kèm migration tương thích ngược, xem [ci-cd.md](ci-cd.md#quay-lui) |
+
+### Hệ quả với việc khởi động
+
+Ứng dụng khởi động được khi schema chưa đúng phiên bản, nên vai trò `api` phải
+**kiểm tra phiên bản schema trong health check** và báo chưa sẵn sàng, thay vì
+chạy rồi lỗi ở câu truy vấn nghiệp vụ đầu tiên.
 
 ---
 

@@ -67,7 +67,7 @@ minh nó chạy đúng trước khi có bất kỳ nghiệp vụ nào.
 | Cấu trúc | Chốt phiên bản nền, khung package, Gradle multi-module, cấu trúc bốn thư mục, quy ước đặt tên và tổ chức code |
 | Nhiều vai trò ứng dụng | Bốn profile, cấu hình connection pool riêng, khởi động đúng bean theo vai trò |
 | Biên giới module | Công cụ kiểm tra tự động cho luật 1; **cơ chế riêng** cho luật 2 (tiền tố tên bảng và test quét); test chặn thư viện bị cấm trên classpath |
-| Truy cập dữ liệu | Spring Data JDBC, jOOQ, `JdbcClient`, converter kiểu JSON, Flyway |
+| Truy cập dữ liệu | Spring Data JDBC, jOOQ, `JdbcClient`, converter kiểu JSON, migration hai chiều |
 | Tenancy | Context workspace, biến phiên theo giao dịch, bảo mật mức dòng, test bất biến schema |
 | Outbox | Bảng chuyển tiếp, tiến trình chuyển tiếp với khoá dòng, đánh thức bằng thông báo, thử lại, thư chết, chống trùng, công cụ phát lại |
 | Sự kiện | Định nghĩa domain event, phiên bản, đăng ký bên tiêu thụ, lần vết xuyên ranh giới bất đồng bộ |

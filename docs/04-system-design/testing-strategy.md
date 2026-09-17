@@ -55,6 +55,26 @@ sau khi đã có dữ liệu.
 
 ---
 
+## Migration
+
+Ứng dụng không tự chạy migration ([CON-68](../02-requirement/constraints.md)), nên
+migration là một đối tượng kiểm thử riêng chứ không phải thứ được chạy ké lúc dựng
+môi trường test.
+
+| Kịch bản | Kết quả mong đợi |
+|---|---|
+| Chạy toàn bộ chiều đi lên trên cơ sở dữ liệu trắng | Schema đúng, thoả mọi bất biến ở mục trên |
+| Changeset không khai báo phần lùi | Build hỏng, không phải cảnh báo ([CON-74](../02-requirement/constraints.md)) |
+| Lên rồi xuống rồi lên lại | Về đúng schema ban đầu, không sót đối tượng nào |
+| Lùi về một phiên bản ở giữa | Dừng đúng chỗ, không lùi quá tay |
+| Chạy chiều đi lên mới trên cơ sở dữ liệu đang có phiên bản ứng dụng cũ chạy | Ứng dụng cũ vẫn chạy đúng — điều kiện để quay lui an toàn |
+| Chạy hai lần liên tiếp | Lần thứ hai không làm gì |
+
+Phần lùi **chưa từng chạy thử là phần lùi không tồn tại**: nó chỉ được cần tới
+đúng lúc có sự cố, và đó là lúc tệ nhất để phát hiện nó sai.
+
+---
+
 ## Tenancy
 
 Chạy trên **mọi endpoint**, không phải trên một vài endpoint tiêu biểu:

@@ -28,12 +28,21 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-65 | Ngữ cảnh lần vết phải được truyền qua siêu dữ liệu của sự kiện để chuỗi không đứt ở ranh giới bất đồng bộ | [infrastructure.md](../04-system-design/infrastructure.md#nguyên-tắc-ứng-dụng-chỉ-nói-một-giao-thức) |
 | CON-66 | Cùng một ảnh container chạy ở cả bốn bậc môi trường; khác biệt chỉ nằm ở biến môi trường và profile vai trò | [environments.md](../04-system-design/environments.md#nguyên-tắc-một-artifact-bốn-cấu-hình) |
 | CON-67 | **Cấm** mọi nhánh code rẽ theo tên môi trường. Khác biệt giữa các bậc phải biểu diễn bằng biến cấu hình nói lên tính chất, không nói lên nơi chốn | [environments.md](../04-system-design/environments.md#nguyên-tắc-một-artifact-bốn-cấu-hình) |
-| CON-68 | Ở bậc `production`, migration chạy như một công việc riêng **trước** khi triển khai, không chạy lúc ứng dụng khởi động | [environments.md](../04-system-design/environments.md#những-thứ-chỉ-xuất-hiện-ở-bậc-này) |
+| CON-68 | Migration **không bao giờ** chạy lúc ứng dụng khởi động, ở **bất kỳ bậc nào**. Nó luôn là một thao tác được gọi tường minh và chạy xong trước khi ứng dụng lên | [ADR-0013](../adr/0013-explicit-two-way-migration.md) |
 | CON-69 | Thứ tự triển khai bắt buộc: migration → `worker` và `scheduler` → `api` và `realtime` | [ci-cd.md](../04-system-design/ci-cd.md#thứ-tự-triển-khai) |
 | CON-70 | Triển khai luôn theo thẻ ảnh cố định gắn với commit, không bao giờ theo thẻ động | [ci-cd.md](../04-system-design/ci-cd.md#ảnh-container) |
 | CON-71 | Cổng chặn merge coi công việc bị bỏ qua là **thất bại**, trừ khi thư mục tương ứng không thay đổi | [ci-cd.md](../04-system-design/ci-cd.md#cổng) |
 | CON-72 | Mọi script kiểm tra của CI phải chạy được từ máy cá nhân bằng một lệnh | [ci-cd.md](../04-system-design/ci-cd.md#cấu-trúc) |
 | CON-73 | Bậc `staging` **không** được dùng dịch vụ giả lập: email, lưu trữ đối tượng, cơ sở dữ liệu và đích thu thập tín hiệu quan sát đều phải là hàng thật | [environments.md](../04-system-design/environments.md#bậc-3--staging) |
+| CON-74 | Mọi changeset migration phải kèm **phần lùi viết tay**. Changeset không có phần lùi làm hỏng CI | [ADR-0013](../adr/0013-explicit-two-way-migration.md) |
+| CON-75 | Chiều đi xuống **không được dùng ở bậc `production`**; quay lui ở đó là sửa tiến bằng một migration mới tương thích ngược | [ADR-0013](../adr/0013-explicit-two-way-migration.md) |
+
+> **Ghi chú (2026-09-17) — CON-68.** Bản trước của ràng buộc này chỉ áp dụng cho
+> bậc `production`, và chấp nhận việc bậc 1–3 chạy migration lúc ứng dụng khởi
+> động. Nội dung cũ: *"Ở bậc `production`, migration chạy như một công việc riêng
+> trước khi triển khai, không chạy lúc ứng dụng khởi động."* Ràng buộc được mở
+> rộng ra cả bốn bậc vì cách cũ khiến đường chạy ở bậc 4 không bao giờ được diễn
+> tập, và khiến không bậc nào điều khiển được chiều đi xuống. Định danh giữ nguyên.
 
 ## Kiến trúc
 

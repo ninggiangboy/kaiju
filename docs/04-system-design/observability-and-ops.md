@@ -140,7 +140,7 @@ Mỗi vai trò có điểm kiểm tra riêng **phản ánh đúng việc nó là
 
 | Vai trò | Khoẻ nghĩa là |
 |---|---|
-| `api` | Kết nối được cơ sở dữ liệu, migration đã chạy xong |
+| `api` | Kết nối được cơ sở dữ liệu, **phiên bản schema đúng với phiên bản ứng dụng**. Ứng dụng không tự chạy migration nên đây là chỗ duy nhất phát hiện schema còn cũ |
 | `realtime` | Kết nối được cơ sở dữ liệu và Redis, đang đăng ký nhận phát tán |
 | `worker` | Kết nối được cơ sở dữ liệu, tiến trình chuyển tiếp đang chạy, độ trễ hàng đợi dưới ngưỡng |
 | `scheduler` | Kết nối được cơ sở dữ liệu, giữ được khoá hoặc đang chờ khoá |

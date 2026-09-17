@@ -15,7 +15,7 @@ backend/
 ├── build.gradle.kts              # cấu hình chung, version catalog
 ├── platform/                     # hạ tầng dùng chung, không chứa nghiệp vụ
 │   ├── core/                     # kiểu dùng chung, lỗi, tiện ích, ScopedValue context
-│   ├── persistence/              # cấu hình Spring Data JDBC, jOOQ, converter, Flyway
+│   ├── persistence/              # cấu hình Spring Data JDBC, jOOQ, converter, script migration
 │   ├── tenancy/                  # WorkspaceContext, thiết lập biến phiên, chính sách bảo mật mức dòng
 │   ├── events/                   # domain event, bảng chuyển tiếp, tiến trình chuyển tiếp, chống trùng
 │   ├── sync/                     # nhật ký thay đổi, cấp vị trí, giao thức đồng bộ phía server
@@ -416,8 +416,9 @@ ghi nhật ký thay đổi, và bản ghi sự kiện.
 6. Dựng nội dung `api` **trước**: viết interface và định nghĩa sự kiện trước khi
    viết hiện thực. Nếu `api` trông xấu thì biên giới đang đặt sai chỗ
 7. Chọn tiền tố tên bảng của module và đăng ký vào test kiểm tra quyền sở hữu bảng
-8. Viết migration cho bảng của module — nhớ cột định danh workspace và chính sách
-   bảo mật mức dòng ([data-access-and-tenancy.md](data-access-and-tenancy.md))
+8. Viết migration cho bảng của module — nhớ cột định danh workspace, chính sách
+   bảo mật mức dòng, và **phần lùi** cho từng changeset
+   ([data-access-and-tenancy.md](data-access-and-tenancy.md#migration))
 9. Đăng ký bên tiêu thụ sự kiện nếu có, kèm cơ chế chống trùng
 10. Xác định thay đổi nào của module cần đi vào nhật ký thay đổi cho client
 11. Chạy test kiểm tra biên giới và test quyền sở hữu bảng
