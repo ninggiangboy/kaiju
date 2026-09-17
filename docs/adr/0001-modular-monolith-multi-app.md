@@ -20,8 +20,9 @@ context, build ra **một artifact**. Artifact đó được triển khai thành
 role** chọn bằng Spring profile: `api`, `realtime`, `worker`, `scheduler`. Mỗi
 role scale độc lập.
 
-Biên giới module được **enforce bằng công cụ** (Spring Modulith verification
-trong test), không chỉ bằng kỷ luật.
+Biên giới module được **enforce bằng công cụ** chạy trong test, không chỉ bằng
+kỷ luật. Công cụ cụ thể và giới hạn của nó:
+[backend-modules.md](../04-system-design/backend-modules.md#công-cụ-kiểm-tra-biên-giới).
 
 ## Lý do
 

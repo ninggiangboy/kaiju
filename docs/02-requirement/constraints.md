@@ -55,7 +55,7 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-23 | Mọi bên tiêu thụ sự kiện phải chống trùng, vì giao hàng là ít nhất một lần | [ADR-0005](../adr/0005-outbox-db-job.md) |
 | CON-24 | Sự kiện phải có trường phiên bản ngay từ sự kiện đầu tiên | [ADR-0005](../adr/0005-outbox-db-job.md) |
 | CON-25 | Kết nối dùng để lắng nghe thông báo của cơ sở dữ liệu không được lấy từ connection pool chung | [ADR-0005](../adr/0005-outbox-db-job.md) |
-| CON-26 | Không dùng cơ chế theo dõi sự kiện có sẵn của Spring Modulith; Modulith chỉ dùng để kiểm tra biên giới module | [ADR-0005](../adr/0005-outbox-db-job.md) |
+| CON-26 | Không dùng cơ chế theo dõi sự kiện có sẵn của framework nền, và không đưa thư viện lưu trữ sự kiện của nó lên classpath | [ADR-0005](../adr/0005-outbox-db-job.md) |
 
 ## Đồng bộ và realtime
 
@@ -92,6 +92,17 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-45 | Token truy cập chỉ mang danh tính, không mang danh sách quyền | [ADR-0010](../adr/0010-bitmask-permission.md) |
 | CON-46 | Quyền phụ thuộc dữ liệu được xử lý bởi một tầng riêng chạy sau khi mặt nạ bit đã cho phép; chỗ nối cho tầng này phải có ngay từ Phase 1 | [ADR-0010](../adr/0010-bitmask-permission.md) |
 | CON-47 | Workspace là đơn vị tenancy duy nhất. Không có cấp tổ chức phía trên | [ADR-0012](../adr/0012-shared-schema-tenancy-rls.md) |
+
+## Khung mã nguồn
+
+| ID | Ràng buộc | Nguồn |
+|---|---|---|
+| CON-51 | Phiên bản nền là Spring Boot dòng 4.x, và công cụ kiểm tra biên giới dùng dòng tương ứng với nó | [backend-modules.md](../04-system-design/backend-modules.md#phiên-bản-nền) |
+| CON-52 | Mọi module nghiệp vụ là package **con trực tiếp** của package gốc ứng dụng, khớp một-một với Gradle module | [backend-modules.md](../04-system-design/backend-modules.md#quy-ước-package-bắt-buộc) |
+| CON-53 | Package gốc của mỗi module để trống; phần lộ ra ngoài nằm ở package `api` và phải được khai báo tường minh | [backend-modules.md](../04-system-design/backend-modules.md#quy-ước-package-bắt-buộc) |
+| CON-54 | Hạ tầng dùng chung nằm **ngoài** package gốc ứng dụng, để không trở thành một module nghiệp vụ | [backend-modules.md](../04-system-design/backend-modules.md#quy-ước-package-bắt-buộc) |
+| CON-55 | Mỗi module sở hữu một tiền tố tên bảng, và có test tự động bắt việc truy cập bảng của module khác | [backend-modules.md](../04-system-design/backend-modules.md#2-không-truy-vấn-bảng-thuộc-sở-hữu-của-module-khác) |
+| CON-56 | Có test kiểm tra classpath và báo lỗi khi phát hiện thư viện bị cấm | [events-and-outbox.md](../04-system-design/events-and-outbox.md#ba-điều-cấm) |
 
 ## Quy trình
 

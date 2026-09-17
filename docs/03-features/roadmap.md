@@ -64,9 +64,9 @@ minh nó chạy đúng trước khi có bất kỳ nghiệp vụ nào.
 
 | Nhóm | Nội dung |
 |---|---|
-| Cấu trúc | Gradle multi-module, cấu trúc bốn thư mục, quy ước đặt tên và tổ chức code |
+| Cấu trúc | Chốt phiên bản nền, khung package, Gradle multi-module, cấu trúc bốn thư mục, quy ước đặt tên và tổ chức code |
 | Nhiều vai trò ứng dụng | Bốn profile, cấu hình connection pool riêng, khởi động đúng bean theo vai trò |
-| Biên giới module | Công cụ kiểm tra tự động, làm hỏng build khi vi phạm |
+| Biên giới module | Công cụ kiểm tra tự động cho luật 1; **cơ chế riêng** cho luật 2 (tiền tố tên bảng và test quét); test chặn thư viện bị cấm trên classpath |
 | Truy cập dữ liệu | Spring Data JDBC, jOOQ, `JdbcClient`, converter kiểu JSON, Flyway |
 | Tenancy | Context workspace, biến phiên theo giao dịch, bảo mật mức dòng, test bất biến schema |
 | Outbox | Bảng chuyển tiếp, tiến trình chuyển tiếp với khoá dòng, đánh thức bằng thông báo, thử lại, thư chết, chống trùng, công cụ phát lại |
@@ -97,6 +97,8 @@ Dựng một thực thể nháp không mang ý nghĩa nghiệp vụ và cho nó 
 
 - Bảy bước kiểm chứng ở trên đều đạt
 - Vi phạm biên giới module làm hỏng build
+- Truy cập bảng của module khác bị test bắt — công cụ sẵn có **không** bắt được việc này
+- Thư viện bị cấm xuất hiện trên classpath làm hỏng build
 - Test bất biến schema chạy và bắt được vi phạm cố ý
 - Bộ test outbox phủ: crash giữa chừng, thử lại, thư chết, chống trùng, thứ tự theo aggregate
 - Bộ test sync phủ toàn bộ bảng kịch bản ở [testing-strategy.md](../04-system-design/testing-strategy.md)
@@ -110,6 +112,7 @@ Dựng một thực thể nháp không mang ý nghĩa nghiệp vụ và cho nó 
 | Cấp số thứ tự theo scope gây tranh chấp khoá | Đo ngay từ đầu; phương án thay thế phải được thiết kế sẵn trên giấy |
 | Kết nối lắng nghe thông báo bị pool thu hồi | Đã biết trước; dùng kết nối riêng ngoài pool, có chu kỳ quét dự phòng |
 | Thiếu hỗ trợ SharedWorker | Làm phương án bầu tab chủ ngay trong phase này, không để sau |
+| Khung package không khớp cách công cụ nhận diện module, build vẫn xanh trong khi không kiểm tra gì | Chốt khung package trước khi viết dòng code đầu tiên; test kiểm tra biên giới phải in ra danh sách module nhận diện được |
 
 ### Cố tình không làm
 

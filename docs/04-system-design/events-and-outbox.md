@@ -32,6 +32,48 @@ flowchart LR
 
 ---
 
+## Chỉ có một cơ chế chuyển tiếp sự kiện
+
+Framework nền có sẵn một cơ chế theo dõi và chuyển tiếp sự kiện riêng. Dự án
+**không dùng** nó ([ADR-0005](../adr/0005-outbox-db-job.md)), nhưng lý do không
+dùng không tự bảo vệ được — cơ chế đó **tự bật khi thư viện tương ứng xuất hiện
+trên classpath**, không cần ai gọi tới nó.
+
+### Ba điều cấm
+
+| Cấm | Vì sao |
+|---|---|
+| Thêm bất kỳ thư viện lưu trữ sự kiện nào của framework nền | Nó tự tạo bảng riêng và tự chặn mọi listener giao dịch, tạo ra **cơ chế chuyển tiếp thứ hai** chạy song song với cơ chế của dự án |
+| Dùng annotation listener giao dịch của framework nền cho giao tiếp giữa các module | Sự kiện sẽ đi đường vòng, không qua bảng chuyển tiếp, và **không tới được vai trò ứng dụng `worker`** |
+| Dùng cơ chế externalize sự kiện ra message broker | Dự án không có broker ([ADR-0005](../adr/0005-outbox-db-job.md)) |
+
+Danh sách thư viện được phép và không được phép nằm ở
+[backend-modules.md](backend-modules.md#thư-viện-được-phép-và-không-được-phép).
+
+### Vì sao đây là loại lỗi khó nhận ra
+
+Nếu hai cơ chế cùng chạy, **mọi thứ vẫn hoạt động**: sự kiện vẫn tới nơi, test vẫn
+xanh. Triệu chứng chỉ xuất hiện về sau và trông như chuyện khác hẳn — bên tiêu thụ
+chạy hai lần, một bảng lạ phình to trong cơ sở dữ liệu, thứ tự xử lý sai lệch
+không giải thích được.
+
+Vì thế cần một **test chặn từ đầu**: kiểm tra classpath và báo lỗi nếu phát hiện
+thư viện bị cấm. Rẻ hơn nhiều so với việc gỡ rối sau sáu tháng.
+
+### Điều này không có nghĩa cơ chế sẵn có là tệ
+
+Cơ chế sẵn có hiện đã khá đầy đủ: ghi cùng giao dịch, theo dõi trạng thái từng
+listener, tự phát lại khi khởi động lại, có cơ chế phát hiện listener treo, và có
+nhiều chế độ dọn dẹp bản ghi đã hoàn tất.
+
+Lý do không dùng **không phải** vì nó thiếu tính năng, mà vì **bên tiêu thụ của
+Kaiju chạy ở một tiến trình khác** (vai trò ứng dụng `worker`), còn cơ chế đó chỉ
+dispatch trong cùng tiến trình. Đây là khác biệt về kiến trúc, không phải về chất
+lượng — và nếu về sau bỏ mô hình nhiều vai trò ứng dụng thì quyết định này đáng
+được xem xét lại.
+
+---
+
 ## Domain event
 
 ### Đặt tên

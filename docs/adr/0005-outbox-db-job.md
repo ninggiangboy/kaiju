@@ -21,8 +21,8 @@ thay đổi nghiệp vụ**. Một relay worker trong app role `worker` đọc b
 `FOR UPDATE SKIP LOCKED` và dispatch tới consumer, kèm retry có backoff, dead
 letter và công cụ replay.
 
-Spring Modulith được dùng **chỉ để verify biên giới module**, không dùng Event
-Publication Registry của nó.
+Cơ chế theo dõi sự kiện có sẵn của framework nền **không được dùng**; framework
+đó chỉ được dùng để kiểm tra biên giới module.
 
 ## Lý do
 
@@ -35,8 +35,8 @@ Publication Registry của nó.
 - CDC bắt thay đổi ở mức row chứ không ở mức **ý định nghiệp vụ**. Consumer cần
   biết "issue đã được transition bởi ai, từ trạng thái nào", không phải "cột
   status của dòng X đổi giá trị".
-- Event Publication Registry của Spring Modulith theo dõi listener trong **cùng
-  tiến trình**; ở đây consumer chạy ở app role khác, nên nó không dispatch được.
+- Cơ chế theo dõi sự kiện sẵn có của framework nền chỉ dispatch **trong cùng
+  tiến trình**; ở đây consumer chạy ở app role khác nên nó không tới được.
   Duy trì hai cơ chế song song sẽ rối hơn là tự viết một cơ chế đầy đủ.
 
 ## Hệ quả
@@ -62,9 +62,9 @@ phải vận hành, trong khi không có nhu cầu nào tương xứng.
 **CDC (Debezium).** Vẫn cần Kafka hoặc tương đương ở phía sau, và event ở mức row
 không mang đủ ý nghĩa nghiệp vụ.
 
-**Spring Modulith Event Publication Registry.** Hợp với consumer trong cùng tiến
-trình, nhưng không dispatch xuyên process, và không có sẵn dead letter, shard,
-hay công cụ replay ở mức cần thiết.
+**Cơ chế theo dõi sự kiện sẵn có của framework nền.** Hợp với consumer trong cùng
+tiến trình, nhưng không dispatch xuyên process — mà đó chính là mô hình triển khai
+đã chọn ở [ADR-0001](0001-modular-monolith-multi-app.md).
 
 **Phát event trực tiếp trong bộ nhớ.** Đơn giản nhất và sai nhất: mất event khi
 tiến trình chết, không retry, không quan sát được.

@@ -89,6 +89,8 @@ Vietnamese; this table is the index into it.
 | Reference a person from business data | [ADR-0011](docs/adr/0011-account-vs-member.md). It must point at `member`, never `account` |
 | Write a Server Action or fetch business data in a server component | [ADR-0008](docs/adr/0008-nextjs-as-spa-shell.md). Both are forbidden |
 | Add a datastore, a broker, or a sync library | [ADR-0002](docs/adr/0002-postgres-only.md), [ADR-0005](docs/adr/0005-outbox-db-job.md), [ADR-0007](docs/adr/0007-build-own-sync-engine.md) |
+| Add any event-store library of the base framework, or use its transactional event listener annotations | [events-and-outbox.md](docs/04-system-design/events-and-outbox.md#ba-điều-cấm). It silently creates a second, competing outbox |
+| Create a package, move one, or add a module | [backend-modules.md](docs/04-system-design/backend-modules.md#quy-ước-package-bắt-buộc). Get this wrong and the boundary check silently verifies nothing |
 | Put a spinner in a main-flow interaction | [frontend.md](docs/04-system-design/frontend.md). It means the action is not optimistic yet |
 | Reuse a permission bit position | [ADR-0010](docs/adr/0010-bitmask-permission.md). Never do this |
 
@@ -109,46 +111,56 @@ These may not be violated. Full reasoning lives in the linked ADRs and in
 5. No datastore other than PostgreSQL. Redis is cache, pub/sub, locks and rate
    limiting only — losing Redis makes the system slower, never wrong
 
+### Code layout
+
+6. Business module packages are **direct sub-packages of the application base
+   package** and map one-to-one onto Gradle modules; a module's base package stays
+   empty and its `api` sub-package is declared as the exposed one
+7. Shared platform code lives **outside** the application base package, so it is
+   not treated as a business module
+8. Each module owns a table name prefix. **The boundary tool does not catch
+   cross-module table access** — the dedicated test does
+
 ### Data
 
-6. **Every business table carries a workspace identifier**, even when it already
+9. **Every business table carries a workspace identifier**, even when it already
    has a project identifier
-7. **Every business table has row level security enabled** on that workspace identifier
-8. **No foreign key** from a business table to a table in the global data region
-9. **Every reference to a person points at `member`, never at `account`**
-10. People who leave a workspace are deactivated, **never hard-deleted**
+10. **Every business table has row level security enabled** on that workspace identifier
+11. **No foreign key** from a business table to a table in the global data region
+12. **Every reference to a person points at `member`, never at `account`**
+13. People who leave a workspace are deactivated, **never hard-deleted**
 
 ### Events
 
-11. Domain events are written to the outbox table **in the same transaction** as
+14. Domain events are written to the outbox table **in the same transaction** as
     the business change
-12. Delivery is at-least-once, so **every consumer must be idempotent**
-13. Events carry a version field from the very first event
-14. The connection that listens for PostgreSQL notifications **must not come from
+15. Delivery is at-least-once, so **every consumer must be idempotent**
+16. Events carry a version field from the very first event
+17. The connection that listens for PostgreSQL notifications **must not come from
     the shared connection pool**
 
 ### Sync
 
-15. Every data change produces a change log entry whose patch contains **only the
+18. Every data change produces a change log entry whose patch contains **only the
     fields that changed**
-16. Mutations go over HTTP POST with an idempotency key, never over the sync stream
-17. **Every change that narrows permissions must emit a revocation event**, and the
+19. Mutations go over HTTP POST with an idempotency key, never over the sync stream
+20. **Every change that narrows permissions must emit a revocation event**, and the
     client must purge that scope's local data
 
 ### Frontend
 
-18. **No Server Actions for business mutations**
-19. **No business data fetching in server components**
-20. The app area renders entirely on the client; only marketing pages and the
+21. **No Server Actions for business mutations**
+22. **No business data fetching in server components**
+23. The app area renders entirely on the client; only marketing pages and the
     magic-link landing page render on the server
-21. Multiple tabs share **one** sync connection and **one** local writer
+24. Multiple tabs share **one** sync connection and **one** local writer
 
 ### Identity and permissions
 
-22. There are no passwords anywhere. Magic link is the only authentication method
-23. Access tokens **never carry a permission list**
-24. **A permission bit position is never redefined or reused**
-25. All permission checks go through a single entry point that also receives the
+25. There are no passwords anywhere. Magic link is the only authentication method
+26. Access tokens **never carry a permission list**
+27. **A permission bit position is never redefined or reused**
+28. All permission checks go through a single entry point that also receives the
     data context, so the permission condition layer can plug in
 
 ---

@@ -56,12 +56,70 @@ flowchart BT
 |---|---|
 | `platform/*` **không được** phụ thuộc vào `modules/*` | Hạ tầng không biết gì về nghiệp vụ |
 | `modules/*` phụ thuộc `platform/*` | Bình thường |
-| `modules/a` phụ thuộc `modules/b` | **Chỉ được** qua `modules/b/public`, và phải khai báo tường minh trong `build.gradle.kts` của `a` |
+| `modules/a` phụ thuộc `modules/b` | **Chỉ được** qua package `api` của `b`, và phải khai báo tường minh trong `build.gradle.kts` của `a` |
 | `bootstrap` phụ thuộc mọi module | Nó chỉ lắp ráp, không chứa logic |
 
 Khai báo phụ thuộc giữa hai module nghiệp vụ trong Gradle là một hành động **có ý
 thức**: nó hiện lên trong review và buộc phải tự hỏi "quan hệ này có nên là đồng
 bộ không, hay nên là sự kiện?".
+
+---
+
+## Quy ước package (bắt buộc)
+
+**Công cụ kiểm tra biên giới nhận diện module theo cấu trúc package, không theo
+cấu trúc Gradle.** Đây là điều dễ hiểu sai nhất, và hiểu sai thì công cụ sẽ không
+thấy module nào cả — build vẫn xanh trong khi không có gì được kiểm tra.
+
+Hai cấu trúc phải **khớp một-một**: mỗi Gradle module trong `modules/` tương ứng
+đúng một package là con trực tiếp của package gốc ứng dụng.
+
+### Bố trí package
+
+```
+dev.kaiju.app                 ← package gốc, chứa lớp khởi động ứng dụng
+├── identity                  ← module, là con TRỰC TIẾP của package gốc
+├── workspace
+├── project
+├── issue
+│   ├── package-info.java     ← khai báo module và phụ thuộc cho phép
+│   ├── api/                  ← khai báo là phần lộ ra ngoài
+│   ├── domain/               ← nội bộ, không khai báo gì
+│   ├── application/          ← nội bộ
+│   └── infrastructure/       ← nội bộ
+└── …
+
+dev.kaiju.platform            ← NẰM NGOÀI package gốc ứng dụng
+├── persistence
+├── tenancy
+├── events
+└── …
+```
+
+### Bốn quy tắc
+
+| # | Quy tắc | Hệ quả nếu làm sai |
+|---|---|---|
+| 1 | Mọi module nghiệp vụ là **con trực tiếp** của package gốc ứng dụng | Package lồng sâu hơn không được nhận diện là module, và không được kiểm tra gì cả |
+| 2 | **Package gốc của mỗi module để trống**, chỉ có `package-info.java` | Package gốc luôn lộ ra ngoài; đặt kiểu dữ liệu ở đó là tạo API ngoài ý muốn |
+| 3 | Package `api` phải được **khai báo tường minh** là phần lộ ra ngoài | Không khai báo thì nó bị coi là nội bộ, và mọi module khác import nó đều bị báo lỗi |
+| 4 | `platform/*` đặt **ngoài** package gốc ứng dụng | Nếu đặt bên trong, `platform` trở thành **một module nghiệp vụ**, và mọi module đều phải khai báo phụ thuộc vào nó — biến hạ tầng dùng chung thành một mắt xích trong đồ thị phụ thuộc |
+
+Quy tắc 4 là điểm quan trọng: mã nguồn **không thuộc module nào** thì module nào
+cũng dùng được tự do. Đặt `platform` ra ngoài package gốc là cách gọn nhất để hạ
+tầng dùng chung không làm nhiễu việc kiểm tra biên giới nghiệp vụ.
+
+### Khai báo phụ thuộc
+
+Mỗi module khai báo tường minh **danh sách module nó được phép phụ thuộc**, và
+khai báo tới đúng phần `api` chứ không phải cả module. Khai báo này nằm ở
+`package-info.java` của module, **song song** với khai báo phụ thuộc trong Gradle:
+
+- Gradle chặn ở mức biên dịch
+- Khai báo ở package chặn ở mức kiểm tra biên giới và **nói rõ ý định** cho người đọc
+
+Hai chỗ phải luôn khớp nhau. Lệch nhau là dấu hiệu ai đó thêm phụ thuộc mà không
+suy nghĩ về nó.
 
 ---
 
@@ -89,33 +147,66 @@ công khai hoặc nghe sự kiện, không tự đọc bảng.
 
 ## Ba luật biên giới
 
-Đây là ba luật quan trọng nhất của toàn bộ backend. Vi phạm bất kỳ luật nào làm
-hỏng build.
+Đây là ba luật quan trọng nhất của toàn bộ backend.
+
+| Luật | Có công cụ tự động bắt không |
+|---|---|
+| 1. Không import package nội bộ của module khác | ✅ Có, làm hỏng build |
+| 2. Không truy vấn bảng của module khác | ❌ **Không** — cần cơ chế riêng, xem mục 2 |
+| 3. Bất đồng bộ chỉ qua domain event | ⚠️ Một phần — công cụ chặn lời gọi trực tiếp vào nội bộ, nhưng không phân biệt được lời gọi hợp lệ qua API với lời gọi lẽ ra nên là sự kiện |
+
+Biết rõ ranh giới của công cụ quan trọng ngang với biết luật: nếu tưởng cả ba
+luật đều được bắt tự động thì luật 2 sẽ bị vi phạm im lặng trong nhiều tháng.
 
 ### 1. Không import package nội bộ của module khác
 
-Mỗi module có đúng một package lộ ra ngoài:
+Mỗi module lộ ra ngoài đúng **một** package:
 
 ```
 modules/issue/
-└── src/main/java/dev/kaiju/issue/
-    ├── domain/            # nội bộ
-    ├── application/       # nội bộ
-    ├── infrastructure/    # nội bộ
-    └── api/               # ← duy nhất được import từ ngoài
+└── src/main/java/dev/kaiju/app/issue/
+    ├── package-info.java   # khai báo module và danh sách phụ thuộc cho phép
+    ├── domain/             # nội bộ
+    ├── application/        # nội bộ
+    ├── infrastructure/     # nội bộ
+    └── api/                # ← được khai báo là giao diện công khai có tên
+        ├── package-info.java      # đánh dấu package này là phần lộ ra ngoài
         ├── IssueQuery.java        # interface đọc
         ├── IssueCommand.java      # interface ghi
         ├── dto/                   # DTO phẳng, không phải entity
         └── event/                 # định nghĩa domain event
 ```
 
-Kiểm tra bằng Spring Modulith trong test. Xem [mục kiểm thử](#kiểm-thử-biên-giới).
+Hai điều **bắt buộc** để cấu trúc này hoạt động, xem
+[quy ước package](#quy-ước-package-bắt-buộc):
+
+- Package `api` phải được **khai báo tường minh** là phần lộ ra ngoài. Không khai
+  báo thì nó bị coi là nội bộ y như ba package kia
+- **Package gốc của module phải để trống**, chỉ chứa `package-info.java`. Package
+  gốc luôn được lộ ra ngoài dù không khai báo gì, nên bất cứ kiểu dữ liệu nào đặt
+  ở đó đều trở thành API ngoài ý muốn
+
+> **Đã thay đổi (2026-09-17):** bản đầu của tài liệu này chỉ nói "`api` là package
+> duy nhất được import từ ngoài" mà không nêu hai điều kiện trên. Cấu trúc thư mục
+> không đổi, nhưng nếu thiếu khai báo thì công cụ kiểm tra sẽ hiểu **ngược lại**
+> ý định: chặn `api` và mở package gốc.
 
 ### 2. Không truy vấn bảng thuộc sở hữu của module khác
 
 Kể cả khi biết tên bảng và câu SQL sẽ nhanh hơn. Một câu `JOIN` xuyên module là
-một phụ thuộc không nhìn thấy được trong Gradle, không kiểm tra được bằng công cụ,
-và là cách monolith trở nên không tách được.
+một phụ thuộc không nhìn thấy được trong Gradle, và là cách monolith trở nên
+không tách được.
+
+**Luật này không có công cụ sẵn nào bắt được**, vì tên bảng chỉ là chuỗi ký tự
+trong SQL. Cần tự dựng cơ chế, và phải dựng ở Phase 0:
+
+| Cơ chế | Cách làm |
+|---|---|
+| Tiền tố tên bảng theo module | Mỗi module sở hữu một tiền tố; bảng của `issue` bắt đầu bằng `issue_` |
+| Test quét mã nguồn | Quét chuỗi SQL và các lớp jOOQ được sinh ra, báo lỗi khi một module chạm tới tiền tố không phải của mình |
+| Chia mã jOOQ theo module | Mã sinh ra cho bảng của module nào chỉ hiển thị trong module đó |
+
+Không có ba thứ này thì luật 2 chỉ là lời khuyên.
 
 Cần dữ liệu của module khác thì có hai lựa chọn:
 - **Đồng bộ**: gọi `api` của module đó. Chấp nhận thêm một vòng truy vấn.
@@ -135,17 +226,67 @@ Nhờ đó, thêm một hành vi mới khi issue đổi trạng thái **không p
 
 ---
 
-## Vai trò của Spring Modulith
+## Công cụ kiểm tra biên giới
 
-**Chỉ dùng để kiểm tra biên giới module.** Không dùng Event Publication Registry
-của nó, vì bên tiêu thụ sự kiện chạy ở vai trò ứng dụng khác và registry chỉ
-dispatch trong cùng tiến trình. Xem [ADR-0005](../adr/0005-outbox-db-job.md).
+> Đây là **nơi duy nhất** trong toàn bộ tài liệu nêu tên công cụ cụ thể. Các tài
+> liệu khác chỉ nói "công cụ kiểm tra biên giới" và trỏ về đây, để nếu sau này
+> đổi công cụ thì chỉ phải sửa một chỗ.
+
+Công cụ dùng là **Spring Modulith**, và **chỉ dùng cho việc kiểm tra biên giới**.
+
+### Phiên bản nền
+
+| | |
+|---|---|
+| Spring Boot | Dòng 4.x |
+| Spring Modulith | Dòng 2.x — dòng này đi kèm Spring Boot 4 |
+| Java | 21 trở lên, bật virtual thread |
+
+Chốt phiên bản trước khi viết dòng code đầu tiên. Dòng 1.x của công cụ đi với
+Spring Boot 3 và có API khác; chọn nhầm dòng thì phần lớn hướng dẫn tìm được trên
+mạng sẽ không khớp.
+
+### Thư viện được phép và không được phép
+
+| Thư viện | Dùng? | Lý do |
+|---|---|---|
+| Nhân của công cụ (`spring-modulith-core`) | ✅ | Cần cho việc kiểm tra biên giới |
+| Bộ hỗ trợ kiểm thử (`spring-modulith-starter-test`) | ✅ | Chạy kiểm tra trong test |
+| Bộ sinh tài liệu | ✅ Tuỳ chọn | Sinh sơ đồ module để đối chiếu |
+| **Mọi bộ lưu trữ sự kiện của công cụ** (`spring-modulith-starter-jdbc`, `-jpa`, `-mongodb`, `-neo4j`) | ❌ **Cấm** | Xem cảnh báo dưới |
+| Các bộ externalize sự kiện ra broker | ❌ Cấm | Dự án không dùng message broker |
+
+> ⚠️ **Cảnh báo quan trọng.** Chỉ cần một bộ lưu trữ sự kiện của công cụ xuất hiện
+> trên classpath là nó **tự động bật cơ chế theo dõi sự kiện riêng của nó, tự tạo
+> bảng riêng, và tự chặn mọi listener giao dịch**. Kết quả là hệ thống có **hai**
+> cơ chế chuyển tiếp sự kiện chạy song song, cùng ghi vào cùng một giao dịch,
+> không biết gì về nhau. Đây là loại lỗi rất khó nhận ra vì mọi thứ vẫn "chạy".
+>
+> Dự án đã có cơ chế chuyển tiếp riêng ([events-and-outbox.md](events-and-outbox.md))
+> và lý do không dùng cơ chế sẵn có nằm ở [ADR-0005](../adr/0005-outbox-db-job.md).
+
+### Công cụ kiểm tra những gì
+
+Chỉ **ba** điều, và cần biết rõ giới hạn này:
+
+| # | Kiểm tra | Tương ứng luật |
+|---|---|---|
+| 1 | Không có phụ thuộc vòng giữa các module | — |
+| 2 | Không truy cập kiểu dữ liệu nằm trong package nội bộ của module khác | Luật 1 |
+| 3 | Nếu một module khai báo danh sách phụ thuộc cho phép thì chỉ những phụ thuộc đó được chấp nhận | Luật 1 |
+
+**Nó không kiểm tra**: truy cập bảng của module khác, việc một lời gọi lẽ ra nên
+là sự kiện, hay bất cứ ràng buộc nào về dữ liệu. Những thứ đó cần cơ chế riêng —
+xem [luật 2](#2-không-truy-vấn-bảng-thuộc-sở-hữu-của-module-khác) và
+[test bất biến cơ sở dữ liệu](testing-strategy.md#bất-biến-cơ-sở-dữ-liệu).
 
 ### Kiểm thử biên giới
 
-Một test duy nhất, chạy trong CI, kiểm tra toàn bộ đồ thị phụ thuộc giữa các
-module và làm hỏng build khi có vi phạm. Test này cũng sinh được tài liệu sơ đồ
-module, dùng để đối chiếu với tài liệu viết tay.
+Một test duy nhất, chạy trong CI, kiểm tra toàn bộ đồ thị phụ thuộc và làm hỏng
+build khi có vi phạm. Test này là **JUnit thuần, không cần khởi động Spring
+context**, nên chạy rất nhanh và đặt được ở lớp test sớm nhất.
+
+Test này cũng sinh được sơ đồ module, dùng để đối chiếu với tài liệu viết tay.
 
 > **Chưa chốt:** có sinh sơ đồ module tự động vào `docs/` hay không. Sinh tự động
 > thì luôn đúng, nhưng thêm một bước trong build và một thư mục do máy quản lý.
@@ -240,14 +381,20 @@ ghi nhật ký thay đổi, và bản ghi sự kiện.
 ## Checklist thêm một module mới
 
 1. Tạo thư mục Gradle, khai báo trong `settings.gradle.kts`
-2. Khai báo phụ thuộc — chỉ `platform/*` và `api` của các module thật sự cần
-3. Đánh dấu module cho công cụ kiểm tra biên giới
-4. Dựng package `api` **trước**: viết interface và định nghĩa sự kiện trước khi
+2. Tạo package là **con trực tiếp** của package gốc ứng dụng, đúng tên module
+   ([quy ước package](#quy-ước-package-bắt-buộc))
+3. Thêm `package-info.java` ở package gốc của module: khai báo module và danh
+   sách phụ thuộc cho phép. **Để package gốc trống ngoài file này**
+4. Tạo package `api` kèm `package-info.java` **khai báo nó là phần lộ ra ngoài** —
+   thiếu bước này thì module khác không import được gì
+5. Khai báo phụ thuộc trong Gradle, khớp với khai báo ở bước 3
+6. Dựng nội dung `api` **trước**: viết interface và định nghĩa sự kiện trước khi
    viết hiện thực. Nếu `api` trông xấu thì biên giới đang đặt sai chỗ
-5. Viết migration cho bảng của module — nhớ cột định danh workspace và chính sách
+7. Chọn tiền tố tên bảng của module và đăng ký vào test kiểm tra quyền sở hữu bảng
+8. Viết migration cho bảng của module — nhớ cột định danh workspace và chính sách
    bảo mật mức dòng ([data-access-and-tenancy.md](data-access-and-tenancy.md))
-6. Đăng ký bên tiêu thụ sự kiện nếu có, kèm cơ chế chống trùng
-7. Xác định thay đổi nào của module cần đi vào nhật ký thay đổi cho client
-8. Chạy test kiểm tra biên giới
-9. Cập nhật bảng module trong tài liệu này và
-   [feature catalog](../03-features/README.md)
+9. Đăng ký bên tiêu thụ sự kiện nếu có, kèm cơ chế chống trùng
+10. Xác định thay đổi nào của module cần đi vào nhật ký thay đổi cho client
+11. Chạy test kiểm tra biên giới và test quyền sở hữu bảng
+12. Cập nhật bảng module trong tài liệu này và
+    [feature catalog](../03-features/README.md)

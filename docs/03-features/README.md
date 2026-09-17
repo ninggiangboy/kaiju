@@ -33,7 +33,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 
 | Phase | Tên | Số feature | TODO | IN_PROGRESS | DONE |
 |---|---|---|---|---|---|
-| 0 | Nền tảng | 48 | 48 | 0 | 0 |
+| 0 | Nền tảng | 51 | 51 | 0 | 0 |
 | 1 | Identity & Workspace | 32 | 32 | 0 | 0 |
 | 2 | Project | 12 | 12 | 0 | 0 |
 | 3 | Issue | 16 | 16 | 0 | 0 |
@@ -50,7 +50,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | 14 | Automation | 10 | 10 | 0 | 0 |
 | 15 | Bulk & Import | 7 | 7 | 0 | 0 |
 | 16 | Integration | 10 | 10 | 0 | 0 |
-| | **Tổng** | **223** | **223** | **0** | **0** |
+| | **Tổng** | **226** | **226** | **0** | **0** |
 
 ---
 
@@ -63,7 +63,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | KJ-PLT-01 | Gradle multi-module và cấu trúc bốn thư mục | | TODO | [backend-modules](../04-system-design/backend-modules.md) |
 | KJ-PLT-02 | Bốn vai trò ứng dụng chọn bằng profile | KJ-PLT-01 | TODO | |
 | KJ-PLT-03 | Cấu hình connection pool riêng theo vai trò | KJ-PLT-02 | TODO | Tính tổng số kết nối thủ công |
-| KJ-PLT-04 | Kiểm tra biên giới module làm hỏng build | KJ-PLT-01 | TODO | Spring Modulith, chỉ dùng để verify |
+| KJ-PLT-04 | Kiểm tra biên giới module làm hỏng build | KJ-PLT-01 | TODO | Chỉ bắt được luật 1, xem ghi chú ở KJ-PLT-18 |
 | KJ-PLT-05 | Cấu hình Spring Data JDBC và converter kiểu JSON | KJ-PLT-01 | TODO | Thiếu là mọi thao tác ghi lỗi kiểu |
 | KJ-PLT-06 | Thiết lập jOOQ và bước sinh mã | KJ-PLT-05 | TODO | |
 | KJ-PLT-07 | Flyway và quy ước migration | KJ-PLT-05 | TODO | |
@@ -77,6 +77,9 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | KJ-PLT-15 | Dockerfile cho backend và frontend | KJ-PLT-01 | TODO | |
 | KJ-PLT-16 | Cấu hình máy chủ trung gian đã tắt đệm cho SSE | KJ-PLT-14 | TODO | Lỗi vận hành phổ biến nhất |
 | KJ-PLT-17 | Bộ khung kiểm thử với Testcontainers | KJ-PLT-07 | TODO | |
+| KJ-PLT-18 | Enforce quyền sở hữu bảng theo module: tiền tố tên bảng và test quét | KJ-PLT-04, KJ-PLT-06 | TODO | Công cụ kiểm tra biên giới **không** bắt được luật này |
+| KJ-PLT-19 | Test chặn thư viện bị cấm xuất hiện trên classpath | KJ-PLT-01 | TODO | Tránh có hai cơ chế chuyển tiếp sự kiện chạy song song |
+| KJ-PLT-20 | Chốt phiên bản nền và khung package của toàn backend | | TODO | Làm trước KJ-PLT-01 |
 
 ### Events & Outbox
 
