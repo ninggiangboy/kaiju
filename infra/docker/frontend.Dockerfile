@@ -2,18 +2,18 @@
 # mutations, no business data fetching in server components. The Node process
 # here only serves marketing pages and the magic-link landing page.
 
-FROM node:22-alpine AS deps
+FROM node:26-alpine AS deps
 WORKDIR /src
 COPY frontend/package.json frontend/package-lock.json* ./
 RUN npm ci
 
-FROM node:22-alpine AS build
+FROM node:26-alpine AS build
 WORKDIR /src
 COPY --from=deps /src/node_modules ./node_modules
 COPY frontend/ .
 RUN npm run build
 
-FROM node:22-alpine AS runtime
+FROM node:26-alpine AS runtime
 WORKDIR /app
 RUN addgroup -S kaiju && adduser -S kaiju -G kaiju
 
