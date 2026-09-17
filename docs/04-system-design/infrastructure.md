@@ -4,7 +4,7 @@ Danh sách đầy đủ những thành phần hạ tầng hệ thống thật s�
 điều gì xảy ra khi từng thành phần chết. Kèm theo là các nhóm thư viện phụ thuộc
 ở phía backend.
 
-**Liên quan:** [architecture.md](architecture.md) · [observability-and-ops.md](observability-and-ops.md) · [backend-modules.md](backend-modules.md#phiên-bản-nền) · [ADR-0002](../adr/0002-postgres-only.md) · [ADR-0003](../adr/0003-redis-scope.md)
+**Liên quan:** [architecture.md](architecture.md) · [environments.md](environments.md) · [observability-and-ops.md](observability-and-ops.md) · [backend-modules.md](backend-modules.md#phiên-bản-nền) · [ADR-0002](../adr/0002-postgres-only.md) · [ADR-0003](../adr/0003-redis-scope.md)
 
 ---
 
@@ -112,9 +112,6 @@ Nhưng nó có mặt **từ Phase 0 ở môi trường phát triển và CI**, k
 tải mà để **bắt sớm**. Lý do: các ràng buộc dưới đây là loại vi phạm hoàn toàn im
 lặng — code chạy đúng suốt nhiều tháng, rồi hỏng vào đúng ngày thêm bộ gộp kết nối
 vì lý do chịu tải, và lúc đó thì đã có hàng nghìn dòng code dựa vào giả định sai.
-
-| Cơ chế đang dùng | Ở chế độ gộp theo giao dịch |
-|---|---|
 
 | Cơ chế đang dùng | Ở chế độ gộp theo giao dịch |
 |---|---|

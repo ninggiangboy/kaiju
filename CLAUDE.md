@@ -13,10 +13,12 @@ violated, and how to record a decision that departs from the docs.
 
 ```
 kaiju/
+├── .github/     # CI workflows and shared check scripts
 ├── docs/        # documentation
 ├── backend/     # Spring Boot, Gradle multi-module
 ├── frontend/    # Next.js
-└── infra/       # Docker Compose, Dockerfiles, reverse proxy, operational scripts
+└── infra/       # Compose files per environment tier, Dockerfiles, reverse proxy,
+                 # orchestration manifests, operational scripts
 ```
 
 Do not add directories at the top level.
@@ -78,6 +80,8 @@ Vietnamese; this table is the index into it.
 | Anything that grants or removes access | [uc-member-invite.md](docs/03-features/usecases/uc-member-invite.md) + [realtime-and-sync.md — revocation](docs/04-system-design/realtime-and-sync.md#khi-quyền-bị-thu-hồi) |
 | Writing tests | [testing-strategy.md](docs/04-system-design/testing-strategy.md) |
 | Docker, proxy config, deployment, metrics, logging | [observability-and-ops.md](docs/04-system-design/observability-and-ops.md) |
+| Standing up or changing an environment | [environments.md](docs/04-system-design/environments.md) — four tiers, and what only that tier catches |
+| CI workflows, release, rollback | [ci-cd.md](docs/04-system-design/ci-cd.md) |
 | Adding a dependency, or standing up an infrastructure component | [infrastructure.md](docs/04-system-design/infrastructure.md) |
 | Performance, availability or security targets | [non-functional.md](docs/02-requirement/non-functional.md) |
 
@@ -92,6 +96,8 @@ Vietnamese; this table is the index into it.
 | Add a datastore, a broker, or a sync library | [ADR-0002](docs/adr/0002-postgres-only.md), [ADR-0005](docs/adr/0005-outbox-db-job.md), [ADR-0007](docs/adr/0007-build-own-sync-engine.md) |
 | Add any event-store library of the base framework, or use its transactional event listener annotations | [events-and-outbox.md](docs/04-system-design/events-and-outbox.md#ba-điều-cấm). It silently creates a second, competing outbox |
 | Create a package, move one, or add a module | [backend-modules.md](docs/04-system-design/backend-modules.md#quy-ước-package-bắt-buộc). Get this wrong and the boundary check silently verifies nothing |
+| Branch on the environment name in code | [environments.md](docs/04-system-design/environments.md). Forbidden — that branch is never exercised where it actually runs |
+| Deploy `api` before `worker`, or run migrations at application startup in production | [ci-cd.md](docs/04-system-design/ci-cd.md#thứ-tự-triển-khai) |
 | Put a spinner in a main-flow interaction | [frontend.md](docs/04-system-design/frontend.md). It means the action is not optimistic yet |
 | Reuse a permission bit position | [ADR-0010](docs/adr/0010-bitmask-permission.md). Never do this |
 
@@ -171,6 +177,16 @@ These may not be violated. Full reasoning lives in the linked ADRs and in
 31. All permission checks go through a single entry point that also receives the
     data context, so the permission condition layer can plug in
 
+### Environments and delivery
+
+32. **One container image runs in all four tiers.** Differences live in environment
+    variables and the role profile — **never in a code branch on the environment name**
+33. In production, migrations run as a **separate job before deployment**, and the
+    deployment order is migration → `worker` and `scheduler` → `api` and `realtime`
+34. Deployments always pin an immutable image tag bound to a commit, never a moving tag
+35. A CI job that was **skipped counts as failed** unless its directory did not change
+36. `staging` uses no stand-in services — real mail, real object storage, real database
+
 ---
 
 ## Recording decisions that depart from the docs
@@ -242,7 +258,8 @@ The project **has not started implementation**. Documentation only.
 |---|---|
 | Brief, Requirement, System Design, Features & Roadmap | ✅ Complete |
 | UX/UI design, ERD, Detail design | ⬜ Not started |
-| `backend/`, `frontend/`, `infra/` | ⬜ Not created |
+| `infra/`, `.github/` | ✅ Scaffolded — environment tiers and CI pipeline |
+| `backend/`, `frontend/` | ⬜ Not created |
 
 Next steps on the roadmap: analyse the data model ([ERD](docs/06-erd/) — its
 README already lists the nine constraints that model must satisfy), then start

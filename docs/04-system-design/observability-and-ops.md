@@ -3,7 +3,7 @@
 Nội dung của `infra/`, cách cấu hình theo vai trò ứng dụng, và những chỉ số phải
 đo được để biết hệ thống có đang khoẻ hay không.
 
-**Liên quan:** [infrastructure.md](infrastructure.md) · [architecture.md](architecture.md) · [events-and-outbox.md](events-and-outbox.md) · [realtime-and-sync.md](realtime-and-sync.md) · [non-functional.md](../02-requirement/non-functional.md)
+**Liên quan:** [environments.md](environments.md) · [ci-cd.md](ci-cd.md) · [infrastructure.md](infrastructure.md) · [architecture.md](architecture.md) · [events-and-outbox.md](events-and-outbox.md) · [realtime-and-sync.md](realtime-and-sync.md) · [non-functional.md](../02-requirement/non-functional.md)
 
 ---
 
@@ -11,16 +11,23 @@ Nội dung của `infra/`, cách cấu hình theo vai trò ứng dụng, và nh�
 
 ```
 infra/
-├── docker-compose.yml         # môi trường phát triển
+├── compose/
+│   ├── docker-compose.yml       # bậc 1 — local-mini
+│   └── docker-compose.dev.yml   # bậc 2 — thêm phần vận hành
+├── staging/                     # bậc 3 — một máy chủ duy nhất
+├── k8s/                         # bậc 4 — bản kê khai cho nền tảng điều phối
 ├── docker/
 │   ├── backend.Dockerfile
 │   └── frontend.Dockerfile
-├── proxy/                     # cấu hình máy chủ trung gian
-├── scripts/                   # khởi tạo, dữ liệu mẫu, tiện ích vận hành
-└── env/                       # tệp biến môi trường mẫu — không chứa bí mật thật
+├── proxy/                       # cấu hình máy chủ trung gian
+├── pgbouncer/                   # cấu hình bộ gộp kết nối
+├── scripts/                     # khởi tạo, dữ liệu mẫu, tiện ích vận hành
+└── env/                         # tệp biến môi trường mẫu — không chứa bí mật thật
 ```
 
-### Môi trường phát triển
+Từng bậc dùng để làm gì và bắt được loại lỗi nào: [environments.md](environments.md).
+
+### Bậc 1 và bậc 2 trên máy phát triển
 
 | Dịch vụ | Vai trò | Mặc định bật |
 |---|---|---|
@@ -29,8 +36,8 @@ infra/
 | Bộ bắt email | Nhận mọi email gửi ra và hiển thị trên giao diện web. **Bắt buộc** vì đăng nhập phụ thuộc hoàn toàn vào email | ✅ |
 | Hệ thống quan sát gói sẵn | Nhận tín hiệu theo chuẩn mở, có sẵn giao diện xem chỉ số, nhật ký và lần vết | ✅ |
 | Lưu trữ đối tượng | Tệp đính kèm, từ Phase 4 | ✅ từ Phase 4 |
-| Bộ gộp kết nối | Bắt sớm vi phạm về trạng thái phiên | ❌ hồ sơ tuỳ chọn |
-| Máy chủ trung gian | Kiểm chứng hành vi đệm của luồng đồng bộ | ❌ hồ sơ tuỳ chọn |
+| Bộ gộp kết nối | Bắt sớm vi phạm về trạng thái phiên | ❌ chỉ ở bậc 2 |
+| Máy chủ trung gian | Kiểm chứng hành vi đệm của luồng đồng bộ | ❌ chỉ ở bậc 2 |
 
 Chi tiết từng thành phần và lý do: [infrastructure.md](infrastructure.md).
 
@@ -158,6 +165,8 @@ ngay ở đầu tài liệu triển khai.
 ---
 
 ## Triển khai
+
+Đường đi từ commit tới môi trường thật: [ci-cd.md](ci-cd.md#phát-hành-và-triển-khai).
 
 Thay thế cuốn chiếu theo từng vai trò. Client mất kết nối đồng bộ vài giây rồi tự
 nối lại và bắt kịp, nên không mất thay đổi nào.

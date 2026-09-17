@@ -22,6 +22,8 @@ và chỉ ra cách áp dụng, không lặp lại phần biện luận.
 | [frontend.md](frontend.md) | Kiến trúc bên trong `frontend/`: local-first, sync engine phía client |
 | [identity-and-permission.md](identity-and-permission.md) | Cơ chế magic link, phiên, mô hình danh tính hai tầng, mặt nạ quyền |
 | [infrastructure.md](infrastructure.md) | Thành phần hạ tầng cần thiết, khi nào cần, mất thì sao, và các nhóm thư viện phụ thuộc |
+| [environments.md](environments.md) | Bốn bậc môi trường, mỗi bậc bắt được loại lỗi gì |
+| [ci-cd.md](ci-cd.md) | Quy trình tích hợp liên tục, cổng chặn merge, đường đi lên các bậc |
 | [observability-and-ops.md](observability-and-ops.md) | Nội dung `infra/`, nhật ký, chỉ số, cấu hình, vận hành |
 | [testing-strategy.md](testing-strategy.md) | Các tầng kiểm thử và những thứ bắt buộc phải có test riêng |
 
@@ -37,6 +39,7 @@ lại đọc khi cần.
 
 ```
 kaiju/
+├── .github/     # quy trình tích hợp liên tục
 ├── docs/        # tài liệu
 ├── backend/     # Spring Boot, Gradle multi-module
 ├── frontend/    # Next.js
@@ -48,7 +51,8 @@ kaiju/
 | `docs/` | Toàn bộ tài liệu, ADR, use case | Không chứa mã nguồn chạy được |
 | `backend/` | Mã nguồn Java, Gradle multi-module, migration của cơ sở dữ liệu, test backend | Không chứa cấu hình triển khai; không chứa asset của frontend |
 | `frontend/` | Mã nguồn Next.js, sync engine phía client, test frontend | Không gọi trực tiếp cơ sở dữ liệu; không chứa logic nghiệp vụ trùng lặp với backend |
-| `infra/` | Docker Compose cho môi trường phát triển, Dockerfile, cấu hình máy chủ trung gian, script khởi tạo và seed | Không chứa bí mật thật; chỉ chứa giá trị mẫu |
+| `infra/` | Tệp compose cho từng bậc môi trường, Dockerfile, cấu hình máy chủ trung gian, bản kê khai cho nền tảng điều phối, script khởi tạo và seed | Không chứa bí mật thật; chỉ chứa giá trị mẫu |
+| `.github/` | Quy trình CI, script kiểm tra dùng chung | Không chứa logic chỉ tồn tại trong tệp cấu hình CI — mọi script phải chạy được từ máy cá nhân |
 
 ### Vì sao một repository
 

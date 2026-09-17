@@ -33,7 +33,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 
 | Phase | Tên | Số feature | TODO | IN_PROGRESS | DONE |
 |---|---|---|---|---|---|
-| 0 | Nền tảng | 55 | 55 | 0 | 0 |
+| 0 | Nền tảng | 63 | 63 | 0 | 0 |
 | 1 | Identity & Workspace | 33 | 33 | 0 | 0 |
 | 2 | Project | 12 | 12 | 0 | 0 |
 | 3 | Issue | 16 | 16 | 0 | 0 |
@@ -50,7 +50,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | 14 | Automation | 10 | 10 | 0 | 0 |
 | 15 | Bulk & Import | 7 | 7 | 0 | 0 |
 | 16 | Integration | 10 | 10 | 0 | 0 |
-| | **Tổng** | **232** | **232** | **0** | **0** |
+| | **Tổng** | **240** | **240** | **0** | **0** |
 
 ---
 
@@ -84,6 +84,14 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | KJ-PLT-22 | Phát tín hiệu quan sát theo chuẩn mở, gồm truyền ngữ cảnh lần vết qua bảng chuyển tiếp | KJ-PLT-12, KJ-EVT-01 | TODO | Thiếu thì chuỗi lần vết đứt đúng chỗ cần nhìn nhất |
 | KJ-PLT-23 | Công việc CI chạy bộ kiểm thử tích hợp qua bộ gộp kết nối | KJ-PLT-17, KJ-PLT-08 | TODO | Cách duy nhất bắt tự động vi phạm CON-62 |
 | KJ-PLT-24 | Định tuyến riêng cho kết nối lắng nghe thông báo, không qua bộ gộp | KJ-EVT-04 | TODO | Viết từ đầu, không thêm lúc triển khai bộ gộp |
+| KJ-PLT-25 | Môi trường bậc 1 `local-mini` chạy bằng một lệnh | | TODO | Cơ sở dữ liệu, máy chủ giao thức Redis, bộ bắt email, lưu trữ đối tượng |
+| KJ-PLT-26 | Môi trường bậc 2 `dev` với bộ gộp kết nối, hệ thống quan sát, máy chủ trung gian và bốn vai trò chạy tách rời | KJ-PLT-25 | TODO | Bậc đầu tiên bắt được vi phạm CON-62 và lỗi đệm luồng đồng bộ |
+| KJ-PLT-27 | Quy trình CI đầy đủ với cổng chặn merge duy nhất | KJ-PLT-23 | TODO | Công việc bị bỏ qua tính là thất bại, xem CON-71 |
+| KJ-PLT-28 | Kiểm tra migration tương thích ngược trong CI | KJ-PLT-08 | TODO | Điều kiện để quay lui an toàn |
+| KJ-PLT-29 | Luật kiểm tra mã nguồn frontend cấm Server Action và lấy dữ liệu nghiệp vụ ở server component | KJ-PLT-04 | TODO | Enforce CON-35 và CON-36 bằng công cụ, không bằng câu văn |
+| KJ-PLT-30 | Dựng và phát hành ảnh container gắn thẻ theo commit | KJ-PLT-27 | TODO | Một ảnh backend cho cả bốn vai trò, xem CON-66 |
+| KJ-PLT-31 | Bản kê khai triển khai cho bậc 3 và bậc 4, gồm công việc migration chạy trước | KJ-PLT-30 | TODO | Thứ tự triển khai theo CON-69 |
+| KJ-PLT-32 | Kiểm tra sau triển khai: sức khoẻ từng vai trò, mở được luồng đồng bộ, độ trễ hàng đợi dưới ngưỡng | KJ-PLT-31 | TODO | Cách tự động duy nhất phát hiện "realtime không chạy" |
 
 ### Events & Outbox
 

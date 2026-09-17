@@ -26,6 +26,14 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-63 | Tệp đính kèm lưu ở kho lưu trữ đối tượng, không lưu trong cơ sở dữ liệu; cơ sở dữ liệu chỉ giữ siêu dữ liệu | [infrastructure.md](../04-system-design/infrastructure.md#lưu-trữ-đối-tượng) |
 | CON-64 | Ứng dụng chỉ phát tín hiệu quan sát theo chuẩn mở, không gắn với một sản phẩm giám sát cụ thể | [infrastructure.md](../04-system-design/infrastructure.md#nguyên-tắc-ứng-dụng-chỉ-nói-một-giao-thức) |
 | CON-65 | Ngữ cảnh lần vết phải được truyền qua siêu dữ liệu của sự kiện để chuỗi không đứt ở ranh giới bất đồng bộ | [infrastructure.md](../04-system-design/infrastructure.md#nguyên-tắc-ứng-dụng-chỉ-nói-một-giao-thức) |
+| CON-66 | Cùng một ảnh container chạy ở cả bốn bậc môi trường; khác biệt chỉ nằm ở biến môi trường và profile vai trò | [environments.md](../04-system-design/environments.md#nguyên-tắc-một-artifact-bốn-cấu-hình) |
+| CON-67 | **Cấm** mọi nhánh code rẽ theo tên môi trường. Khác biệt giữa các bậc phải biểu diễn bằng biến cấu hình nói lên tính chất, không nói lên nơi chốn | [environments.md](../04-system-design/environments.md#nguyên-tắc-một-artifact-bốn-cấu-hình) |
+| CON-68 | Ở bậc `production`, migration chạy như một công việc riêng **trước** khi triển khai, không chạy lúc ứng dụng khởi động | [environments.md](../04-system-design/environments.md#những-thứ-chỉ-xuất-hiện-ở-bậc-này) |
+| CON-69 | Thứ tự triển khai bắt buộc: migration → `worker` và `scheduler` → `api` và `realtime` | [ci-cd.md](../04-system-design/ci-cd.md#thứ-tự-triển-khai) |
+| CON-70 | Triển khai luôn theo thẻ ảnh cố định gắn với commit, không bao giờ theo thẻ động | [ci-cd.md](../04-system-design/ci-cd.md#ảnh-container) |
+| CON-71 | Cổng chặn merge coi công việc bị bỏ qua là **thất bại**, trừ khi thư mục tương ứng không thay đổi | [ci-cd.md](../04-system-design/ci-cd.md#cổng) |
+| CON-72 | Mọi script kiểm tra của CI phải chạy được từ máy cá nhân bằng một lệnh | [ci-cd.md](../04-system-design/ci-cd.md#cấu-trúc) |
+| CON-73 | Bậc `staging` **không** được dùng dịch vụ giả lập: email, lưu trữ đối tượng, cơ sở dữ liệu và đích thu thập tín hiệu quan sát đều phải là hàng thật | [environments.md](../04-system-design/environments.md#bậc-3--staging) |
 
 ## Kiến trúc
 
