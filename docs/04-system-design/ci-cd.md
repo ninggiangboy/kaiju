@@ -187,6 +187,24 @@ Lý do viết tường minh như vậy: mặc định của phần lớn cấu h
 bỏ qua là đã qua. Kết hợp với lọc theo đường dẫn, đó là cách một thay đổi backend
 merge được mà chưa từng chạy một test nào — vì bộ lọc đường dẫn viết sai.
 
+### Khi ứng dụng chưa tồn tại
+
+`backend/` và `frontend/` chưa có. Nhưng `infra/docker/backend.Dockerfile` và
+`infra/docker/frontend.Dockerfile` **thì có**, và chúng nằm trong bộ lọc của hai
+thư mục ấy — nên một pull request nâng phiên bản ảnh nền sẽ kích hoạt công việc
+backend hoặc frontend, rồi hỏng vì thiếu `gradlew` hoặc thiếu tệp khoá phụ thuộc.
+Đó là tiếng ồn, không phải phát hiện, và nó chặn mọi lần nâng phụ thuộc cho hai
+tệp đó.
+
+Công việc phát hiện thư mục thay đổi vì vậy còn xét thêm một điều kiện: **tệp
+build của ứng dụng có tồn tại không** (`backend/settings.gradle.kts`,
+`frontend/package.json`). Chưa có thì công việc tương ứng bị bỏ qua và cổng chấp
+nhận trạng thái đó.
+
+Điều kiện này **tự biến mất**: ngày tệp build xuất hiện, bộ lọc quay lại tự quyết
+định một mình. Nó khoá theo *tệp build* chứ không theo thư mục là có chủ đích —
+một thư mục khung rỗng không được bật lại các kiểm tra trước khi có thứ để kiểm tra.
+
 ### Thứ tự thăng cấp
 
 Một cổng thứ hai, nhỏ hơn, nằm trong `pr-hygiene.yml`: pull request vào

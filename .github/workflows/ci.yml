@@ -37,8 +37,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       docs: ${{ steps.filter.outputs.docs }}
-      backend: ${{ steps.filter.outputs.backend }}
-      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend == 'true' && steps.exists.outputs.backend == 'true' }}
+      frontend: ${{ steps.filter.outputs.frontend == 'true' && steps.exists.outputs.frontend == 'true' }}
       infra: ${{ steps.filter.outputs.infra }}
     steps:
       - uses: actions/checkout@v7
@@ -59,6 +59,30 @@ jobs:
             infra:
               - 'infra/**'
               - '.github/workflows/**'
+
+      # Neither application exists yet - this is still a documentation-only
+      # repository. But a bump to backend.Dockerfile or frontend.Dockerfile does
+      # trip the filters above, and the job then fails on a missing gradlew or a
+      # missing lockfile. That is noise, not a finding, and it blocks every
+      # dependency bump to those two files.
+      #
+      # This guard removes itself. The day the build file lands, the filter goes
+      # back to deciding alone. It is keyed on the BUILD FILE rather than on the
+      # directory on purpose: an empty scaffold directory must not switch the
+      # checks back on before there is anything for them to run against.
+      - id: exists
+        run: |
+          set -euo pipefail
+          check() {   # <app> <build file>
+            if [[ -f "$2" ]]; then
+              echo "$1=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "$1=false" >> "$GITHUB_OUTPUT"
+              echo "::notice::$1/ does not exist yet ($2 is missing) - its checks have nothing to run against"
+            fi
+          }
+          check backend  backend/settings.gradle.kts
+          check frontend frontend/package.json
 
   # --------------------------------------------------------------------
   docs:
@@ -335,7 +359,7 @@ jobs:
             local name="$1" changed="$2" result="$3"
             if [[ "$changed" != "true" ]]; then
               if [[ "$result" == "skipped" ]]; then
-                echo "  SKIP $name: directory unchanged"
+                echo "  SKIP $name: nothing to check for it"
               else
                 echo "  FAIL $name: ran although its directory was unchanged ($result) - the filter is wrong"
                 fail=1
