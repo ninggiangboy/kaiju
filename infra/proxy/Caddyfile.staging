@@ -1,0 +1,43 @@
+# Bậc 3 — TLS thật, tên miền thật. Chứng chỉ do Caddy tự xin và tự gia hạn.
+#
+# Giống Caddyfile.dev ở đúng chỗ quan trọng nhất: luồng đồng bộ không được đệm.
+# Khác ở chỗ đây là lần đầu tiên luồng đó đi qua TLS thật.
+
+{$KAIJU_DOMAIN} {
+	log {
+		format json
+	}
+
+	encode zstd gzip
+
+	handle /api/sync/stream* {
+		reverse_proxy realtime:8080 {
+			flush_interval -1
+			transport http {
+				read_timeout 0
+			}
+			header_up X-Accel-Buffering no
+		}
+	}
+
+	handle /api/* {
+		reverse_proxy api:8080
+	}
+
+	request_body {
+		max_size 50MB
+	}
+
+	# Trang tiếp thị và trang nhận magic link — phần duy nhất được render ở
+	# phía máy chủ (ADR-0008).
+	handle {
+		reverse_proxy frontend:3000
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}

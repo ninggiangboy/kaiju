@@ -1,0 +1,59 @@
+# Bậc 2 — máy chủ trung gian ở môi trường phát triển, không TLS.
+#
+# Tệp này tồn tại vì MỘT dòng: `flush_interval -1` ở khối luồng đồng bộ. Thiếu
+# nó, delta bị giữ trong bộ đệm cho tới khi đầy, triệu chứng là "realtime không
+# chạy", và KHÔNG có lỗi nào ở bất kỳ đâu.
+
+{
+	admin off
+	auto_https off
+}
+
+:8080 {
+	log {
+		format console
+	}
+
+	# --- Luồng đồng bộ ---------------------------------------------------
+	# Phải đặt TRƯỚC khối bắt tất cả bên dưới.
+	handle /api/sync/stream* {
+		reverse_proxy realtime:8080 {
+			# Tắt đệm. Đây là lý do tồn tại của cả tệp này.
+			flush_interval -1
+			# Thời gian chờ đọc phải dài hơn chu kỳ nhịp tim, nếu không kết nối
+			# bị đóng liên tục và client bootstrap lại vô ích.
+			transport http {
+				read_timeout 0
+			}
+			header_up X-Accel-Buffering no
+		}
+	}
+
+	# --- Phần còn lại của API -------------------------------------------
+	handle /api/* {
+		reverse_proxy api:8080
+	}
+
+	# --- Kiểm tra sức khoẻ theo từng vai trò ----------------------------
+	handle /internal/health/realtime {
+		reverse_proxy realtime:8080 {
+			rewrite /actuator/health
+		}
+	}
+
+	handle /internal/health/api {
+		reverse_proxy api:8080 {
+			rewrite /actuator/health
+		}
+	}
+
+	# Giới hạn kích thước nội dung tải lên; thiếu thì tệp lớn bị từ chối với
+	# thông báo khó hiểu.
+	request_body {
+		max_size 50MB
+	}
+
+	handle {
+		respond "kaiju dev proxy" 200
+	}
+}

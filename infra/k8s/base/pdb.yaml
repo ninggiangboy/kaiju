@@ -1,0 +1,30 @@
+# Không để nâng cấp nút gỡ hết bản của một vai trò cùng lúc.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kaiju-api
+  namespace: kaiju
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels: { app.kubernetes.io/name: kaiju-api }
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kaiju-realtime
+  namespace: kaiju
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels: { app.kubernetes.io/name: kaiju-realtime }
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kaiju-worker
+  namespace: kaiju
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels: { app.kubernetes.io/name: kaiju-worker }

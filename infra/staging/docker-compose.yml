@@ -1,0 +1,125 @@
+# Bậc 3 — staging, tất cả trên MỘT máy chủ.
+#
+# Chỉ ứng dụng chạy trong container. Mọi thứ có trạng thái thì KHÔNG:
+#
+#   PostgreSQL          cài thẳng trên máy chủ, hoặc dịch vụ quản lý sẵn
+#   Máy chủ Redis       cài thẳng trên máy chủ
+#   Gửi email           dịch vụ gửi thư giao dịch thật
+#   Lưu trữ đối tượng   dịch vụ tương thích S3 thật
+#   Quan sát hệ thống   đích thu thập thật
+#
+# KHÔNG còn dịch vụ giả lập nào (CON-73). Đây là ranh giới định nghĩa bậc 3:
+# ba thứ dưới đây chỉ hỏng ở lần chạm đầu tiên với dịch vụ thật, và không có
+# bậc 3 thì lần chạm đầu tiên đó xảy ra ở production.
+#
+#   1. xác thực tên miền gửi thư   -> "đăng nhập không hoạt động"
+#   2. chính sách kho lưu trữ      -> liên kết có chữ ký, chia sẻ nguồn gốc
+#   3. chuỗi chứng chỉ và tên miền -> luồng đồng bộ qua TLS thật
+#
+#   docker compose --env-file /etc/kaiju/staging.env \
+#                  -f infra/staging/docker-compose.yml up -d
+
+name: kaiju-staging
+
+x-app: &app
+  image: ${KAIJU_IMAGE:?KAIJU_IMAGE phải là thẻ cố định gắn với commit, không phải thẻ động}
+  env_file:
+    - ${KAIJU_ENV_FILE:-/etc/kaiju/staging.env}
+  restart: unless-stopped
+  logging:
+    driver: json-file
+    options:
+      max-size: "20m"
+      max-file: "5"
+
+services:
+  # Chạy trước mọi vai trò, rồi thoát. Ở bậc 3 vẫn có thể chạy migration lúc
+  # ứng dụng khởi động, nhưng làm giống bậc 4 ngay từ đây để thứ tự triển khai
+  # (CON-69) được kiểm chứng ở nơi nó còn hỏng được mà không hại ai.
+  migrate:
+    <<: *app
+    command: ["--kaiju.migrate.only=true"]
+    environment:
+      KAIJU_ROLE: migrate
+    restart: "no"
+
+  worker:
+    <<: *app
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      KAIJU_ROLE: worker
+      KAIJU_DB_POOL_SIZE: "10"
+      KAIJU_MIGRATE_ON_STARTUP: "false"
+      OTEL_SERVICE_NAME: kaiju-worker
+
+  scheduler:
+    <<: *app
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      KAIJU_ROLE: scheduler
+      KAIJU_DB_POOL_SIZE: "3"
+      KAIJU_MIGRATE_ON_STARTUP: "false"
+      OTEL_SERVICE_NAME: kaiju-scheduler
+
+  # api và realtime lên SAU worker và scheduler: tiến trình nền phải hiểu được
+  # định dạng sự kiện mới trước khi có ai sinh ra chúng (CON-69).
+  api:
+    <<: *app
+    depends_on:
+      worker:
+        condition: service_started
+      scheduler:
+        condition: service_started
+    environment:
+      KAIJU_ROLE: api
+      KAIJU_DB_POOL_SIZE: "20"
+      KAIJU_MIGRATE_ON_STARTUP: "false"
+      OTEL_SERVICE_NAME: kaiju-api
+    expose:
+      - "8080"
+
+  realtime:
+    <<: *app
+    depends_on:
+      worker:
+        condition: service_started
+    environment:
+      KAIJU_ROLE: realtime
+      KAIJU_DB_POOL_SIZE: "5"
+      KAIJU_MIGRATE_ON_STARTUP: "false"
+      OTEL_SERVICE_NAME: kaiju-realtime
+    # Dài hơn chu kỳ nhịp tim, để client kịp nối lại chủ động.
+    stop_grace_period: 45s
+    expose:
+      - "8080"
+
+  frontend:
+    image: ${KAIJU_FRONTEND_IMAGE:?thẻ cố định gắn với commit}
+    restart: unless-stopped
+    expose:
+      - "3000"
+
+  caddy:
+    image: caddy:2-alpine
+    depends_on:
+      - api
+      - realtime
+      - frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      KAIJU_DOMAIN: ${KAIJU_DOMAIN:?tên miền thật, cần cho chứng chỉ}
+    volumes:
+      - ../proxy/Caddyfile.staging:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    restart: unless-stopped
+
+volumes:
+  caddy-data:
+  caddy-config:

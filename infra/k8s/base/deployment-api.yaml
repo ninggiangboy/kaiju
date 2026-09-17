@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kaiju-api
+  namespace: kaiju
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app.kubernetes.io/name: kaiju-api }
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: { maxSurge: 1, maxUnavailable: 0 }
+  template:
+    metadata:
+      labels: { app.kubernetes.io/name: kaiju-api }
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: app
+          image: kaiju-backend
+          ports: [{ name: http, containerPort: 8080 }]
+          env:
+            - name: KAIJU_ROLE
+              value: api
+            - name: KAIJU_DB_POOL_SIZE
+              value: "20"
+            - name: OTEL_SERVICE_NAME
+              value: kaiju-api
+          envFrom:
+            - configMapRef: { name: kaiju-config }
+            - secretRef: { name: kaiju-secrets }
+          # Khoẻ nghĩa là kết nối được cơ sở dữ liệu VÀ migration đã chạy xong.
+          # Một điểm kiểm tra chỉ trả về "còn sống" cho mọi vai trò là vô dụng.
+          readinessProbe:
+            httpGet: { path: /actuator/health/readiness, port: http }
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /actuator/health/liveness, port: http }
+            periodSeconds: 15
+          startupProbe:
+            httpGet: { path: /actuator/health/readiness, port: http }
+            failureThreshold: 30
+            periodSeconds: 5
+          resources:
+            requests: { cpu: 250m, memory: 768Mi }
+            limits: { memory: 1536Mi }

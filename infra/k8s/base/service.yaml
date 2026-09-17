@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kaiju-api
+  namespace: kaiju
+spec:
+  selector: { app.kubernetes.io/name: kaiju-api }
+  ports: [{ name: http, port: 80, targetPort: http }]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kaiju-realtime
+  namespace: kaiju
+spec:
+  selector: { app.kubernetes.io/name: kaiju-realtime }
+  ports: [{ name: http, port: 80, targetPort: http }]
+  # Gắn phiên theo kết nối. Không bắt buộc, nhưng giảm số lần bootstrap lại:
+  # client nối lại rơi vào cùng một bản thì vị trí đồng bộ còn nguyên trong bộ
+  # nhớ của bản đó.
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP: { timeoutSeconds: 10800 }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kaiju-frontend
+  namespace: kaiju
+spec:
+  selector: { app.kubernetes.io/name: kaiju-frontend }
+  ports: [{ name: http, port: 80, targetPort: http }]

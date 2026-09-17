@@ -1,0 +1,26 @@
+# Next dùng như SPA shell (ADR-0008). Tiến trình này chỉ phục vụ trang tiếp thị
+# và trang nhận magic link; toàn bộ khu vực app render ở phía client.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kaiju-frontend
+  namespace: kaiju
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app.kubernetes.io/name: kaiju-frontend }
+  template:
+    metadata:
+      labels: { app.kubernetes.io/name: kaiju-frontend }
+    spec:
+      containers:
+        - name: app
+          image: kaiju-frontend
+          ports: [{ name: http, containerPort: 3000 }]
+          readinessProbe:
+            httpGet: { path: /, port: http }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { memory: 512Mi }

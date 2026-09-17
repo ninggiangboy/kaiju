@@ -1,0 +1,113 @@
+# Bậc 1 — local-mini
+#
+# Đủ để `./gradlew bootRun` chạy được và bộ test chạy được. Không có gì thuộc về
+# vận hành: không bộ gộp kết nối, không hệ thống quan sát, không máy chủ trung
+# gian, không tách vai trò ứng dụng. Cả bốn thứ đó làm việc gỡ lỗi khó hơn mà
+# không bắt được lỗi logic nào — chúng nằm ở bậc 2.
+#
+#   docker compose -f infra/compose/docker-compose.yml up -d
+#
+# Backend và frontend chạy NGOÀI Docker ở bậc này.
+
+name: kaiju
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    command:
+      # Kiến trúc phụ thuộc vào cơ chế thông báo giữa các phiên và vào khoá dòng
+      # có bỏ qua dòng đã khoá; cả hai có sẵn, nhưng ngân sách kết nối thì phải
+      # đủ rộng cho bốn vai trò cộng kết nối lắng nghe riêng.
+      - -c
+      - max_connections=200
+      - -c
+      - log_min_duration_statement=500
+    environment:
+      POSTGRES_DB: kaiju
+      POSTGRES_USER: kaiju
+      POSTGRES_PASSWORD: kaiju
+      # Cần cho việc xác thực qua bộ gộp kết nối ở bậc 2.
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    ports:
+      - "5432:5432"
+    volumes:
+      # PostgreSQL 18 đổi điểm gắn khuyến nghị: gắn ở /var/lib/postgresql chứ
+      # KHÔNG phải /var/lib/postgresql/data. Gắn ở đường dẫn cũ thì ảnh từ chối
+      # khởi động. Đường dẫn mới cho phép nâng cấp phiên bản tại chỗ về sau.
+      - postgres-data:/var/lib/postgresql
+      - ../postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kaiju -d kaiju"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    command:
+      # Mất Redis thì hệ thống chậm đi, không sai dữ liệu (ADR-0003). Không bật
+      # lưu xuống đĩa, để cách chạy ở đây khớp với giả định đó.
+      - valkey-server
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  mailpit:
+    # Đăng nhập chỉ có magic link, nên thiếu dịch vụ này là không đăng nhập được.
+    # Giao diện xem thư: http://localhost:8025
+    image: axllent/mailpit:latest
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: "1"
+      MP_SMTP_AUTH_ALLOW_INSECURE: "1"
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # giao diện web
+    healthcheck:
+      test: ["CMD", "/mailpit", "readyz"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio:
+    # Chỉ dùng từ Phase 4, nhưng có sẵn từ đầu: thêm sau tốn công hơn là để đó.
+    # Giao diện quản trị: http://localhost:9001
+    image: quay.io/minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: kaiju
+      MINIO_ROOT_PASSWORD: kaiju-dev-secret
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio-init:
+    image: quay.io/minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set kaiju http://minio:9000 kaiju kaiju-dev-secret &&
+      mc mb --ignore-existing kaiju/kaiju-attachments &&
+      echo 'bucket sẵn sàng'
+      "
+    restart: "no"
+
+volumes:
+  postgres-data:
+  minio-data:

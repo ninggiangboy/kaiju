@@ -1,0 +1,7 @@
+# Bí mật thật không bao giờ vào repository — chỉ tệp mẫu trong infra/env/.
+infra/env/*.env
+!infra/env/*.env.example
+.env
+.env.local
+
+.DS_Store

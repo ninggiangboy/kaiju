@@ -1,0 +1,21 @@
+# Chỉ cấu hình không bí mật. Bí mật đến từ cơ chế bí mật của nền tảng và được
+# gắn vào qua `envFrom.secretRef: kaiju-secrets` — xem README của thư mục này.
+#
+# Tên biến nói lên TÍNH CHẤT, không nói lên NƠI CHỐN (CON-67): không có biến
+# nào tên kiểu KAIJU_IS_PROD, vì nhánh code rẽ theo tên môi trường là nhánh
+# không bao giờ được kiểm thử ở nơi nó thật sự chạy.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kaiju-config
+  namespace: kaiju
+data:
+  KAIJU_MAIL_TRANSPORT: "smtp"
+  KAIJU_OBJECT_STORAGE_PATH_STYLE: "false"
+  KAIJU_MIGRATE_ON_STARTUP: "false"
+
+  # Chuẩn mở, không tên sản phẩm nào (CON-64). Đổi hệ thống thu thập chỉ là đổi
+  # địa chỉ này.
+  OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+  OTEL_TRACES_SAMPLER: "parentbased_traceidratio"
+  OTEL_TRACES_SAMPLER_ARG: "0.1"

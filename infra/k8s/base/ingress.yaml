@@ -1,0 +1,55 @@
+# Luồng đồng bộ chỉ hoạt động khi lớp vào ra được cấu hình đúng. Ba chú thích
+# dưới đây là toàn bộ lý do tệp này tách riêng khỏi đường đi thường:
+#
+#   proxy-buffering: off    thiếu -> delta bị giữ lại, KHÔNG có lỗi nào
+#   proxy-read-timeout      phải dài hơn chu kỳ nhịp tim
+#   X-Accel-Buffering: no   tắt đệm ở tầng ngoài cùng
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kaiju-sync
+  namespace: kaiju
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Accel-Buffering no;
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: REPLACED_BY_OVERLAY
+      http:
+        paths:
+          - path: /api/sync/stream
+            pathType: Prefix
+            backend:
+              service:
+                name: kaiju-realtime
+                port: { name: http }
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kaiju
+  namespace: kaiju
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: REPLACED_BY_OVERLAY
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: kaiju-api
+                port: { name: http }
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kaiju-frontend
+                port: { name: http }

@@ -1,0 +1,33 @@
+# Bậc 4 — production.
+#
+# Bốn vai trò ứng dụng là bốn đối tượng triển khai riêng, mở rộng độc lập, dùng
+# CHUNG một ảnh (CON-66). Vai trò được chọn bằng biến môi trường KAIJU_ROLE.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - migrate-job.yaml
+  - deployment-api.yaml
+  - deployment-realtime.yaml
+  - deployment-worker.yaml
+  - deployment-scheduler.yaml
+  - deployment-frontend.yaml
+  - service.yaml
+  - ingress.yaml
+  - hpa.yaml
+  - pdb.yaml
+
+labels:
+  - includeSelectors: false
+    pairs:
+      app.kubernetes.io/part-of: kaiju
+
+# Thẻ ảnh do pipeline ghi đè bằng mã băm của commit. KHÔNG bao giờ dùng thẻ
+# động (CON-70) — triển khai theo thẻ động nghĩa là không biết bản nào đang chạy.
+images:
+  - name: kaiju-backend
+    newTag: REPLACED_BY_PIPELINE
+  - name: kaiju-frontend
+    newTag: REPLACED_BY_PIPELINE

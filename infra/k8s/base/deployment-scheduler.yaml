@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kaiju-scheduler
+  namespace: kaiju
+spec:
+  # Hai bản để sẵn sàng cao, nhưng chỉ MỘT bản làm việc tại một thời điểm —
+  # khoá phân tán quyết định bản nào. Vai trò này không mở rộng: thêm bản chỉ
+  # để không chết, không để chạy nhanh hơn.
+  replicas: 2
+  selector:
+    matchLabels: { app.kubernetes.io/name: kaiju-scheduler }
+  template:
+    metadata:
+      labels: { app.kubernetes.io/name: kaiju-scheduler }
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: app
+          image: kaiju-backend
+          ports: [{ name: http, containerPort: 8080 }]
+          env:
+            - name: KAIJU_ROLE
+              value: scheduler
+            - name: KAIJU_DB_POOL_SIZE
+              value: "3"
+            - name: OTEL_SERVICE_NAME
+              value: kaiju-scheduler
+          envFrom:
+            - configMapRef: { name: kaiju-config }
+            - secretRef: { name: kaiju-secrets }
+          # Khoẻ nghĩa là giữ được khoá HOẶC đang chờ khoá — bản đang chờ vẫn
+          # hoàn toàn khoẻ mạnh.
+          readinessProbe:
+            httpGet: { path: /actuator/health/readiness, port: http }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 100m, memory: 512Mi }
+            limits: { memory: 1Gi }

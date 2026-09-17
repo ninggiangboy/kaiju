@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kaiju-worker
+  namespace: kaiju
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app.kubernetes.io/name: kaiju-worker }
+  template:
+    metadata:
+      labels: { app.kubernetes.io/name: kaiju-worker }
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: app
+          image: kaiju-backend
+          ports: [{ name: http, containerPort: 8080 }]
+          env:
+            - name: KAIJU_ROLE
+              value: worker
+            - name: KAIJU_DB_POOL_SIZE
+              value: "10"
+            - name: OTEL_SERVICE_NAME
+              value: kaiju-worker
+          envFrom:
+            - configMapRef: { name: kaiju-config }
+            - secretRef: { name: kaiju-secrets }
+          # Khoẻ nghĩa là tiến trình chuyển tiếp đang chạy VÀ độ trễ hàng đợi
+          # dưới ngưỡng. Một worker vẫn sống nhưng hàng đợi tồn đọng một giờ
+          # thì KHÔNG khoẻ.
+          readinessProbe:
+            httpGet: { path: /actuator/health/readiness, port: http }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: { path: /actuator/health/liveness, port: http }
+            periodSeconds: 20
+          resources:
+            requests: { cpu: 250m, memory: 768Mi }
+            limits: { memory: 1536Mi }

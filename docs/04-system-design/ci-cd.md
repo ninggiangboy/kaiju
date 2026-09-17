@@ -89,6 +89,25 @@ rằng kết nối lắng nghe thông báo được định tuyến riêng (`CON
 có nó thì cả hai chỉ lộ ra vào ngày thêm bộ gộp kết nối ở môi trường thật vì lý do
 chịu tải, khi đã có hàng nghìn dòng code dựa trên giả định sai.
 
+#### Công việc này phải chạy song song, với pool nhỏ
+
+Chi tiết dễ bỏ qua, và bỏ qua thì cả công việc trở nên vô dụng.
+
+Chế độ gộp theo giao dịch **không** tự nó làm hỏng trạng thái phiên. Nó chỉ trả
+kết nối server về pool sau mỗi giao dịch. Nếu pool đủ rộng và chỉ có một client,
+client đó gần như luôn nhận lại **đúng kết nối cũ**, nên một biến đặt ở phạm vi
+phiên vẫn còn nguyên ở giao dịch sau và test vẫn xanh.
+
+Vi phạm chỉ lộ ra khi **nhiều client tranh nhau một số ít kết nối server**, vì lúc
+đó client B nhận được kết nối vừa bị client A bỏ lại, mang theo trạng thái của A.
+
+| Cấu hình bắt buộc của công việc này | |
+|---|---|
+| Kích thước pool của bộ gộp | Nhỏ — vài kết nối, không phải vài chục |
+| Cách chạy test | **Song song**, nhiều luồng |
+
+Chạy tuần tự qua bộ gộp với pool rộng là một công việc CI xanh không kiểm tra gì cả.
+
 ---
 
 ## Từng công việc
