@@ -198,14 +198,26 @@ Dựng **một ảnh duy nhất cho backend** — bốn vai trò dùng chung ả
 
 ### Đường đi lên các bậc
 
-| Sự kiện | Hành động |
-|---|---|
-| Merge vào nhánh phát triển | Dựng ảnh, gắn thẻ theo commit. **Không triển khai tự động** |
-| Gắn thẻ phiên bản | Dựng ảnh, gắn thẻ phiên bản, triển khai lên `staging` |
-| Duyệt thủ công | Triển khai lên `production` |
+| Sự kiện | Hành động | Thứ thi hành |
+|---|---|---|
+| Merge vào nhánh phát triển | Dựng ảnh, gắn thẻ theo commit. **Không triển khai tự động** | — |
+| Gắn thẻ phiên bản | Dựng ảnh, gắn thẻ phiên bản, triển khai lên `staging` | Ansible |
+| Merge pull request đổi thẻ ảnh trong overlay | Triển khai lên `production` | Argo CD |
 
 Bậc 1 và bậc 2 không nằm trong đường đi này — chúng chạy trên máy cá nhân và không
 có gì để triển khai.
+
+Hai bậc dùng **hai cơ chế khác nhau**, vì bậc 3 chạy compose trên một máy chủ đơn
+còn bậc 4 chạy trên cụm. Trình tự nghiệp vụ thì giống hệt nhau; chỉ khác thứ thi
+hành nó.
+
+> **Đã thay đổi (2026-09-18):** trước đây cổng vào `production` là một lần **duyệt
+> thủ công trong giao diện pipeline**, và pipeline tự phát lệnh vào cụm. Nay trạng
+> thái mong muốn của bậc 4 nằm trong git: pipeline mở một pull request sửa thẻ ảnh
+> trong overlay, và **merge pull request đó chính là hành động triển khai**. Lý do
+> đổi: một nút duyệt không nói cho ai biết đang đi từ thẻ nào sang thẻ nào, còn một
+> diff thì nói — và trạng thái đang chạy không còn chỉ tồn tại bên trong cụm. Xem
+> [ADR-0014](../adr/0014-declarative-infra-gitops.md).
 
 ### Thứ tự triển khai
 
@@ -222,6 +234,15 @@ dạng mới được ghi vào bảng chuyển tiếp và bị xử lý bởi wo
 Migration chạy như một **công việc riêng trước khi triển khai**. Nó không bao giờ
 chạy lúc ứng dụng khởi động, ở bất kỳ bậc nào — xem
 [ADR-0013](../adr/0013-explicit-two-way-migration.md).
+
+Ở bậc 4, thứ tự này **do engine cưỡng chế** chứ không còn là một chuỗi lệnh xếp
+cạnh nhau: migration là `PreSync` hook, `worker` và `scheduler` ở sync wave 1,
+`api` và `realtime` ở wave 2, kiểm tra sau triển khai ở `PostSync`. Ở bậc 3 nó vẫn
+là trình tự trong playbook, vì compose không có khái niệm tương đương.
+
+> **Đã thay đổi (2026-09-18):** trước đây thứ tự này chỉ được ghi thành chú thích
+> trong `deploy-staging.sh` và mấy dòng `echo` trong pipeline — tức là không có gì
+> bảo đảm nó được tuân thủ. Xem [ADR-0014](../adr/0014-declarative-infra-gitops.md).
 
 > **Đã thay đổi (2026-09-17):** trước đây quy tắc này chỉ áp dụng cho bậc 4, với
 > lý do nhiều bản cùng khởi động sẽ cùng chạy migration. Lý do đó vẫn đúng nhưng
@@ -264,4 +285,5 @@ rằng "realtime không chạy", vốn là chế độ hỏng đặc trưng củ
 | Không bí mật nào nằm trong repository | Kể cả cho bậc 1 |
 | Công việc chỉ nhận đúng bí mật nó cần | Không đưa toàn bộ vào mọi công việc |
 | Pull request từ nhánh ngoài **không** nhận bí mật | Đây là dự án cá nhân nên rủi ro thấp, nhưng cấu hình sai ở chỗ này là cách lộ thông tin phổ biến nhất |
-| Triển khai lên `production` cần duyệt thủ công | |
+| Triển khai lên `production` đi qua một pull request được merge | Thay cho nút duyệt thủ công trước đây — xem [ADR-0014](../adr/0014-declarative-infra-gitops.md) |
+| Tệp trạng thái của OpenTofu **không nằm trong repository** | Nó chứa mật khẩu và khoá truy cập ở dạng đọc được; backend từ xa phải có mã hoá |

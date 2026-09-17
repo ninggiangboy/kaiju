@@ -36,6 +36,11 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-73 | Bậc `staging` **không** được dùng dịch vụ giả lập: email, lưu trữ đối tượng, cơ sở dữ liệu và đích thu thập tín hiệu quan sát đều phải là hàng thật | [environments.md](../04-system-design/environments.md#bậc-3--staging) |
 | CON-74 | Mọi changeset migration phải kèm **phần lùi viết tay**. Changeset không có phần lùi làm hỏng CI | [ADR-0013](../adr/0013-explicit-two-way-migration.md) |
 | CON-75 | Chiều đi xuống **không được dùng ở bậc `production`**; quay lui ở đó là sửa tiến bằng một migration mới tương thích ngược | [ADR-0013](../adr/0013-explicit-two-way-migration.md) |
+| CON-76 | Bốn lớp công cụ vận hành có ranh giới sở hữu tách bạch: OpenTofu giữ tài nguyên hạ tầng, Ansible giữ cấu hình bên trong máy, Argo CD giữ mọi đối tượng trong cụm, Makefile và script giữ bậc 1-2. **OpenTofu không bao giờ tạo đối tượng Kubernetes** | [ADR-0014](../adr/0014-declarative-infra-gitops.md) |
+| CON-77 | Trạng thái mong muốn của bậc 4 nằm trong git. Triển khai `production` là **một commit đổi thẻ ảnh trong overlay**, không phải một lệnh mệnh lệnh phát ra từ pipeline; merge pull request đó là cổng duyệt duy nhất | [ADR-0014](../adr/0014-declarative-infra-gitops.md) |
+| CON-78 | Makefile và script trong `infra/scripts/` **không được ghi** vào trạng thái mong muốn của bậc 3-4. Chúng chỉ được đọc trạng thái và chỉ được thao tác ở bậc 1-2 | [ADR-0014](../adr/0014-declarative-infra-gitops.md) |
+| CON-79 | Mọi `Deployment` ở bậc 4 phải có **ràng buộc trải bản sao theo node** và một ngân sách gián đoạn. Thiếu ràng buộc trải, hai bản sao rơi vào cùng một node và ngân sách gián đoạn sẽ chặn việc rút tải node đó vĩnh viễn | [ADR-0014](../adr/0014-declarative-infra-gitops.md) |
+| CON-80 | Chiều đi xuống của migration **được phép ở bậc 3** qua đường có ghi vết, vì đó là nơi duy nhất kiểm chứng được phần lùi trước khi phải tin vào nó. Ở bậc 4 vẫn cấm theo CON-75 | [ADR-0014](../adr/0014-declarative-infra-gitops.md) |
 
 > **Ghi chú (2026-09-17) — CON-68.** Bản trước của ràng buộc này chỉ áp dụng cho
 > bậc `production`, và chấp nhận việc bậc 1–3 chạy migration lúc ứng dụng khởi

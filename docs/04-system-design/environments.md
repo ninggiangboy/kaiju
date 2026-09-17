@@ -172,6 +172,42 @@ Vai trò `realtime` giữ kết nối dài hạn, nên thời gian chờ tắt p
 kỳ nhịp tim, để client kịp nhận tín hiệu đóng và nối lại chủ động thay vì phát
 hiện ra bằng thời gian chờ.
 
+### Thêm và bớt node
+
+Đây là **hai việc khác nhau** và hay bị lẫn: mở rộng số **bản chạy** là việc của
+bộ tự mở rộng theo chiều ngang; mở rộng số **node** là việc của tầng hạ tầng bên
+dưới nó.
+
+| Loại cụm | Thêm node | Bớt node |
+|---|---|---|
+| Quản lý sẵn | Đổi khoảng `min`/`max` của nhóm node trong OpenTofu; bộ tự mở rộng cụm tự thêm khi có bản chạy đang chờ xếp chỗ | Bộ tự mở rộng tự rút, và nó **tôn trọng ngân sách gián đoạn** |
+| Tự quản | OpenTofu tạo máy ảo, Ansible gắn nó vào cụm | Rút tải khỏi node → xoá node khỏi cụm → **rồi mới** huỷ máy ảo |
+
+Huỷ máy trước khi rút tải là giết bản chạy đột ngột. Thứ tự trên không phải quy
+ước, nó bắt buộc.
+
+**Hai điều kiện phải có trước khi việc bớt node an toàn:**
+
+- **Ràng buộc trải bản sao theo node** (CON-79). Thiếu nó, hai bản sao của cùng
+  một vai trò có thể nằm chung một node; khi đó ngân sách gián đoạn giữ tối thiểu
+  một bản sẽ **chặn việc rút tải node đó vĩnh viễn**. Vừa mất tính sẵn sàng cao,
+  vừa làm việc thu hẹp cụm treo.
+- **Ngân sách gián đoạn cho đủ mọi vai trò**, kể cả `scheduler`. Không có nó, một
+  lần rút tải có thể xoá cả hai bản `scheduler` cùng lúc và tác vụ định kỳ đứng
+  cho tới khi bản mới lên.
+
+**Mở rộng theo chiều ngang phải đúng trước thì mở rộng cụm mới có tác dụng.** Bộ
+tự mở rộng cụm chỉ phản ứng với bản chạy **đang chờ xếp chỗ**. Nếu quy tắc mở rộng
+của `realtime` đo theo CPU thì nó không bao giờ kích hoạt — một bản giữ hàng nghìn
+kết nối nhàn rỗi gần như không tốn CPU — nên sẽ không có bản chạy nào phải chờ, và
+cụm sẽ không bao giờ lớn lên dù đang quá tải thật. Xem phần chưa chốt bên dưới.
+
+Phía ứng dụng chịu được việc mất node theo thiết kế: `worker` nhận sự kiện
+**ít nhất một lần** và consumer bắt buộc luỹ đẳng, nên bị giết giữa chừng là an
+toàn; `scheduler` có bản còn lại giành khoá; `realtime` rớt kết nối thì client nối
+lại và bắt kịp theo con trỏ. Điều kiện là thời gian chờ tắt êm ở trên được tôn
+trọng, nên đừng hạ ngưỡng chờ của bộ tự mở rộng xuống dưới nó.
+
 ---
 
 ## Migration
@@ -183,8 +219,8 @@ container đã có, chạy một lần rồi thoát. Khác nhau chỉ ở chỗ 
 |---|---|---|
 | `local-mini` | `make db-up`, `make db-down`, `make db-status` | Dùng thoải mái |
 | `dev` | Cùng các lệnh đó, chạy trong mạng của bậc 2 | Dùng thoải mái |
-| `staging` | Bước đầu tiên của script triển khai | Dè dặt |
-| `production` | Công việc chạy trước khi triển khai trong pipeline | **Không** |
+| `staging` | Bước đầu tiên của playbook triển khai | Dè dặt, nhưng **được phép** — đây là nơi duy nhất kiểm chứng được phần lùi trước khi phải tin vào nó (CON-80) |
+| `production` | `PreSync` hook, chạy trước khi bất kỳ vai trò nào được cập nhật | **Không** |
 
 Không bậc nào chạy migration lúc ứng dụng khởi động, và không ứng dụng nào tự chạy
 nó. Chi tiết công cụ, quy ước script và phần lùi nằm ở
@@ -236,3 +272,9 @@ chạy — xem [architecture.md](architecture.md).
 > quản lý sẵn. Quyết định khi dựng bậc 3 lần đầu. Nó không chặn việc gì vì cả bốn
 > đều là giao thức chuẩn: SMTP, S3, chuẩn mở về quan sát, và giao thức của
 > PostgreSQL.
+
+> **Chưa chốt:** bộ chuyển đổi số đo tuỳ biến cho quy tắc mở rộng theo chiều ngang.
+> Hiện `realtime` và `worker` đang tạm đo theo CPU, và cả hai đều **sai tín hiệu**:
+> `realtime` phải đo theo số kết nối đồng bộ đang mở, `worker` phải đo theo độ trễ
+> hàng đợi sự kiện. Phải thay trước khi tải thật tới, vì việc mở rộng cụm phụ thuộc
+> vào nó (xem [Thêm và bớt node](#thêm-và-bớt-node)).
