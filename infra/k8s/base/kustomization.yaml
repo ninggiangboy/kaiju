@@ -25,10 +25,12 @@ labels:
     pairs:
       app.kubernetes.io/part-of: kaiju
 
-# Image tags are overridden by the pipeline with the commit hash. NEVER use a
-# moving tag (CON-70) - deploying from one means not knowing what is running.
+# Each OVERLAY pins its own tag, because environments advance independently
+# (CON-77). The placeholder below is never deployed: it is not a valid pushed
+# tag, so an overlay that forgot to pin fails to pull instead of quietly running
+# something unknown. NEVER use a moving tag (CON-70).
 images:
   - name: kaiju-backend
-    newTag: REPLACED_BY_PIPELINE
+    newTag: REPLACED_BY_OVERLAY
   - name: kaiju-frontend
-    newTag: REPLACED_BY_PIPELINE
+    newTag: REPLACED_BY_OVERLAY

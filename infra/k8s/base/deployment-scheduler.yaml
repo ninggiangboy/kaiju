@@ -3,6 +3,11 @@ kind: Deployment
 metadata:
   name: kaiju-scheduler
   namespace: kaiju
+  annotations:
+    # Deployment order is mandatory (CON-69): migration -> worker and
+    # scheduler -> api and realtime. Argo CD enforces it through waves;
+    # the migration runs earlier still, as a PreSync hook.
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   # Two replicas for availability, but only ONE works at a time - a distributed
   # lock decides which. This role does not scale: extra replicas exist so it
@@ -14,6 +19,20 @@ spec:
     metadata:
       labels: { app.kubernetes.io/name: kaiju-scheduler }
     spec:
+      # CON-79: without this, both replicas can land on the SAME node. The PDB
+      # then refuses every eviction on that node (it must keep one available),
+      # which deadlocks `kubectl drain` and stalls any cluster scale-down - while
+      # also silently giving up the availability the second replica was for.
+      #
+      # DoNotSchedule is deliberate: on a one-node cluster the second replica
+      # stays Pending, and that Pending pod is exactly the signal the cluster
+      # autoscaler needs to add a node.
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels: { app.kubernetes.io/name: kaiju-scheduler }
       terminationGracePeriodSeconds: 60
       containers:
         - name: app

@@ -28,3 +28,26 @@ spec:
   minAvailable: 1
   selector:
     matchLabels: { app.kubernetes.io/name: kaiju-worker }
+---
+# `scheduler` runs two replicas but only one works at a time, decided by a
+# distributed lock. Without a budget here a single drain can evict BOTH at once,
+# and scheduled work stops until a replacement is scheduled and wins the lock.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kaiju-scheduler
+  namespace: kaiju
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels: { app.kubernetes.io/name: kaiju-scheduler }
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kaiju-frontend
+  namespace: kaiju
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels: { app.kubernetes.io/name: kaiju-frontend }
