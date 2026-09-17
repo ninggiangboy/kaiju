@@ -33,14 +33,21 @@ x-app: &app
       max-file: "5"
 
 services:
-  # Runs before every role, then exits. Tier 3 could still migrate at
-  # application startup, but doing it the tier 4 way from here means the
-  # deployment order (CON-69) gets exercised where it can still fail harmlessly.
+  # Runs before every role, then exits. Nothing migrates at application
+  # startup, at any tier (CON-68), so this is the only thing that touches the
+  # schema - and the deployment order (CON-69) gets exercised here, where it
+  # can still fail harmlessly.
+  #
+  # It connects DIRECTLY, not through a pooler: the changelog lock is held for
+  # the length of the run and a session-scoped lock does not survive
+  # transaction pooling (CON-62).
   migrate:
     <<: *app
-    command: ["--kaiju.migrate.only=true"]
     environment:
       KAIJU_ROLE: migrate
+      KAIJU_DB_POOL_SIZE: "2"
+      KAIJU_MIGRATE_COMMAND: up
+      KAIJU_DB_URL: ${KAIJU_DB_DIRECT_URL:?KAIJU_DB_DIRECT_URL must be set - the migration runner never goes through a pooler}
     restart: "no"
 
   worker:
@@ -51,7 +58,6 @@ services:
     environment:
       KAIJU_ROLE: worker
       KAIJU_DB_POOL_SIZE: "10"
-      KAIJU_MIGRATE_ON_STARTUP: "false"
       OTEL_SERVICE_NAME: kaiju-worker
 
   scheduler:
@@ -62,7 +68,6 @@ services:
     environment:
       KAIJU_ROLE: scheduler
       KAIJU_DB_POOL_SIZE: "3"
-      KAIJU_MIGRATE_ON_STARTUP: "false"
       OTEL_SERVICE_NAME: kaiju-scheduler
 
   # api and realtime come up AFTER worker and scheduler: background processes
@@ -77,7 +82,6 @@ services:
     environment:
       KAIJU_ROLE: api
       KAIJU_DB_POOL_SIZE: "20"
-      KAIJU_MIGRATE_ON_STARTUP: "false"
       OTEL_SERVICE_NAME: kaiju-api
     expose:
       - "8080"
@@ -90,7 +94,6 @@ services:
     environment:
       KAIJU_ROLE: realtime
       KAIJU_DB_POOL_SIZE: "5"
-      KAIJU_MIGRATE_ON_STARTUP: "false"
       OTEL_SERVICE_NAME: kaiju-realtime
     # Longer than the heartbeat interval, so clients reconnect deliberately.
     stop_grace_period: 45s

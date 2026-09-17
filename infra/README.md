@@ -12,6 +12,7 @@ everything under `docs/`).
 ```bash
 cd infra
 make up        # tier 1 - enough to run the backend and the test suite
+make db-up     # apply migrations; nothing migrates on startup (CON-68)
 make up-dev    # tier 2 - adds the operational layer
 make check     # every static check, exactly as CI runs them
 ```
@@ -50,9 +51,9 @@ Observability sits on 3001 rather than 3000 because 3000 is reserved for Next.
 
 ---
 
-## Two details that are easy to get wrong
+## Three details that are easy to get wrong
 
-### `KAIJU_DB_URL` and `KAIJU_DB_LISTEN_URL` are two different variables
+### `KAIJU_DB_URL` and `KAIJU_DB_DIRECT_URL` are two different variables
 
 At tier 1 they point at the same place, and they **still stay separate**. From
 tier 2 onward, ordinary reads and writes go through the connection pooler while
@@ -61,6 +62,24 @@ listening never works through a pooler (`CON-25`).
 
 Write them apart from the first line of code, rather than retrofitting the
 split when the pooler arrives.
+
+### Migrations are never a side effect of starting the application
+
+No tier migrates at startup (`CON-68`). The schema moves because somebody ran
+`make db-up`, or because the deploy step ran the `migrate` service before
+bringing any role up. `make db-down` reverts, `make db-status` shows where
+things stand.
+
+Two consequences worth remembering:
+
+- The application starts fine against an out-of-date schema. The `api` health
+  check is what reports not-ready, so trust it rather than "the container is up".
+- `make db-down` does **not** bring back data the up direction dropped. It is a
+  tier 1-2 tool; production rolls forward instead (`CON-75`).
+
+The migration runner connects through `KAIJU_DB_DIRECT_URL`, not the pooled
+URL — its changelog lock is session-scoped and would not survive transaction
+pooling (`CON-62`).
 
 ### Buffering must be off for the sync stream
 

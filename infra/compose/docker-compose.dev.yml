@@ -36,7 +36,7 @@ x-app: &app
     KAIJU_DB_URL: jdbc:postgresql://pgbouncer:6432/kaiju
     # CON-25: the notification listener connects DIRECTLY. Under transaction
     # pooling, listening never works through a pooler.
-    KAIJU_DB_LISTEN_URL: jdbc:postgresql://postgres:5432/kaiju
+    KAIJU_DB_DIRECT_URL: jdbc:postgresql://postgres:5432/kaiju
     KAIJU_DB_USER: kaiju
     KAIJU_DB_PASSWORD: kaiju
     # --- Supporting infrastructure ---------------------------------------
@@ -107,13 +107,14 @@ services:
     volumes:
       - ../proxy/Caddyfile.dev:/etc/caddy/Caddyfile:ro
 
+  # No service migrates on startup (CON-68). Run `make db-up` first; the api
+  # health check reports not-ready while the schema version is behind.
   api:
     <<: *app
     environment:
       <<: *app-env
       KAIJU_ROLE: api
       KAIJU_DB_POOL_SIZE: "20"
-      KAIJU_MIGRATE_ON_STARTUP: "true"
       OTEL_SERVICE_NAME: kaiju-api
     expose:
       - "8080"
@@ -127,7 +128,6 @@ services:
       <<: *app-env
       KAIJU_ROLE: realtime
       KAIJU_DB_POOL_SIZE: "5"
-      KAIJU_MIGRATE_ON_STARTUP: "false"
       OTEL_SERVICE_NAME: kaiju-realtime
     expose:
       - "8080"
@@ -141,7 +141,6 @@ services:
       <<: *app-env
       KAIJU_ROLE: worker
       KAIJU_DB_POOL_SIZE: "10"
-      KAIJU_MIGRATE_ON_STARTUP: "false"
       OTEL_SERVICE_NAME: kaiju-worker
 
   scheduler:
@@ -153,7 +152,6 @@ services:
       <<: *app-env
       KAIJU_ROLE: scheduler
       KAIJU_DB_POOL_SIZE: "3"
-      KAIJU_MIGRATE_ON_STARTUP: "false"
       OTEL_SERVICE_NAME: kaiju-scheduler
 
 volumes:

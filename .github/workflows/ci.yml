@@ -184,7 +184,7 @@ jobs:
       KAIJU_DB_URL: jdbc:postgresql://localhost:6432/kaiju
       # ...while the listener connects DIRECTLY. Under transaction pooling,
       # listening never works through a pooler.
-      KAIJU_DB_LISTEN_URL: jdbc:postgresql://localhost:5432/kaiju
+      KAIJU_DB_DIRECT_URL: jdbc:postgresql://localhost:5432/kaiju
       KAIJU_DB_USER: kaiju
       KAIJU_DB_PASSWORD: kaiju
     steps:
@@ -200,7 +200,7 @@ jobs:
         working-directory: backend
 
   backend-migration:
-    name: Backend - backward-compatible migrations
+    name: Backend - migrations up, down and backward-compatible
     needs: [changes, backend-build]
     if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
@@ -217,6 +217,13 @@ jobs:
       # change during the window where two versions run side by side - which is
       # exactly what makes a rollback safe.
       - run: ./gradlew migrationCompatibilityTest
+        working-directory: backend
+      # Every changeset must carry a hand-written rollback (CON-74), and the
+      # rollback must actually run: up, then all the way down, then up again,
+      # ending on the same schema. A rollback that has never been executed is
+      # a rollback that does not exist - it is only ever needed at the worst
+      # possible moment.
+      - run: ./gradlew migrationRollbackTest
         working-directory: backend
 
   # --------------------------------------------------------------------

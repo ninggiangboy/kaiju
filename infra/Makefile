@@ -15,6 +15,7 @@ up: ## Tier 1: database, Redis, mail catcher, object storage
 	$(COMPOSE_MINI) up -d --wait postgres valkey mailpit minio
 	@echo "mail:    http://localhost:8025"
 	@echo "storage: http://localhost:9001"
+	@echo "next:    make db-up   (nothing migrates on startup - CON-68)"
 
 .PHONY: down
 down: ## Stop tiers 1 and 2, keeping the data
@@ -38,10 +39,34 @@ up-dev: ## Tier 2: adds the pooler, observability, reverse proxy and four roles
 	@echo "app:           http://localhost:8080"
 	@echo "observability: http://localhost:3001"
 	@echo "mail:          http://localhost:8025"
+	@echo "note:          api reports not-ready until 'make db-up' has run"
 
 .PHONY: pooler
 pooler: ## Start only the connection pooler, to run the backend outside Docker on 6432
 	$(COMPOSE_DEV) up -d --wait postgres pgbouncer
+
+## --- Migration -----------------------------------------------------------
+#
+# Nothing migrates at application startup, at any tier (CON-68). The schema
+# changes because somebody ran one of these. All three go through the `migrate`
+# service of tier 1, which connects directly to the database, so they work
+# whether tier 1 or tier 2 is running.
+
+MIGRATE := $(COMPOSE_MINI) run --rm --build migrate
+
+.PHONY: db-up
+db-up: ## Apply every pending changeset
+	KAIJU_MIGRATE_COMMAND=up $(MIGRATE)
+
+.PHONY: db-down
+db-down: ## Revert the last changeset, or COUNT=n of them
+	@# Down is a tier 1-2 tool. It does NOT bring back data the up direction
+	@# dropped, and it is never used in production (CON-75).
+	KAIJU_MIGRATE_COMMAND=down KAIJU_MIGRATE_COUNT=$${COUNT:-1} $(MIGRATE)
+
+.PHONY: db-status
+db-status: ## Show which changesets are applied and which are pending
+	KAIJU_MIGRATE_COMMAND=status $(MIGRATE)
 
 ## --- Checks --------------------------------------------------------------
 
@@ -56,7 +81,7 @@ check-docs: ## Links, heading anchors, the feature table, and no DDL under docs/
 check-compose: ## Syntax of every compose file
 	$(COMPOSE_MINI) config -q
 	$(COMPOSE_DEV) config -q
-	KAIJU_IMAGE=x KAIJU_FRONTEND_IMAGE=x KAIJU_DOMAIN=x \
+	KAIJU_IMAGE=x KAIJU_FRONTEND_IMAGE=x KAIJU_DOMAIN=x KAIJU_DB_DIRECT_URL=x \
 		KAIJU_ENV_FILE=../env/staging.env.example \
 		docker compose -f staging/docker-compose.yml config -q
 

@@ -1,6 +1,10 @@
-# CON-68: at tier 4, migrations run as a SEPARATE job before deployment, not at
-# application startup. Several replicas starting together would otherwise all
-# run migrations - that is what differs from the three tiers below.
+# CON-68: migrations run as a SEPARATE job before deployment, never at
+# application startup. That holds at every tier; here it is also the only thing
+# that stops several replicas starting together from all migrating at once.
+#
+# The down direction is NOT used at this tier. Rolling back a release means
+# redeploying the previous image tag against a schema the old code still
+# understands (CON-75).
 #
 # The pipeline suffixes the job name with the image tag, so each release is a
 # new job and the history is preserved.
@@ -21,10 +25,18 @@ spec:
       containers:
         - name: migrate
           image: kaiju-backend
-          args: ["--kaiju.migrate.only=true"]
           env:
             - name: KAIJU_ROLE
               value: migrate
+            - name: KAIJU_MIGRATE_COMMAND
+              value: up
+            # Directly, never through a pooler: the changelog lock is held for
+            # the length of the run and is session-scoped (CON-62).
+            - name: KAIJU_DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: kaiju-secrets
+                  key: KAIJU_DB_DIRECT_URL
             - name: KAIJU_DB_POOL_SIZE
               value: "2"
           envFrom:

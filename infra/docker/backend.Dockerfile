@@ -1,7 +1,11 @@
-# ONE image for all four application roles (CON-66).
+# ONE image for all four application roles, and for migration (CON-66).
 #
 # The role is chosen at startup through KAIJU_ROLE, not by building different
 # images. Nothing in here branches on an environment name (CON-67).
+#
+# KAIJU_ROLE=migrate runs one migration command (KAIJU_MIGRATE_COMMAND: up,
+# down or status) and exits. No other role touches the schema - nothing
+# migrates at application startup, at any tier (CON-68).
 #
 # The dependency layer is separate from the source layer, so changing code does
 # not re-download every dependency.

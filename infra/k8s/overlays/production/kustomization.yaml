@@ -15,7 +15,7 @@ patches:
 # keys:
 #
 #   KAIJU_DB_URL              KAIJU_MAIL_HOST
-#   KAIJU_DB_LISTEN_URL       KAIJU_MAIL_PORT
+#   KAIJU_DB_DIRECT_URL       KAIJU_MAIL_PORT
 #   KAIJU_DB_USER             KAIJU_MAIL_USER
 #   KAIJU_DB_PASSWORD         KAIJU_MAIL_PASSWORD
 #   KAIJU_REDIS_URL           KAIJU_MAIL_FROM
@@ -24,6 +24,6 @@ patches:
 #   OTEL_EXPORTER_OTLP_ENDPOINT
 #   KAIJU_OBJECT_STORAGE_ACCESS_KEY / _SECRET_KEY
 #
-# CON-25: KAIJU_DB_LISTEN_URL must point DIRECTLY at the database. If a
+# CON-25: KAIJU_DB_DIRECT_URL must point DIRECTLY at the database. If a
 # connection pooler is ever added at this tier, KAIJU_DB_URL changes and this
 # one does not.

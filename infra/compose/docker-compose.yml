@@ -110,6 +110,37 @@ services:
       "
     restart: "no"
 
+  # The migration runner. It is NEVER started by `up`: it sits behind a compose
+  # profile and is invoked one command at a time (see `make db-up`, `db-down`,
+  # `db-status`).
+  #
+  # CON-68: nothing migrates at application startup, at any tier. The schema
+  # changes because somebody asked it to.
+  #
+  # It connects DIRECTLY to the database even at tier 2, where everything else
+  # goes through the connection pooler: the migration tool holds a changelog
+  # lock for the length of the run, and a session-scoped lock does not survive
+  # transaction pooling (CON-62).
+  migrate:
+    profiles: ["migrate"]
+    build:
+      context: ../..
+      dockerfile: infra/docker/backend.Dockerfile
+    image: kaiju-backend:dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      KAIJU_ROLE: migrate
+      # up | down | status. `down` reverts KAIJU_MIGRATE_COUNT changesets.
+      KAIJU_MIGRATE_COMMAND: ${KAIJU_MIGRATE_COMMAND:-up}
+      KAIJU_MIGRATE_COUNT: ${KAIJU_MIGRATE_COUNT:-1}
+      KAIJU_DB_URL: jdbc:postgresql://postgres:5432/kaiju
+      KAIJU_DB_USER: kaiju
+      KAIJU_DB_PASSWORD: kaiju
+      KAIJU_DB_POOL_SIZE: "2"
+    restart: "no"
+
 volumes:
   postgres-data:
   minio-data:

@@ -12,7 +12,8 @@ metadata:
 data:
   KAIJU_MAIL_TRANSPORT: "smtp"
   KAIJU_OBJECT_STORAGE_PATH_STYLE: "false"
-  KAIJU_MIGRATE_ON_STARTUP: "false"
+  # CON-68: nothing migrates at startup. The pre-deploy Job does it.
+  KAIJU_MIGRATE_COMMAND: "up"
 
   # Open standard, no product name (CON-64). Switching collection backends is
   # just changing this address.
