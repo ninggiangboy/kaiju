@@ -122,16 +122,38 @@ nhập dùng được trong thực tế.**
 
 | Thành phần | Tính chất |
 |---|---|
-| Token truy cập | Thời hạn ngắn, chỉ mang danh tính `account`, **không mang danh sách quyền** |
+| Token truy cập | Thời hạn ngắn, **chỉ mang claims cơ bản** |
 | Token làm mới | Lưu dạng băm, xoay vòng mỗi lần dùng, gắn với một phiên cụ thể |
 | Phiên | Ghi thiết bị, địa chỉ IP, lần truy cập gần nhất; người dùng xem và thu hồi được |
 
-**Token truy cập không mang quyền.** Nếu mang thì khi đuổi ai đó khỏi workspace,
-họ vẫn giữ quyền cho tới khi token hết hạn. Quyền được tra và cache theo từng
-request, xoá cache ngay khi có thay đổi.
-
 Phát hiện dùng lại token làm mới đã bị xoay vòng thì thu hồi toàn bộ phiên của
 tài khoản đó — dấu hiệu token đã bị đánh cắp.
+
+### Token truy cập chứa gì
+
+Đây là **hợp đồng cố định**. Thêm bất cứ thứ gì ngoài danh sách bên trái đều phải
+có lý do được ghi lại.
+
+| Có trong token | Không bao giờ có trong token |
+|---|---|
+| Định danh `account` | Danh sách quyền hoặc mặt nạ quyền |
+| Định danh phiên | Tên vai trò |
+| Thời điểm phát hành và hết hạn | Danh sách workspace người dùng thuộc về |
+| Loại token | Định danh `member` ở bất kỳ workspace nào |
+| | Email hoặc thông tin cá nhân khác |
+
+### Vì sao quyền không nằm trong token
+
+Ba lý do, lý do đầu là lý do quyết định:
+
+| Lý do | Diễn giải |
+|---|---|
+| **Không thu hồi được** | Đuổi một người khỏi workspace mà quyền nằm trong token thì họ vẫn giữ nguyên quyền cho tới khi token hết hạn. Rút ngắn thời hạn token chỉ làm hẹp cửa sổ chứ không đóng được nó |
+| **Phình theo số workspace** | Một người thuộc mười workspace, mỗi nơi một vai trò và một tập project — nhét hết vào token thì token to hơn phần lớn request dùng nó |
+| **Sai nguồn sự thật** | Token do client giữ và gửi lên. Bất cứ quyết định phân quyền nào dựa trên dữ liệu client gửi lên đều là quyết định dựa trên dữ liệu không đáng tin |
+
+Hệ quả: **mặt nạ quyền luôn được tra lại phía server theo từng request.** Chi phí
+của việc này được bù bằng cache, xem mục dưới.
 
 ---
 
@@ -187,19 +209,116 @@ sửa mọi truy vấn đã viết.
 trong cơ sở dữ liệu đột nhiên mang một quyền khác — và không có cách nào phát
 hiện bằng test.
 
-### Cache
-
-Mặt nạ hiệu lực được cache theo cặp người dùng và phạm vi. Xoá cache khi vai trò
-đổi, khi thành viên bị thêm hoặc bớt, khi group đổi thành viên.
-
-**Việc xoá cache phải đi kèm phát sự kiện thu hồi quyền cho sync engine**
-([realtime-and-sync.md](realtime-and-sync.md#khi-quyền-bị-thu-hồi)). Xoá cache mà
-không báo cho client thì client vẫn giữ nguyên dữ liệu đã tải về.
-
 ### Gỡ lỗi
 
 Mặt nạ thô không đọc được bằng mắt. Cần một tiện ích giải mã mặt nạ thành danh
 sách tên quyền, và **nhật ký phải ghi tên quyền, không ghi con số**.
+
+---
+
+## Kiểm tra quyền ở mọi hành động
+
+Luật nền: **mọi hành động đều phải qua một lần kiểm tra mặt nạ bit.** Không có
+hành động nào được miễn, và không có đường nào đi vòng qua bước này.
+
+### Đường đi của một request
+
+```mermaid
+flowchart LR
+    tok["Token truy cập<br/>→ account, session"] --> ws["Workspace<br/>lấy từ đường dẫn"]
+    ws --> mem["Tra member<br/>= f(account, workspace)"]
+    mem --> mask["Tra mặt nạ hiệu lực"]
+    mask --> cache{"Có trong cache?"}
+    cache -->|có| chk["Kiểm tra"]
+    cache -->|không| db[("Tính lại từ<br/>cơ sở dữ liệu")] --> chk
+    chk --> cond["Điều kiện phụ thuộc dữ liệu<br/>nếu quyền đó có"]
+    cond --> act["Thực hiện hành động"]
+```
+
+Token chỉ đóng góp **bước đầu tiên**. Mọi thứ sau đó là dữ liệu phía server.
+
+### Bốn chỗ bắt buộc kiểm tra
+
+Kiểm tra ở controller là **chưa đủ**, vì một hành động có thể được kích hoạt từ
+nhiều đường vào khác nhau.
+
+| Chỗ | Kiểm tra gì | Vì sao không bỏ được |
+|---|---|---|
+| **Command và query handler** | Quyền tương ứng với hành động | Đây là chỗ duy nhất mọi đường vào đều đi qua: HTTP, tác vụ nền, quy tắc tự động, thao tác hàng loạt |
+| **Truy vấn danh sách** | Điều kiện quyền ghép thẳng vào SQL | Lọc sau khi đã tải về vừa chậm vừa dễ sót; xem [NFR-07](../02-requirement/non-functional.md) |
+| **Cấp scope đồng bộ** | Người dùng được nhận scope nào | Sai ở đây là gửi thẳng dữ liệu của người khác xuống máy client |
+| **Quy tắc tự động** | Quyền của người mà quy tắc chạy dưới danh nghĩa | Nếu không, automation trở thành đường leo thang quyền |
+
+Controller **không** phải là chỗ kiểm tra chính. Nó chỉ nên từ chối sớm những
+trường hợp hiển nhiên để tiết kiệm công.
+
+### Mặc định là từ chối
+
+| Quy tắc | |
+|---|---|
+| Mỗi hành động khai báo **đúng một** quyền cần có | Không có hành động nào "không cần quyền" |
+| Hành động không khai báo quyền thì **bị từ chối**, không phải được cho qua | Quên khai báo là lỗi hiển nhiên, không phải lỗ hổng âm thầm |
+| Có test liệt kê mọi hành động và bắt lỗi khi có hành động chưa khai báo | Chỉ dựa vào review thì sớm muộn sẽ lọt |
+| Danh mục quyền nằm ở **một chỗ duy nhất** | Để đối chiếu được với vị trí bit đã cấp |
+
+### Một điểm vào duy nhất
+
+Mọi lời gọi kiểm tra đi qua cùng một hàm, và hàm đó nhận **cả ngữ cảnh dữ liệu**
+chứ không chỉ nhận mặt nạ:
+
+```
+require(permission, context)
+```
+
+`context` mang workspace, project, và đối tượng bị tác động khi có. Nhờ đó tầng
+[permission condition](#permission-condition) cắm vào được mà không phải sửa chỗ gọi.
+
+**Đây là lý do chỗ nối phải có ngay từ Phase 1**, dù chưa hiện thực điều kiện nào.
+Thêm tham số `context` sau nghĩa là sửa mọi lời gọi kiểm tra quyền trong toàn hệ thống.
+
+### Cache mặt nạ
+
+| | |
+|---|---|
+| Khoá | Theo cặp người dùng và phạm vi (workspace hoặc project) |
+| Nơi lưu | Redis, có đường dự phòng tính lại từ cơ sở dữ liệu |
+| Thời hạn | Ngắn — cache chỉ để giảm tải, **không phải** để giảm độ trễ thu hồi |
+| Xoá cache | Ngay khi vai trò đổi, thành viên bị thêm hoặc bớt, group đổi thành viên, hoặc permission scheme đổi |
+
+**Xoá cache luôn đi kèm phát sự kiện thu hồi cho sync engine.** Xoá cache mà không
+báo cho client thì server đã chặn nhưng client vẫn giữ nguyên dữ liệu đã tải về.
+
+### Mặt nạ ở phía client chỉ là gợi ý giao diện
+
+Client **cũng** nhận mặt nạ của chính nó qua scope đồng bộ, để ẩn hoặc vô hiệu hoá
+nút bấm và để làm được việc đó khi offline.
+
+> ⚠️ Mặt nạ phía client **không phải** là biện pháp kiểm soát. Nó chỉ quyết định
+> giao diện trông thế nào. Server kiểm tra lại mọi hành động, và **không bao giờ**
+> đọc mặt nạ từ dữ liệu client gửi lên.
+
+Hệ quả thực tế: một mutation lạc quan có thể bị server từ chối vì thiếu quyền dù
+giao diện đã cho bấm — ví dụ quyền vừa bị thu hồi mà client chưa nhận được tin.
+Đường xử lý là hoàn tác và báo lý do, giống mọi mutation bị từ chối khác.
+
+### Những cách làm sai
+
+| Sai | Vì sao |
+|---|---|
+| Đọc vai trò hoặc quyền từ token | Dữ liệu do client giữ; và không thu hồi được |
+| Nhận mặt nạ hoặc vai trò từ tham số của request | Client tự khai quyền cho mình |
+| Chỉ kiểm tra ở controller | Tác vụ nền, automation và thao tác hàng loạt đi đường khác |
+| Chỉ ẩn nút ở giao diện | Không phải kiểm soát, chỉ là trang trí |
+| Tải danh sách về rồi lọc ở tầng ứng dụng | Chậm, và dễ sót ở nhánh phân trang hoặc đếm số lượng |
+| Bỏ qua kiểm tra vì "hành động này ai cũng làm được" | Vẫn phải khai báo một quyền, kể cả quyền mà mọi vai trò đều có |
+
+### Ghi nhận
+
+Mọi lần **từ chối** vì thiếu quyền đều được ghi nhật ký kèm người thực hiện, hành
+động, phạm vi và quyền còn thiếu. Nhật ký ghi **tên quyền**, không ghi giá trị số.
+
+Một chuỗi từ chối liên tiếp của cùng một người là tín hiệu đáng xem: hoặc giao
+diện đang hiển thị sai, hoặc có người đang dò tìm.
 
 ---
 

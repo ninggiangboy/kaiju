@@ -92,6 +92,10 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-45 | Token truy cập chỉ mang danh tính, không mang danh sách quyền | [ADR-0010](../adr/0010-bitmask-permission.md) |
 | CON-46 | Quyền phụ thuộc dữ liệu được xử lý bởi một tầng riêng chạy sau khi mặt nạ bit đã cho phép; chỗ nối cho tầng này phải có ngay từ Phase 1 | [ADR-0010](../adr/0010-bitmask-permission.md) |
 | CON-47 | Workspace là đơn vị tenancy duy nhất. Không có cấp tổ chức phía trên | [ADR-0012](../adr/0012-shared-schema-tenancy-rls.md) |
+| CON-57 | Token truy cập chỉ chứa claims cơ bản: danh tính tài khoản, phiên, thời điểm phát hành và hết hạn, loại token. Không chứa vai trò, quyền, hay danh sách workspace | [identity-and-permission.md](../04-system-design/identity-and-permission.md#token-truy-cập-chứa-gì) |
+| CON-58 | Mặt nạ quyền luôn được tra lại phía server theo từng request, không bao giờ đọc từ token hay từ tham số client gửi lên | [identity-and-permission.md](../04-system-design/identity-and-permission.md#vì-sao-quyền-không-nằm-trong-token) |
+| CON-59 | Mọi hành động khai báo đúng một quyền cần có; hành động chưa khai báo thì **bị từ chối**, không được cho qua | [identity-and-permission.md](../04-system-design/identity-and-permission.md#mặc-định-là-từ-chối) |
+| CON-60 | Kiểm tra quyền nằm ở command và query handler, không phải ở controller, vì tác vụ nền và quy tắc tự động đi đường khác | [identity-and-permission.md](../04-system-design/identity-and-permission.md#bốn-chỗ-bắt-buộc-kiểm-tra) |
 
 ## Khung mã nguồn
 

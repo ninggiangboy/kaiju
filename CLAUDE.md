@@ -158,9 +158,16 @@ These may not be violated. Full reasoning lives in the linked ADRs and in
 ### Identity and permissions
 
 25. There are no passwords anywhere. Magic link is the only authentication method
-26. Access tokens **never carry a permission list**
-27. **A permission bit position is never redefined or reused**
-28. All permission checks go through a single entry point that also receives the
+26. Access tokens carry **basic claims only** — account, session, issue and expiry
+    time, token type. Never roles, permissions or the workspace list
+27. The permission mask is **always resolved server-side per request**, never read
+    from the token and never from anything the client sends
+28. **Every action declares exactly one required permission**, and an action with
+    no declared permission is **denied**, not allowed
+29. Permission checks live in command and query handlers, not in controllers —
+    background jobs, automation rules and bulk operations enter another way
+30. **A permission bit position is never redefined or reused**
+31. All permission checks go through a single entry point that also receives the
     data context, so the permission condition layer can plug in
 
 ---

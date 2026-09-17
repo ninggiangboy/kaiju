@@ -34,7 +34,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | Phase | Tên | Số feature | TODO | IN_PROGRESS | DONE |
 |---|---|---|---|---|---|
 | 0 | Nền tảng | 51 | 51 | 0 | 0 |
-| 1 | Identity & Workspace | 32 | 32 | 0 | 0 |
+| 1 | Identity & Workspace | 33 | 33 | 0 | 0 |
 | 2 | Project | 12 | 12 | 0 | 0 |
 | 3 | Issue | 16 | 16 | 0 | 0 |
 | 4 | Collaboration | 15 | 15 | 0 | 0 |
@@ -50,7 +50,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | 14 | Automation | 10 | 10 | 0 | 0 |
 | 15 | Bulk & Import | 7 | 7 | 0 | 0 |
 | 16 | Integration | 10 | 10 | 0 | 0 |
-| | **Tổng** | **226** | **226** | **0** | **0** |
+| | **Tổng** | **227** | **227** | **0** | **0** |
 
 ---
 
@@ -167,6 +167,7 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 | KJ-WSP-19 | Scope workspace và danh bạ thành viên đồng bộ | KJ-SYN-07, KJ-WSP-03 | TODO | Ô chọn người chạy cục bộ |
 | KJ-WSP-20 | Giới hạn số lời mời trong một khoảng thời gian | KJ-WSP-04 | TODO | Chống dùng để gửi thư rác |
 | KJ-WSP-21 | Cấu hình workspace | KJ-WSP-01 | TODO | |
+| KJ-WSP-22 | Danh mục quyền tập trung và kiểm tra mặc định từ chối | KJ-WSP-16 | TODO | Có test bắt hành động chưa khai báo quyền |
 
 ---
 
