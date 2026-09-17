@@ -1,0 +1,55 @@
+# Remove a node from the cluster.
+#
+# THE ORDER BELOW IS MANDATORY, not a convention:
+#
+#   drain the node -> delete it from the cluster -> ONLY THEN destroy the machine
+#
+# Destroying the machine first kills its pods abruptly. The application survives
+# that by design - workers are idempotent and the scheduler has a second replica
+# - but realtime clients lose their stream without the graceful close that lets
+# them reconnect cleanly, and there is no reason to inflict it.
+#
+# This playbook does the first two steps. The third is `tofu destroy`, run
+# separately and deliberately.
+- name: Drain and remove a node
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    drain_timeout: 300s
+
+  tasks:
+    - name: Require the node name
+      ansible.builtin.assert:
+        that:
+          - node_name is defined
+          - node_name | length > 0
+        fail_msg: "node_name must be supplied, e.g. -e node_name=kaiju-node-1"
+
+    - name: Cordon the node
+      ansible.builtin.command: kubectl cordon {{ node_name }}
+      changed_when: true
+
+    - name: Drain the node
+      # This BLOCKS on the disruption budgets, and that is the point: it will
+      # not evict the last available replica of a role. If it hangs, the cause
+      # is almost always two replicas of one role sitting on this node, which
+      # the spread constraints exist to prevent (CON-79).
+      ansible.builtin.command: >-
+        kubectl drain {{ node_name }}
+        --ignore-daemonsets
+        --delete-emptydir-data
+        --timeout={{ drain_timeout }}
+      changed_when: true
+      register: drain
+
+    - name: Delete the node from the cluster
+      ansible.builtin.command: kubectl delete node {{ node_name }}
+      changed_when: true
+
+    - name: State the remaining step
+      ansible.builtin.debug:
+        msg: >-
+          {{ node_name }} is drained and removed from the cluster. The machine
+          still exists - destroy it from infra/tofu/, not from here.

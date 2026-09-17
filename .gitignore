@@ -5,3 +5,13 @@ infra/env/*.env
 .env.local
 
 .DS_Store
+
+# Ansible inventory names real machines.
+infra/ansible/inventory/hosts.yml
+
+# OpenTofu state contains secrets in readable form, and local variable files.
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars

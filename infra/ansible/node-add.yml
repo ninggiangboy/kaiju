@@ -1,0 +1,54 @@
+# Join a new worker node to a SELF-MANAGED cluster.
+#
+# On a managed cluster this playbook is not used at all: the node pool is an
+# OpenTofu variable, and the cluster autoscaler adds nodes on its own when pods
+# are Pending. See infra/tofu/.
+#
+# The machine itself is created by OpenTofu. This playbook only configures what
+# is inside it (ADR-0014) - which is exactly the boundary between the two tools.
+- name: Join a worker node to the cluster
+  hosts: k8s_agents
+  become: true
+  gather_facts: true
+
+  vars:
+    # Taken from the control plane at /var/lib/rancher/k3s/server/node-token.
+    # Passed on the command line or from a vault - never written down here.
+    k3s_url: "https://{{ hostvars[groups['k8s_servers'][0]].ansible_host }}:6443"
+
+  tasks:
+    - name: Require the join token
+      ansible.builtin.assert:
+        that:
+          - k3s_token is defined
+          - k3s_token | length > 0
+        fail_msg: "k3s_token must be supplied, e.g. -e k3s_token=..."
+
+    - name: Disable swap
+      # The kubelet refuses to start with swap on, and the failure message is
+      # not obvious if you have not seen it before.
+      ansible.builtin.command: swapoff -a
+      changed_when: false
+
+    - name: Remove swap from fstab so it stays off after a reboot
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^([^#].*\sswap\s.*)$'
+        replace: '# \1'
+
+    - name: Install the node agent
+      ansible.builtin.shell:
+        cmd: curl -sfL https://get.k3s.io | K3S_URL={{ k3s_url }} K3S_TOKEN={{ k3s_token }} sh -
+        creates: /usr/local/bin/k3s
+
+    - name: Wait for the agent to be running
+      ansible.builtin.systemd:
+        name: k3s-agent
+        state: started
+        enabled: true
+
+    - name: Report what to verify from the control plane
+      ansible.builtin.debug:
+        msg: >-
+          Joined. Confirm with `kubectl get nodes` and watch for the replica
+          spread constraints to place pods on it (CON-79).

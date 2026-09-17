@@ -1,0 +1,22 @@
+# Copy to hosts.yml and fill in. hosts.yml is NOT committed - it names real
+# machines, and the repository holds no real infrastructure detail.
+all:
+  children:
+    # Tier 3: one VPS running compose. Exactly one host, by design - the whole
+    # point of this tier is that it is a single machine (environments.md).
+    staging:
+      hosts:
+        kaiju-staging:
+          ansible_host: REPLACE
+          ansible_user: deploy
+
+    # Tier 4 workers, for a SELF-MANAGED cluster only. On a managed cluster the
+    # node pool is an OpenTofu variable and none of this applies.
+    k8s_servers:
+      hosts:
+        kaiju-cp-1:
+          ansible_host: REPLACE
+    k8s_agents:
+      hosts:
+        kaiju-node-1:
+          ansible_host: REPLACE

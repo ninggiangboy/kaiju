@@ -1,0 +1,67 @@
+# Run a migration against tier 3, in either direction.
+#
+# Tier 3 is the ONLY place above a developer machine where the down direction is
+# allowed (CON-80). That is deliberate: a hand-written rollback nobody has ever
+# executed is not a rollback, and tier 4 forbids the down direction entirely
+# (CON-75), so staging is the only place it can be proven.
+#
+#   ansible-playbook migrate-staging.yml -e command=status
+#   ansible-playbook migrate-staging.yml -e command=up
+#   ansible-playbook migrate-staging.yml -e command=down -e count=1
+#
+# The run is recorded on the host. Reverting a schema is not something anyone
+# should have to reconstruct from memory afterwards.
+- name: Migrate the staging database
+  hosts: staging
+  become: true
+  gather_facts: true
+
+  vars:
+    kaiju_root: /opt/kaiju
+    kaiju_env_file: /etc/kaiju/staging.env
+    command: status
+    count: 1
+    audit_log: /var/log/kaiju-migrations.log
+
+  tasks:
+    - name: Validate the command
+      ansible.builtin.assert:
+        that: command in ["up", "down", "status"]
+        fail_msg: "command must be one of: up, down, status"
+
+    - name: Confirm a down migration was meant
+      # Down does NOT restore data the up direction dropped. Making that an
+      # explicit second flag keeps it from being a typo away from a status check.
+      ansible.builtin.assert:
+        that: confirm_down | default(false) | bool
+        fail_msg: >-
+          The down direction does not bring back data that the up direction
+          dropped. Re-run with -e confirm_down=true if that is understood.
+      when: command == "down"
+
+    - name: Run the migration
+      ansible.builtin.command:
+        cmd: >-
+          docker compose --env-file {{ kaiju_env_file }}
+          -f staging/docker-compose.yml run --rm migrate
+        chdir: "{{ kaiju_root }}"
+      environment:
+        KAIJU_MIGRATE_COMMAND: "{{ command }}"
+        KAIJU_MIGRATE_COUNT: "{{ count }}"
+      register: migrate
+      changed_when: command != "status"
+
+    - name: Record the run
+      ansible.builtin.lineinfile:
+        path: "{{ audit_log }}"
+        line: >-
+          {{ ansible_date_time.iso8601 }} command={{ command }}
+          count={{ count if command == 'down' else '-' }}
+          by={{ lookup('env', 'USER') | default('unknown', true) }}
+        create: true
+        mode: "0640"
+      when: command != "status"
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: migrate.stdout_lines
