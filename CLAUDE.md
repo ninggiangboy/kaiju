@@ -266,7 +266,7 @@ The project **has not started implementation**. Documentation only.
 |---|---|
 | Brief, Requirement, System Design, Features & Roadmap | ✅ Complete |
 | UX/UI design, ERD, Detail design | ⬜ Not started |
-| `infra/`, `.github/` | ✅ Scaffolded — environment tiers and CI pipeline |
+| `infra/`, `.github/` | ✅ Scaffolded — environment tiers, CI pipeline, and the delivery toolchain (OpenTofu, Ansible, Argo CD). Nothing applied yet: no cloud account, no cluster, no host |
 | `backend/`, `frontend/` | ⬜ Not created |
 
 Next steps on the roadmap: analyse the data model ([ERD](docs/06-erd/) — its

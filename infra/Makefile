@@ -70,8 +70,13 @@ db-status: ## Show which changesets are applied and which are pending
 
 ## --- Checks --------------------------------------------------------------
 
+# There is deliberately NO deploy target here. This Makefile never writes to the
+# desired state of tiers 3-4 (CON-78): tier 3 is deployed by Ansible, tier 4 by
+# merging a pull request that Argo CD reconciles. Two things able to change
+# production is two things that will disagree about it.
+
 .PHONY: check
-check: check-docs check-compose check-k8s check-ci ## Every static check, exactly as CI runs them
+check: check-docs check-compose check-k8s check-ci check-tofu check-ansible ## Every static check, exactly as CI runs them
 
 .PHONY: check-docs
 check-docs: ## Links, heading anchors, the feature table, and no DDL under docs/
@@ -97,6 +102,18 @@ check-ci: ## CI workflows, reverse proxy configuration, operational scripts
 	docker run --rm -e KAIJU_DOMAIN=example.com -v "$$PWD/proxy:/w" -w /w caddy:2-alpine \
 		sh -c 'caddy validate --config Caddyfile.dev --adapter caddyfile && \
 		       caddy validate --config Caddyfile.staging --adapter caddyfile' 2>&1 | tail -1
+
+.PHONY: check-tofu
+check-tofu: ## Formatting and syntax of the infrastructure stacks
+	@command -v tofu >/dev/null && tofu fmt -check -recursive tofu/ \
+		|| (command -v terraform >/dev/null && terraform fmt -check -recursive tofu/) \
+		|| echo "  (skipped: neither tofu nor terraform installed)"
+
+.PHONY: check-ansible
+check-ansible: ## Syntax of every playbook
+	@command -v ansible-playbook >/dev/null \
+		&& (cd ansible && for p in *.yml; do ansible-playbook --syntax-check "$$p" >/dev/null || exit 1; done && echo "  playbooks ok") \
+		|| echo "  (skipped: ansible not installed)"
 
 .PHONY: smoke
 smoke: ## Post-deployment checks; defaults to tier 2

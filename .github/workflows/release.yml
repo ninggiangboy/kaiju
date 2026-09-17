@@ -11,11 +11,6 @@ on:
     branches: [main]
     tags: ["v*"]
   workflow_dispatch:
-    inputs:
-      deploy_production:
-        description: Deploy to production (requires approval)
-        type: boolean
-        default: false
 
 concurrency:
   group: release-${{ github.ref }}
@@ -81,36 +76,79 @@ jobs:
     environment: staging
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy
-        # The order inside that script is mandatory (CON-69):
-        #   migration -> worker and scheduler -> api and realtime
-        # Background processes must understand the new event format BEFORE
-        # anything produces it.
-        run: |
-          echo "Not wired up yet: needs credentials for the staging host."
-          echo "The command to run on that host:"
-          echo "  KAIJU_IMAGE=ghcr.io/${{ github.repository }}/backend:${{ needs.images.outputs.tag }} \\"
-          echo "  infra/scripts/deploy-staging.sh"
-          exit 1
 
-  production:
-    name: Deploy production
+      - name: Install Ansible
+        run: pipx install --include-deps ansible-core
+
+      - name: Authorise the deploy key
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "${{ secrets.STAGING_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.STAGING_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Deploy
+        # The order (migration -> worker and scheduler -> api and realtime,
+        # CON-69) lives inside scripts/deploy-staging.sh, which this playbook
+        # calls. It is not restated here, so the two cannot drift.
+        working-directory: infra/ansible
+        run: |
+          cp inventory/hosts.yml.example inventory/hosts.yml
+          ansible-playbook deploy-staging.yml \
+            -e kaiju_image=ghcr.io/${{ github.repository }}/backend:${{ needs.images.outputs.tag }}
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "True"
+
+  # Tier 4 is NOT deployed from here (CON-77). This job proposes the change; a
+  # human merging the pull request is what deploys, and Argo CD reconciles from
+  # the merged commit. The diff says exactly which tag is replacing which -
+  # something an approval button never did.
+  propose-production:
+    name: Propose production release
     needs: [images, staging]
-    if: inputs.deploy_production
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
-    # This environment carries a manual approval rule. It is the only human
-    # gate in the whole pipeline.
-    environment: production
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - name: Write the image tag into the manifests
+        with:
+          ref: main
+
+      - name: Install kustomize
         run: |
-          cd infra/k8s/overlays/production
-          kubectl kustomize . > /dev/null   # validate before touching anything
-          echo "Not wired up yet: needs cluster credentials."
-          echo "The steps, in this exact order (CON-68, CON-69):"
-          echo "  1. kubectl apply -f <migration job>  and wait for it to finish"
-          echo "  2. kubectl set image deploy/kaiju-worker deploy/kaiju-scheduler ..."
-          echo "  3. kubectl set image deploy/kaiju-api deploy/kaiju-realtime ..."
-          echo "  4. infra/scripts/smoke.sh https://<domain>"
-          exit 1
+          curl -sSL "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
+
+      - name: Pin the image tag in the production overlay
+        working-directory: infra/k8s/overlays/production
+        run: |
+          kustomize edit set image \
+            kaiju-backend=ghcr.io/${{ github.repository }}/backend:${{ github.ref_name }} \
+            kaiju-frontend=ghcr.io/${{ github.repository }}/frontend:${{ github.ref_name }}
+
+      - name: Verify the overlay still builds
+        run: kubectl kustomize infra/k8s/overlays/production > /dev/null
+
+      - name: Open the release pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branch="release/${{ github.ref_name }}"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add infra/k8s/overlays/production/kustomization.yaml
+          git commit -m "release: deploy ${{ github.ref_name }} to production"
+          git push origin "$branch"
+          gh pr create \
+            --base main --head "$branch" \
+            --title "release: deploy ${{ github.ref_name }} to production" \
+            --body "Merging this deploys \`${{ github.ref_name }}\` to production.
+
+          Argo CD reconciles from the merged commit. The migration runs first as
+          a PreSync hook, then worker and scheduler, then api and realtime
+          (CON-69). Rolling back is \`git revert\` of the merge.
+
+          Staging is already running this tag."

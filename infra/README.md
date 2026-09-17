@@ -74,8 +74,11 @@ Two consequences worth remembering:
 
 - The application starts fine against an out-of-date schema. The `api` health
   check is what reports not-ready, so trust it rather than "the container is up".
-- `make db-down` does **not** bring back data the up direction dropped. It is a
-  tier 1-2 tool; production rolls forward instead (`CON-75`).
+- `make db-down` does **not** bring back data the up direction dropped. Tier 4
+  forbids the down direction outright and rolls forward instead (`CON-75`).
+  Tier 3 **does** allow it, through `ansible/migrate-staging.yml`, which records
+  every run — a hand-written rollback nobody has executed is not a rollback, and
+  staging is the only place it can be proven (`CON-80`).
 
 The migration runner connects through `KAIJU_DB_DIRECT_URL`, not the pooled
 URL — its changelog lock is session-scoped and would not survive transaction
@@ -88,6 +91,49 @@ That is the entire reason `proxy/Caddyfile.*` exists, and the reason for the
 produces **no error at all** — the only symptom is "realtime does not work".
 
 `scripts/smoke.sh` carries a check dedicated to it.
+
+---
+
+## Who changes what
+
+Four tools, each owning one layer, and none reaching into another's
+([ADR-0014](../docs/adr/0014-declarative-infra-gitops.md)). When something needs
+changing, this table says where.
+
+| Tool | Owns | Recognise it by |
+|---|---|---|
+| **OpenTofu** (`tofu/`) | Database, object storage, mail, cluster, node pools | Losing it loses data |
+| **Ansible** (`ansible/`) | Configuration inside a machine that already exists; tier 3 deployment | It can be rebuilt |
+| **Argo CD** (`argocd/`) | Everything running inside the tier 4 cluster | Desired state is in git |
+| **This Makefile** | Tiers 1-2, and the static checks | A person runs it |
+
+Two rules keep them from fighting:
+
+**OpenTofu never creates a Kubernetes object.** If it did, it and Argo CD would
+both believe they own that object, and the loop that follows is hard to unpick
+once it is live.
+
+**The Makefile never writes to the desired state of tiers 3-4** (`CON-78`).
+There is no `make deploy-production`, and that is not an omission — two things
+able to change production is two things that will disagree about it.
+
+### How a change reaches production
+
+```
+merge to main        → build an image, tag it with the commit. Nothing deploys.
+push a version tag   → Ansible deploys tier 3, then a pull request is opened
+                       that bumps the image tag in the production overlay
+merge that PR        → Argo CD reconciles. THIS is the deployment.
+git revert that PR   → rollback
+```
+
+The merged pull request is the approval gate, and it shows exactly which tag is
+replacing which. Argo CD enforces the mandatory order (`CON-69`) with sync
+waves: migration as a `PreSync` hook, then `worker` and `scheduler`, then `api`
+and `realtime`.
+
+> **Not wired up yet.** No cloud account, no cluster, no host. The manifests,
+> stacks and playbooks are written and checked; none has been applied.
 
 ---
 
@@ -110,7 +156,7 @@ early beats running wrong in silence.
 
 ```
 infra/
-├── Makefile                      # every command, all runnable locally
+├── Makefile                      # tiers 1-2, and every static check
 ├── compose/
 │   ├── docker-compose.yml        # tier 1
 │   └── docker-compose.dev.yml    # tier 2, layered on tier 1
@@ -118,7 +164,10 @@ infra/
 │   └── docker-compose.yml        # tier 3, a single VPS
 ├── k8s/
 │   ├── base/                     # tier 4, four roles + the migration job
-│   └── overlays/{staging,production}/
+│   └── overlays/{staging,production}/   # each pins its own image tag
+├── argocd/                       # tier 4 Applications - what reconciles the above
+├── ansible/                      # tier 3 deployment, and self-managed cluster nodes
+├── tofu/                         # cloud resources: database, object storage, mail
 ├── docker/                       # backend and frontend Dockerfiles
 ├── proxy/                        # Caddyfile.dev and Caddyfile.staging
 ├── pgbouncer/                    # pooler configuration, shared with CI

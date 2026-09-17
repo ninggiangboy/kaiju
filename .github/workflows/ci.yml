@@ -280,6 +280,23 @@ jobs:
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
           shellcheck infra/scripts/*.sh
+      - uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_wrapper: false
+      - run: make check-tofu
+        working-directory: infra
+      - name: Ansible playbooks
+        run: |
+          pipx install --include-deps ansible-core
+          make check-ansible
+        working-directory: infra
+      - name: Argo CD manifests
+        # A malformed Application does not fail anything at apply time - it just
+        # never syncs, quietly.
+        run: |
+          for f in infra/argocd/*.yaml; do
+            python3 -c "import sys,yaml; yaml.safe_load(open(sys.argv[1]))" "$f"
+          done
 
   # --------------------------------------------------------------------
   gate:
