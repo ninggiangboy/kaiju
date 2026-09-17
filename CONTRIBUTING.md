@@ -26,8 +26,11 @@ upload, instead of after it.
 2. **Commit per stage of work**, in English, Conventional Commits. Never one
    large commit at the end
 3. **Run `make -C infra check`** — the same static checks CI runs
-4. **Open a pull request into `dev`.** Its title follows the same form as a
-   commit message, because it becomes the merge commit's message
+4. **Push, and open the pull request in the same breath.** A pushed branch with
+   no pull request is invisible: nothing reviews it, no check is required of it,
+   and it drifts behind `dev` while everyone assumes it is in flight. Open it
+   into `dev`, and give it a title in the same form as a commit message, because
+   it becomes the merge commit's message
 5. **Promote** by opening a pull request from `dev` to `staging`, and later from
    `staging` to `production`
 
