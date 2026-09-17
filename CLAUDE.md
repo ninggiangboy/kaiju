@@ -230,7 +230,7 @@ happens again later.
 | **A use case gains or loses a branch** | Add or amend the branch, and note in the business-rules table that the rule changed and when |
 | **A requirement turns out to be wrong** | Keep the ID. Update the text and add a note recording the previous wording. Never delete the row and never reuse the ID |
 | **A feature is dropped or postponed** | Keep the row and the ID, set status to `DEFERRED`, and state in the notes which phase it moved to and why |
-| **A change makes a README wrong** | Update that README **in the same commit** — `README.md`, `.github/README.md` or `infra/README.md`. A stale README is worse than none: it is read by someone with no way to know it is out of date |
+| **A change makes a README wrong** | Update that README **in the same commit** — `README.md`, `.github/CI.md` or `infra/README.md`. A stale README is worse than none: it is read by someone with no way to know it is out of date |
 | **A small, purely local choice** | No documentation change needed. If it does not cross a module boundary and does not contradict anything written down, it is not a departure |
 
 ### What counts as a departure worth recording

@@ -115,7 +115,7 @@ the documentation.
 ### Keeping this file true
 
 **A change that makes any README wrong updates it in the same commit** — this
-one, [`.github/README.md`](.github/README.md) and
+one, [`.github/CI.md`](.github/CI.md) and
 [`infra/README.md`](infra/README.md). A README nobody maintains is worse than no
 README: it is read by someone who has no way to know it is out of date.
 

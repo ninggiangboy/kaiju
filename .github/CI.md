@@ -1,7 +1,12 @@
-# .github/
+# The pipeline
 
-The continuous integration pipeline, the pull request template, and the git
-hooks. The design, and why each check exists, is documented in
+The continuous integration workflows, the pull request template, and the git
+hooks.
+
+> This file is **not** called `README.md`, and must not be renamed to it.
+> GitHub picks the repository's front page in the order `.github/README.md`,
+> then `README.md`, then `docs/README.md` — so a README here silently replaces
+> the one at the root on the repository's landing page. The design, and why each check exists, is documented in
 [ci-cd.md](../docs/04-system-design/ci-cd.md) (Vietnamese, like everything under
 `docs/`). What the rules mean for you when you push: [CONTRIBUTING.md](../CONTRIBUTING.md).
 
