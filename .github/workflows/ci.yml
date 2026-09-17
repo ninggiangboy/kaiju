@@ -49,6 +49,8 @@ jobs:
             docs:
               - 'docs/**'
               - 'CLAUDE.md'
+              - 'README.md'
+              - 'CONTRIBUTING.md'
               - '.github/scripts/check-docs.py'
             backend:
               - 'backend/**'

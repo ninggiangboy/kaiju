@@ -23,6 +23,11 @@ kaiju/
 
 Do not add directories at the top level.
 
+At the root, [`README.md`](README.md) is the entry point for a person arriving at
+the repository and [`CONTRIBUTING.md`](CONTRIBUTING.md) is what to read before
+pushing anything. `.github/hooks/pre-push`, installed by `make -C infra hooks`,
+refuses a push those two rule out.
+
 ---
 
 ## Development principle
@@ -225,6 +230,7 @@ happens again later.
 | **A use case gains or loses a branch** | Add or amend the branch, and note in the business-rules table that the rule changed and when |
 | **A requirement turns out to be wrong** | Keep the ID. Update the text and add a note recording the previous wording. Never delete the row and never reuse the ID |
 | **A feature is dropped or postponed** | Keep the row and the ID, set status to `DEFERRED`, and state in the notes which phase it moved to and why |
+| **A change makes a README wrong** | Update that README **in the same commit** — `README.md`, `.github/README.md` or `infra/README.md`. A stale README is worse than none: it is read by someone with no way to know it is out of date |
 | **A small, purely local choice** | No documentation change needed. If it does not cross a module boundary and does not contradict anything written down, it is not a departure |
 
 ### What counts as a departure worth recording
@@ -263,6 +269,8 @@ from it. A separate follow-up commit is a follow-up that does not happen.
 | Feature status | Lives only in the [feature catalog](docs/03-features/README.md); never duplicated elsewhere |
 | Unsettled points | Write `> **Chưa chốt:** …` rather than guessing |
 | Diagrams | Mermaid |
+| READMEs | Updated in the same commit as the change that makes them wrong (`CON-85`) |
+| Working rules a newcomer needs | Live **in the repository**, not only in a design document: `CONTRIBUTING.md`, the pull request template, the pre-push hook, and a CI check where one can actually enforce it |
 
 ---
 
