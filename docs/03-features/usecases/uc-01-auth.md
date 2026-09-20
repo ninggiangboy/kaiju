@@ -4,7 +4,7 @@ Kaiju chỉ có một phương thức xác thực: magic link. Cùng một luồ
 ký lẫn đăng nhập.
 
 **Phase:** 1 · **Feature:** KJ-IDN-01 → KJ-IDN-11
-**Liên quan:** [ADR-0009](../../adr/0009-magic-link-only.md) · [identity-and-permission.md](../../04-system-design/identity-and-permission.md) · [uc-member-invite.md](uc-member-invite.md)
+**Liên quan:** [ADR-0009](../../adr/0009-magic-link-only.md) · [identity-and-permission.md](../../04-system-design/identity-and-permission.md) · [uc-03-member-invite.md](uc-03-member-invite.md)
 
 ---
 
@@ -160,7 +160,7 @@ ngắt khi token cũ hết hạn.
 
 | Nhánh | Xử lý |
 |---|---|
-| Đến từ một lời mời | **Bỏ qua bước tạo workspace**, vào thẳng workspace được mời (xem [uc-member-invite](uc-member-invite.md)) |
+| Đến từ một lời mời | **Bỏ qua bước tạo workspace**, vào thẳng workspace được mời (xem [uc-member-invite](uc-03-member-invite.md)) |
 | Có lời mời đang chờ cho email này | Hiển thị danh sách lời mời trước, cho chọn chấp nhận hoặc tạo workspace mới |
 
 ### Vì sao hỏi tên workspace thay vì tự đặt

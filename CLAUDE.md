@@ -80,9 +80,9 @@ Vietnamese; this table is the index into it.
 | The SSE protocol, cursors, catch-up, bootstrap | [realtime-and-sync.md](docs/04-system-design/realtime-and-sync.md) |
 | Client-side store, optimistic updates, offline queue | [frontend.md](docs/04-system-design/frontend.md) + [realtime-and-sync.md](docs/04-system-design/realtime-and-sync.md) |
 | Next.js routing, deciding where something renders | [frontend.md](docs/04-system-design/frontend.md) + [ADR-0008](docs/adr/0008-nextjs-as-spa-shell.md) |
-| Auth, sessions, magic link | [identity-and-permission.md](docs/04-system-design/identity-and-permission.md) + [uc-auth.md](docs/03-features/usecases/uc-auth.md) |
+| Auth, sessions, magic link | [identity-and-permission.md](docs/04-system-design/identity-and-permission.md) + [uc-01-auth.md](docs/03-features/usecases/uc-01-auth.md) |
 | Permission checks, roles, bitmasks | [identity-and-permission.md](docs/04-system-design/identity-and-permission.md) + [ADR-0010](docs/adr/0010-bitmask-permission.md) |
-| Anything that grants or removes access | [uc-member-invite.md](docs/03-features/usecases/uc-member-invite.md) + [realtime-and-sync.md — revocation](docs/04-system-design/realtime-and-sync.md#khi-quyền-bị-thu-hồi) |
+| Anything that grants or removes access | [uc-03-member-invite.md](docs/03-features/usecases/uc-03-member-invite.md) + [realtime-and-sync.md — revocation](docs/04-system-design/realtime-and-sync.md#khi-quyền-bị-thu-hồi) |
 | Writing tests | [testing-strategy.md](docs/04-system-design/testing-strategy.md) |
 | Docker, proxy config, deployment, metrics, logging | [observability-and-ops.md](docs/04-system-design/observability-and-ops.md) |
 | Standing up or changing an environment | [environments.md](docs/04-system-design/environments.md) — four tiers, and what only that tier catches |

@@ -158,43 +158,43 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-IDN-01 | Gửi magic link, giới hạn tần suất, chống dò email | KJ-PLT-11 | TODO | ✅ [uc-auth](usecases/uc-auth.md) | |
-| KJ-IDN-02 | Token lưu dạng băm, dùng một lần, có thời hạn, vô hiệu hàng loạt | KJ-IDN-01 | TODO | ✅ [uc-auth](usecases/uc-auth.md) | |
-| KJ-IDN-03 | Mã 6 số kèm ràng buộc thiết bị | KJ-IDN-02 | TODO | ✅ [uc-auth](usecases/uc-auth.md) | Bắt buộc, không phải tuỳ chọn |
-| KJ-IDN-04 | Xác thực và cấp phiên đăng nhập | KJ-IDN-03 | TODO | ✅ [uc-auth](usecases/uc-auth.md) | |
-| KJ-IDN-05 | Token làm mới xoay vòng và phát hiện tái sử dụng | KJ-IDN-04 | TODO | ✅ [uc-auth](usecases/uc-auth.md) | Tái sử dụng thì thu hồi toàn bộ |
-| KJ-IDN-06 | Danh sách phiên và thu hồi | KJ-IDN-05 | TODO | ✅ [uc-auth](usecases/uc-auth.md) | |
-| KJ-IDN-07 | Onboarding tài khoản mới | KJ-IDN-04 | TODO | ✅ [uc-auth](usecases/uc-auth.md) | Hỏi tên hiển thị và tên workspace |
-| KJ-IDN-08 | Hồ sơ mặc định của tài khoản | KJ-IDN-04 | TODO | ✅ [uc-auth](usecases/uc-auth.md) | Chỉ dùng để điền sẵn |
-| KJ-IDN-09 | Xoá tài khoản kèm ẩn danh hoá | KJ-IDN-08 | TODO | ✅ [uc-auth](usecases/uc-auth.md) | Dữ liệu nghiệp vụ nguyên vẹn |
-| KJ-IDN-10 | Nhật ký kiểm toán cho hành động bảo mật | KJ-IDN-04 | TODO | ✅ [uc-auth](usecases/uc-auth.md) | |
-| KJ-IDN-11 | Gửi email qua bảng chuyển tiếp kèm mẫu thư | KJ-EVT-03 | TODO | ✅ [uc-auth](usecases/uc-auth.md) | Không gửi trực tiếp trong request |
+| KJ-IDN-01 | Gửi magic link, giới hạn tần suất, chống dò email | KJ-PLT-11 | TODO | ✅ [uc-01-auth](usecases/uc-01-auth.md) | |
+| KJ-IDN-02 | Token lưu dạng băm, dùng một lần, có thời hạn, vô hiệu hàng loạt | KJ-IDN-01 | TODO | ✅ [uc-01-auth](usecases/uc-01-auth.md) | |
+| KJ-IDN-03 | Mã 6 số kèm ràng buộc thiết bị | KJ-IDN-02 | TODO | ✅ [uc-01-auth](usecases/uc-01-auth.md) | Bắt buộc, không phải tuỳ chọn |
+| KJ-IDN-04 | Xác thực và cấp phiên đăng nhập | KJ-IDN-03 | TODO | ✅ [uc-01-auth](usecases/uc-01-auth.md) | |
+| KJ-IDN-05 | Token làm mới xoay vòng và phát hiện tái sử dụng | KJ-IDN-04 | TODO | ✅ [uc-01-auth](usecases/uc-01-auth.md) | Tái sử dụng thì thu hồi toàn bộ |
+| KJ-IDN-06 | Danh sách phiên và thu hồi | KJ-IDN-05 | TODO | ✅ [uc-01-auth](usecases/uc-01-auth.md) | |
+| KJ-IDN-07 | Onboarding tài khoản mới | KJ-IDN-04 | TODO | ✅ [uc-01-auth](usecases/uc-01-auth.md) | Hỏi tên hiển thị và tên workspace |
+| KJ-IDN-08 | Hồ sơ mặc định của tài khoản | KJ-IDN-04 | TODO | ✅ [uc-01-auth](usecases/uc-01-auth.md) | Chỉ dùng để điền sẵn |
+| KJ-IDN-09 | Xoá tài khoản kèm ẩn danh hoá | KJ-IDN-08 | TODO | ✅ [uc-01-auth](usecases/uc-01-auth.md) | Dữ liệu nghiệp vụ nguyên vẹn |
+| KJ-IDN-10 | Nhật ký kiểm toán cho hành động bảo mật | KJ-IDN-04 | TODO | ✅ [uc-01-auth](usecases/uc-01-auth.md) | |
+| KJ-IDN-11 | Gửi email qua bảng chuyển tiếp kèm mẫu thư | KJ-EVT-03 | TODO | ✅ [uc-01-auth](usecases/uc-01-auth.md) | Không gửi trực tiếp trong request |
 
 ### Workspace & Member
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-WSP-01 | Tạo workspace và quản lý slug | KJ-IDN-07 | TODO | ✅ [uc-workspace](usecases/uc-workspace.md) | |
-| KJ-WSP-02 | Chuyển đổi giữa các workspace | KJ-WSP-01 | TODO | ✅ [uc-workspace](usecases/uc-workspace.md) | Không phải đăng nhập lại |
-| KJ-WSP-03 | Hồ sơ thành viên riêng theo workspace | KJ-WSP-01 | TODO | ✅ [uc-workspace](usecases/uc-workspace.md) | Không lan sang workspace khác |
-| KJ-WSP-04 | Mời nhiều email trong một lần | KJ-WSP-03, KJ-IDN-11 | TODO | ✅ [uc-member-invite](usecases/uc-member-invite.md) | |
-| KJ-WSP-05 | Chấp nhận lời mời, đầy đủ mọi nhánh | KJ-WSP-04 | TODO | ✅ [uc-member-invite](usecases/uc-member-invite.md) | Năm nhánh, mỗi nhánh một test |
-| KJ-WSP-06 | Thành viên ở trạng thái chờ, gán việc trước khi chấp nhận | KJ-WSP-04 | TODO | ✅ [uc-member-invite](usecases/uc-member-invite.md) | |
-| KJ-WSP-07 | Danh sách lời mời, gửi lại, thu hồi | KJ-WSP-04 | TODO | ✅ [uc-member-invite](usecases/uc-member-invite.md) | |
-| KJ-WSP-08 | Bốn vai trò mặc định | KJ-WSP-16 | TODO | ✅ [uc-member-invite](usecases/uc-member-invite.md) | |
-| KJ-WSP-09 | Vai trò khách với phạm vi hạn chế | KJ-WSP-08 | TODO | ✅ [uc-member-invite](usecases/uc-member-invite.md) | Bắt buộc có từ phase này |
-| KJ-WSP-10 | Đổi vai trò của thành viên | KJ-WSP-08 | TODO | ✅ [uc-member-invite](usecases/uc-member-invite.md) | |
-| KJ-WSP-11 | Xoá thành viên kèm gán lại công việc | KJ-WSP-10 | TODO | ✅ [uc-member-invite](usecases/uc-member-invite.md) | Tránh issue mồ côi |
-| KJ-WSP-12 | Tự rời workspace | KJ-WSP-11 | TODO | ✅ [uc-workspace](usecases/uc-workspace.md) | |
-| KJ-WSP-13 | Chuyển quyền sở hữu | KJ-WSP-10 | TODO | ✅ [uc-workspace](usecases/uc-workspace.md) | Luôn còn ít nhất một chủ sở hữu |
-| KJ-WSP-14 | Xoá workspace mềm kèm ân hạn và khôi phục | KJ-WSP-13 | TODO | ✅ [uc-workspace](usecases/uc-workspace.md) | |
-| KJ-WSP-15 | Group thành viên và cấp quyền theo group | KJ-WSP-16 | TODO | ✅ [uc-member-invite](usecases/uc-member-invite.md) | |
+| KJ-WSP-01 | Tạo workspace và quản lý slug | KJ-IDN-07 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | |
+| KJ-WSP-02 | Chuyển đổi giữa các workspace | KJ-WSP-01 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | Không phải đăng nhập lại |
+| KJ-WSP-03 | Hồ sơ thành viên riêng theo workspace | KJ-WSP-01 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | Không lan sang workspace khác |
+| KJ-WSP-04 | Mời nhiều email trong một lần | KJ-WSP-03, KJ-IDN-11 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | |
+| KJ-WSP-05 | Chấp nhận lời mời, đầy đủ mọi nhánh | KJ-WSP-04 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Năm nhánh, mỗi nhánh một test |
+| KJ-WSP-06 | Thành viên ở trạng thái chờ, gán việc trước khi chấp nhận | KJ-WSP-04 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | |
+| KJ-WSP-07 | Danh sách lời mời, gửi lại, thu hồi | KJ-WSP-04 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | |
+| KJ-WSP-08 | Bốn vai trò mặc định | KJ-WSP-16 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | |
+| KJ-WSP-09 | Vai trò khách với phạm vi hạn chế | KJ-WSP-08 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Bắt buộc có từ phase này |
+| KJ-WSP-10 | Đổi vai trò của thành viên | KJ-WSP-08 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | |
+| KJ-WSP-11 | Xoá thành viên kèm gán lại công việc | KJ-WSP-10 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Tránh issue mồ côi |
+| KJ-WSP-12 | Tự rời workspace | KJ-WSP-11 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | |
+| KJ-WSP-13 | Chuyển quyền sở hữu | KJ-WSP-10 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | Luôn còn ít nhất một chủ sở hữu |
+| KJ-WSP-14 | Xoá workspace mềm kèm ân hạn và khôi phục | KJ-WSP-13 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | |
+| KJ-WSP-15 | Group thành viên và cấp quyền theo group | KJ-WSP-16 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | |
 | KJ-WSP-16 | Mặt nạ bit hai cấp và tính quyền hiệu lực | KJ-PLT-05 | TODO | — | Dự phòng vượt 64 bit |
 | KJ-WSP-17 | Cache quyền và xoá cache khi thay đổi | KJ-WSP-16, KJ-PLT-11 | TODO | — | Kèm phát sự kiện thu hồi |
 | KJ-WSP-18 | Chỗ nối cho tầng permission condition | KJ-WSP-16 | TODO | — | Bắt buộc, dù chưa có điều kiện nào |
 | KJ-WSP-19 | Scope workspace và danh bạ thành viên đồng bộ | KJ-SYN-07, KJ-WSP-03 | TODO | — | Ô chọn người chạy cục bộ |
-| KJ-WSP-20 | Giới hạn số lời mời trong một khoảng thời gian | KJ-WSP-04 | TODO | ✅ [uc-member-invite](usecases/uc-member-invite.md) | Chống dùng để gửi thư rác |
-| KJ-WSP-21 | Cấu hình workspace | KJ-WSP-01 | TODO | ✅ [uc-workspace](usecases/uc-workspace.md) | |
+| KJ-WSP-20 | Giới hạn số lời mời trong một khoảng thời gian | KJ-WSP-04 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Chống dùng để gửi thư rác |
+| KJ-WSP-21 | Cấu hình workspace | KJ-WSP-01 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | |
 | KJ-WSP-22 | Danh mục quyền tập trung và kiểm tra mặc định từ chối | KJ-WSP-16 | TODO | — | Có test bắt hành động chưa khai báo quyền |
 
 ---
@@ -203,18 +203,18 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-PRJ-01 | Tạo project với thông tin cơ bản | KJ-WSP-16 | TODO | ✅ [uc-project](usecases/uc-project.md) | |
-| KJ-PRJ-02 | Quy tắc và tính duy nhất của key trong workspace | KJ-PRJ-01 | TODO | ✅ [uc-project](usecases/uc-project.md) | Không duy nhất toàn cục |
-| KJ-PRJ-03 | Đổi key và giữ liên kết cũ | KJ-PRJ-02 | TODO | ✅ [uc-project](usecases/uc-project.md) | Cần lưu lịch sử key |
-| KJ-PRJ-04 | Loại project quyết định tính năng được bật | KJ-PRJ-01 | TODO | ✅ [uc-project](usecases/uc-project.md) | |
-| KJ-PRJ-05 | Hai mức hiển thị của project | KJ-PRJ-01, KJ-WSP-09 | TODO | ✅ [uc-project](usecases/uc-project.md) | Nền cho vai trò khách |
-| KJ-PRJ-06 | Thành viên và vai trò trong project | KJ-PRJ-01, KJ-WSP-16 | TODO | ✅ [uc-project](usecases/uc-project.md) | |
-| KJ-PRJ-07 | Danh sách project, tìm kiếm, yêu thích, gần đây | KJ-PRJ-01 | TODO | ✅ [uc-project](usecases/uc-project.md) | |
-| KJ-PRJ-08 | Component trong project | KJ-PRJ-01 | TODO | ✅ [uc-project](usecases/uc-project.md) | |
-| KJ-PRJ-09 | Lưu trữ, khôi phục và xoá project | KJ-PRJ-01 | TODO | ✅ [uc-project](usecases/uc-project.md) | |
-| KJ-PRJ-10 | Permission scheme dùng lại giữa nhiều project | KJ-PRJ-06 | TODO | ✅ [uc-project](usecases/uc-project.md) | |
-| KJ-PRJ-11 | Nhật ký thay đổi cấp project | KJ-PRJ-01 | TODO | ✅ [uc-project](usecases/uc-project.md) | |
-| KJ-PRJ-12 | Scope project cho sync engine | KJ-PRJ-01, KJ-SYN-07 | TODO | ✅ [uc-project](usecases/uc-project.md) | Đăng ký, bootstrap, thu hồi |
+| KJ-PRJ-01 | Tạo project với thông tin cơ bản | KJ-WSP-16 | TODO | ✅ [uc-04-project](usecases/uc-04-project.md) | |
+| KJ-PRJ-02 | Quy tắc và tính duy nhất của key trong workspace | KJ-PRJ-01 | TODO | ✅ [uc-04-project](usecases/uc-04-project.md) | Không duy nhất toàn cục |
+| KJ-PRJ-03 | Đổi key và giữ liên kết cũ | KJ-PRJ-02 | TODO | ✅ [uc-04-project](usecases/uc-04-project.md) | Cần lưu lịch sử key |
+| KJ-PRJ-04 | Loại project quyết định tính năng được bật | KJ-PRJ-01 | TODO | ✅ [uc-04-project](usecases/uc-04-project.md) | |
+| KJ-PRJ-05 | Hai mức hiển thị của project | KJ-PRJ-01, KJ-WSP-09 | TODO | ✅ [uc-04-project](usecases/uc-04-project.md) | Nền cho vai trò khách |
+| KJ-PRJ-06 | Thành viên và vai trò trong project | KJ-PRJ-01, KJ-WSP-16 | TODO | ✅ [uc-04-project](usecases/uc-04-project.md) | |
+| KJ-PRJ-07 | Danh sách project, tìm kiếm, yêu thích, gần đây | KJ-PRJ-01 | TODO | ✅ [uc-04-project](usecases/uc-04-project.md) | |
+| KJ-PRJ-08 | Component trong project | KJ-PRJ-01 | TODO | ✅ [uc-04-project](usecases/uc-04-project.md) | |
+| KJ-PRJ-09 | Lưu trữ, khôi phục và xoá project | KJ-PRJ-01 | TODO | ✅ [uc-04-project](usecases/uc-04-project.md) | |
+| KJ-PRJ-10 | Permission scheme dùng lại giữa nhiều project | KJ-PRJ-06 | TODO | ✅ [uc-04-project](usecases/uc-04-project.md) | |
+| KJ-PRJ-11 | Nhật ký thay đổi cấp project | KJ-PRJ-01 | TODO | ✅ [uc-04-project](usecases/uc-04-project.md) | |
+| KJ-PRJ-12 | Scope project cho sync engine | KJ-PRJ-01, KJ-SYN-07 | TODO | ✅ [uc-04-project](usecases/uc-04-project.md) | Đăng ký, bootstrap, thu hồi |
 
 ---
 

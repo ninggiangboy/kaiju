@@ -43,6 +43,6 @@ ERD đầy đủ sớm tạo cảm giác an toàn giả.
 | 4 | Các cột nối giữa vùng toàn cục và vùng tenant (`member.account_id`, bảng ánh xạ account ↔ workspace) **không khai báo FK constraint**, vì tương lai có thể nằm khác shard | [ADR-0011](../adr/0011-account-vs-member.md) |
 | 5 | **Mọi bảng nghiệp vụ bật Row Level Security** theo `workspace_id` | [ADR-0012](../adr/0012-shared-schema-tenancy-rls.md) |
 | 6 | Shard key của toàn hệ thống là `workspace_id`. Chưa shard thật, nhưng mô hình không được cản trở việc đó | [ADR-0012](../adr/0012-shared-schema-tenancy-rls.md) |
-| 7 | `project.key` unique **theo workspace**, không unique toàn cục | [uc-project.md](../03-features/usecases/uc-project.md) |
+| 7 | `project.key` unique **theo workspace**, không unique toàn cục | [uc-04-project.md](../03-features/usecases/uc-04-project.md) |
 | 8 | Aggregate phải nhỏ; collection con được map vào aggregate phải có chặn trên về số lượng, vì Spring Data JDBC xoá và chèn lại toàn bộ collection khi lưu | [ADR-0004](../adr/0004-spring-data-jdbc.md) |
-| 9 | Người rời workspace **không bị xoá cứng**; dòng `member` được giữ lại ở trạng thái vô hiệu để mọi tham chiếu lịch sử còn nguyên | [uc-member-invite.md](../03-features/usecases/uc-member-invite.md) |
+| 9 | Người rời workspace **không bị xoá cứng**; dòng `member` được giữ lại ở trạng thái vô hiệu để mọi tham chiếu lịch sử còn nguyên | [uc-03-member-invite.md](../03-features/usecases/uc-03-member-invite.md) |

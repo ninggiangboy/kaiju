@@ -12,15 +12,41 @@ nhưng đầy đủ, chính các nhánh này mới là phần quyết định m�
 
 | Use case | Phase | Trạng thái |
 |---|---|---|
-| [uc-auth.md](uc-auth.md) — Đăng nhập và phiên làm việc | 1 | ✅ Đã viết |
-| [uc-workspace.md](uc-workspace.md) — Workspace | 1 | ✅ Đã viết |
-| [uc-member-invite.md](uc-member-invite.md) — Thành viên và lời mời | 1 | ✅ Đã viết |
-| [uc-project.md](uc-project.md) — Project | 2 | ✅ Đã viết |
+| [uc-01-auth.md](uc-01-auth.md) — Đăng nhập và phiên làm việc | 1 | ✅ Đã viết |
+| [uc-02-workspace.md](uc-02-workspace.md) — Workspace | 1 | ✅ Đã viết |
+| [uc-03-member-invite.md](uc-03-member-invite.md) — Thành viên và lời mời | 1 | ✅ Đã viết |
+| [uc-04-project.md](uc-04-project.md) — Project | 2 | ✅ Đã viết |
+| uc-05-issue.md — Issue | 3 | ⬜ Chưa viết |
+| uc-06-collaboration.md — Collaboration | 4 | ⬜ Chưa viết |
+| uc-07-workflow.md — Workflow | 5 | ⬜ Chưa viết |
+| uc-08-field.md — Custom field & Screen | 6 | ⬜ Chưa viết |
+| uc-09-search.md — Search & Query | 7 | ⬜ Chưa viết |
+| uc-10-board.md — Board | 8 | ⬜ Chưa viết |
+| uc-11-sprint.md — Sprint & Scrum | 9 | ⬜ Chưa viết |
+| uc-12-roadmap.md — Roadmap & Timeline | 10 | ⬜ Chưa viết |
+| uc-13-time.md — Time tracking | 11 | ⬜ Chưa viết |
+| uc-14-version.md — Version & Release | 12 | ⬜ Chưa viết |
+| uc-15-dashboard.md — Dashboard & Report | 13 | ⬜ Chưa viết |
+| uc-16-automation.md — Automation | 14 | ⬜ Chưa viết |
+| uc-17-bulk.md — Bulk & Import/Export | 15 | ⬜ Chưa viết |
+| uc-18-integration.md — Integration & Public API | 16 | ⬜ Chưa viết |
 
-> **Use case cho Phase 3 trở đi chưa được viết, và đó là chủ ý.** Chúng được viết
-> ngay trước khi bắt đầu phase tương ứng. Viết trước cả mười sáu phase nghĩa là
-> phần lớn sẽ lỗi thời trước khi được dùng tới, và một tài liệu lỗi thời có hại
-> hơn là không có tài liệu.
+Số trong tên file là **thứ tự viết**, tăng dần và không tái sử dụng — giống
+cách đánh ID feature — để đọc theo đúng thứ tự dự kiến triển khai mà không cần
+mở bảng này. Tên phần chữ sau số là dự kiến theo nhóm feature tương ứng trong
+[feature catalog](../README.md); có thể đổi khi thực sự viết nếu một nhóm cần
+tách thành nhiều use case, nhưng số đã cấp cho một use case đã viết thì giữ
+nguyên. Phase 0 (Nền tảng) không có use case vì đó là hạ tầng, không có luồng
+người dùng.
+
+> **Changed (2026-09-20):** Quyết định trước đây là chỉ viết use case ngay
+> trước khi bắt đầu phase tương ứng, để tránh tài liệu lỗi thời trước khi được
+> dùng tới. Người dùng chọn đổi hướng: hoàn thiện toàn bộ docs — kể cả use case
+> của các phase sau — trước khi bắt đầu implementation, rồi mới bổ sung nội
+> dung từng use case. Rủi ro lỗi thời vẫn còn và người dùng đã chấp nhận đánh
+> đổi đó; khi một use case được viết mà phát hiện lệch với feature catalog hoặc
+> system design, phải cập nhật cả hai theo quy tắc ở
+> [CLAUDE.md — Recording decisions that depart from the docs](../../../CLAUDE.md#recording-decisions-that-depart-from-the-docs).
 
 ---
 

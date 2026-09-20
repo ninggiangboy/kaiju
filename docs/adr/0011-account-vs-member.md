@@ -2,7 +2,7 @@
 
 - **Trạng thái:** Accepted
 - **Ngày:** 2026-09-17
-- **Liên quan:** [ADR-0009](0009-magic-link-only.md), [ADR-0012](0012-shared-schema-tenancy-rls.md), [Glossary](../glossary.md), [uc-member-invite.md](../03-features/usecases/uc-member-invite.md)
+- **Liên quan:** [ADR-0009](0009-magic-link-only.md), [ADR-0012](0012-shared-schema-tenancy-rls.md), [Glossary](../glossary.md), [uc-03-member-invite.md](../03-features/usecases/uc-03-member-invite.md)
 
 ## Bối cảnh
 

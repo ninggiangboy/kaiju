@@ -8,7 +8,7 @@ thuộc dữ liệu.
 Tài liệu này mô tả **cơ chế**. Luồng người dùng đầy đủ kèm các nhánh ngoại lệ nằm
 ở [use case](../03-features/usecases/).
 
-**Liên quan:** [ADR-0009](../adr/0009-magic-link-only.md) · [ADR-0010](../adr/0010-bitmask-permission.md) · [ADR-0011](../adr/0011-account-vs-member.md) · [uc-auth.md](../03-features/usecases/uc-auth.md) · [uc-member-invite.md](../03-features/usecases/uc-member-invite.md)
+**Liên quan:** [ADR-0009](../adr/0009-magic-link-only.md) · [ADR-0010](../adr/0010-bitmask-permission.md) · [ADR-0011](../adr/0011-account-vs-member.md) · [uc-01-auth.md](../03-features/usecases/uc-01-auth.md) · [uc-03-member-invite.md](../03-features/usecases/uc-03-member-invite.md)
 
 ---
 
@@ -167,7 +167,7 @@ Khác biệt duy nhất so với magic link thông thường: thời hạn dài 
 tuần), và khi xác thực thì ngoài việc cấp phiên còn gắn `account` vào `member` đã
 tạo sẵn.
 
-Các nhánh xử lý đầy đủ: [uc-member-invite.md](../03-features/usecases/uc-member-invite.md).
+Các nhánh xử lý đầy đủ: [uc-03-member-invite.md](../03-features/usecases/uc-03-member-invite.md).
 
 ---
 
