@@ -95,6 +95,14 @@ Touching data the client holds:
 - [ ] The change emits a change log entry whose patch carries only the fields that changed
 - [ ] Anything that narrows permissions emits a revocation event, and the client purges that scope
 
+Touching `docs/03-features/usecases/`:
+
+- [ ] Considered whether this use case needs a revocation branch (invariant 20 - something narrows access, client must purge)
+- [ ] Considered whether this use case needs an offline branch (mutation queues while disconnected)
+- [ ] Considered whether this use case needs a permission-denied branch (invariant 28 - the action's one required permission is missing)
+- [ ] Considered whether this use case needs an idempotency-key branch (invariant 19 - the same request is retried)
+- [ ] Considered whether this use case needs a concurrent-edit branch (two users act on the same data near-simultaneously)
+
 Touching migrations:
 
 - [ ] Every changeset has a hand-written rollback, and `make -C infra db-down` was run against it

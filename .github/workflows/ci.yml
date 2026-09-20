@@ -95,9 +95,12 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       # Internal links and heading anchors, no duplicate feature identifiers,
-      # every dependency pointing at a real one, and no DDL anywhere under
-      # docs/ - the data model analysis is deferred, so DDL in the
-      # documentation means someone decided something without recording it.
+      # every dependency pointing at a real one, no DDL anywhere under docs/
+      # (the data model analysis is deferred, so DDL in the documentation
+      # means someone decided something without recording it), and the use
+      # case ID scheme in docs/03-features/usecases/ - unique QT-/branch IDs,
+      # every citation resolving to a real one, every UC section structurally
+      # complete, and every MUST-level FR in functional.md traced to a UC.
       - run: python3 .github/scripts/check-docs.py
 
   # --------------------------------------------------------------------

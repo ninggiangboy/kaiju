@@ -28,12 +28,29 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 Đánh dấu riêng, độc lập với cột Trạng thái, việc feature đó **đã có tài liệu use
 case** ([usecases/](usecases/)) chưa. Hai cột này lệch pha có chủ đích: một use
 case được viết **trước khi** code, nên `✅` ở cột này không kéo Trạng thái ra
-khỏi `TODO`, và ngược lại một feature không có use case riêng (ví dụ phần lớn
-Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có thể tiến tới
-`DONE` mà không cần cột này chuyển `✅`.
+khỏi `TODO`, và ngược lại một feature không cần use case riêng (`KJ-PLT`,
+`KJ-EVT` — hạ tầng thuần, không có luồng người dùng nào để đặc tả) vẫn có thể
+tiến tới `DONE` mà không cần cột này chuyển `✅`.
 
-- `✅ [uc-xxx](usecases/uc-xxx.md)` — đã có use case, kèm link
+> **Changed (2026-09-20):** Trước đây toàn bộ Phase 0 bị coi là "hạ tầng,
+> không có người dùng" nên không có use case nào. Lý do đó đúng với `KJ-PLT`
+> và `KJ-EVT`, nhưng sai với `KJ-SYN`: hàng đợi offline, hoàn tác khi bị từ
+> chối, trạng thái kết nối, và xoá dữ liệu khi bị thu hồi quyền đều là hành vi
+> người dùng nhìn thấy trực tiếp, và đều là `FR-SYN-01..10` (MUST). Phần lớn
+> `KJ-SYN` nay có use case trong
+> [uc-19-sync.md](usecases/uc-19-sync.md); các feature thuần nội bộ của nhóm
+> này (`KJ-SYN-18..21` — dọn dẹp lưu trữ, tầng truyền tải, bộ test, cổng ra
+> phase) vẫn giữ `—` vì không có luồng người dùng tương ứng.
+
+- `✅` kèm link tới use case thật, ví dụ `[uc-05-issue.md](usecases/uc-05-issue.md)` — đã có use case
 - `—` — chưa có, hoặc feature không cần use case riêng
+
+Bảng này không có cột `FR` (requirement). Mỗi use case đã tự liệt kê các
+`FR-xx` nó hiện thực hoá ở dòng `**Requirement:**` của từng section — xem
+[usecases/README.md](usecases/README.md#cách-đánh-id). `KJ → UC` (bảng này) và
+`FR → UC` (trong use case) là đủ để trả lời cả hai chiều tra cứu, qua use case
+làm bảng nối; thêm `FR → KJ` trực tiếp vào đây là một mapping thứ ba trùng
+thông tin và sẽ lệch pha theo thời gian.
 
 ### Quy tắc cập nhật
 
@@ -128,23 +145,23 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-SYN-01 | Nhật ký thay đổi và cấp số thứ tự theo scope | KJ-PLT-07 | TODO | — | Phương án bộ đếm theo scope |
-| KJ-SYN-02 | Sinh patch bằng diff tường minh khi ghi | KJ-SYN-01, KJ-PLT-05 | TODO | — | Chỉ trường đã đổi |
-| KJ-SYN-03 | Endpoint bắt kịp theo cursor | KJ-SYN-01 | TODO | — | |
-| KJ-SYN-04 | Bootstrap với ảnh chụp nhất quán | KJ-SYN-03 | TODO | — | Ảnh chụp và số thứ tự cùng thời điểm |
-| KJ-SYN-05 | Mã hoá và giải mã cursor đa scope | KJ-SYN-03 | TODO | — | Chuỗi mờ, client không diễn giải |
-| KJ-SYN-06 | Luồng SSE với xác thực và nhịp tim | KJ-SYN-05 | TODO | — | |
-| KJ-SYN-07 | Phân quyền scope khi mở kết nối | KJ-SYN-06 | TODO | — | Client không tự khai scope |
-| KJ-SYN-08 | Phát tán giữa các instance qua Redis | KJ-SYN-06, KJ-EVT-03 | TODO | — | Gửi rồi quên, chấp nhận mất |
-| KJ-SYN-09 | Sự kiện thu hồi scope | KJ-SYN-07 | TODO | — | |
-| KJ-SYN-10 | SharedWorker và phương án bầu tab chủ | | TODO | — | Làm cả hai trong phase này |
-| KJ-SYN-11 | Bản sao cục bộ chuẩn hoá theo thực thể | KJ-SYN-10 | TODO | — | Không tổ chức theo khoá truy vấn |
-| KJ-SYN-12 | Tầng truy vấn phản ứng cho React | KJ-SYN-11 | TODO | — | |
-| KJ-SYN-13 | Hàng đợi mutation bền | KJ-SYN-11 | TODO | — | Sống sót qua tải lại trang |
-| KJ-SYN-14 | Áp lạc quan và hoàn tác | KJ-SYN-13 | TODO | — | |
-| KJ-SYN-15 | Rebase mutation chưa được xác nhận | KJ-SYN-14 | TODO | — | Hai tầng trạng thái |
-| KJ-SYN-16 | Endpoint mutation với khoá chống trùng | KJ-SYN-02 | TODO | — | |
-| KJ-SYN-17 | Hiển thị trạng thái kết nối và mutation chờ | KJ-SYN-13 | TODO | — | |
+| KJ-SYN-01 | Nhật ký thay đổi và cấp số thứ tự theo scope | KJ-PLT-07 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-06--nối-lại-sau-khi-mất-kết-nối-bắt-kịp-theo-cursor-không-sót) | Phương án bộ đếm theo scope |
+| KJ-SYN-02 | Sinh patch bằng diff tường minh khi ghi | KJ-SYN-01, KJ-PLT-05 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-03--áp-lạc-quan-hoàn-tác-kèm-lý-do-khi-server-từ-chối) | Chỉ trường đã đổi |
+| KJ-SYN-03 | Endpoint bắt kịp theo cursor | KJ-SYN-01 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-06--nối-lại-sau-khi-mất-kết-nối-bắt-kịp-theo-cursor-không-sót) | |
+| KJ-SYN-04 | Bootstrap với ảnh chụp nhất quán | KJ-SYN-03 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-02--bootstrap-lần-đầu-và-khi-vắng-mặt-quá-lâu) | Ảnh chụp và số thứ tự cùng thời điểm |
+| KJ-SYN-05 | Mã hoá và giải mã cursor đa scope | KJ-SYN-03 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-06--nối-lại-sau-khi-mất-kết-nối-bắt-kịp-theo-cursor-không-sót) | Chuỗi mờ, client không diễn giải |
+| KJ-SYN-06 | Luồng SSE với xác thực và nhịp tim | KJ-SYN-05 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-05--nhận-thay-đổi-của-người-khác-không-cần-tải-lại) | |
+| KJ-SYN-07 | Phân quyền scope khi mở kết nối | KJ-SYN-06 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-09--thu-hồi-quyền-xoá-dữ-liệu-scope-đó-khỏi-máy) | Client không tự khai scope |
+| KJ-SYN-08 | Phát tán giữa các instance qua Redis | KJ-SYN-06, KJ-EVT-03 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-05--nhận-thay-đổi-của-người-khác-không-cần-tải-lại) | Gửi rồi quên, chấp nhận mất |
+| KJ-SYN-09 | Sự kiện thu hồi scope | KJ-SYN-07 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-09--thu-hồi-quyền-xoá-dữ-liệu-scope-đó-khỏi-máy) | |
+| KJ-SYN-10 | SharedWorker và phương án bầu tab chủ | | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-07--nhiều-tab-chia-sẻ-một-kết-nối-và-một-bộ-ghi-cục-bộ) | Làm cả hai trong phase này |
+| KJ-SYN-11 | Bản sao cục bộ chuẩn hoá theo thực thể | KJ-SYN-10 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-01--mở-ứng-dụng-hiển-thị-ngay-từ-bản-sao-cục-bộ) | Không tổ chức theo khoá truy vấn |
+| KJ-SYN-12 | Tầng truy vấn phản ứng cho React | KJ-SYN-11 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-01--mở-ứng-dụng-hiển-thị-ngay-từ-bản-sao-cục-bộ) | |
+| KJ-SYN-13 | Hàng đợi mutation bền | KJ-SYN-11 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-04--thao-tác-khi-mất-mạng-hàng-đợi-sống-sót-qua-tải-lại-trang) | Sống sót qua tải lại trang |
+| KJ-SYN-14 | Áp lạc quan và hoàn tác | KJ-SYN-13 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-03--áp-lạc-quan-hoàn-tác-kèm-lý-do-khi-server-từ-chối) | |
+| KJ-SYN-15 | Rebase mutation chưa được xác nhận | KJ-SYN-14 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-03--áp-lạc-quan-hoàn-tác-kèm-lý-do-khi-server-từ-chối) | Hai tầng trạng thái |
+| KJ-SYN-16 | Endpoint mutation với khoá chống trùng | KJ-SYN-02 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-04--thao-tác-khi-mất-mạng-hàng-đợi-sống-sót-qua-tải-lại-trang) | |
+| KJ-SYN-17 | Hiển thị trạng thái kết nối và mutation chờ | KJ-SYN-13 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-08--hiển-thị-trạng-thái-kết-nối-và-số-thay-đổi-đang-chờ) | |
 | KJ-SYN-18 | Chính sách dọn dẹp lưu trữ cục bộ | KJ-SYN-11 | TODO | — | |
 | KJ-SYN-19 | Tầng truyền tải nằm sau interface | KJ-SYN-06 | TODO | — | Để đổi sang WebSocket được |
 | KJ-SYN-20 | Bộ test sync engine theo bảng kịch bản | KJ-SYN-15, KJ-SYN-09 | TODO | — | [testing-strategy](../04-system-design/testing-strategy.md) |
