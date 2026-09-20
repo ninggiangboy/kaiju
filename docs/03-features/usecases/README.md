@@ -25,7 +25,7 @@ nhưng đầy đủ, chính các nhánh này mới là phần quyết định m�
 | [uc-11-sprint.md](uc-11-sprint.md) — Sprint & Scrum | 9 | ✅ Đã viết |
 | [uc-12-roadmap.md](uc-12-roadmap.md) — Roadmap & Timeline | 10 | ✅ Đã viết |
 | [uc-13-time.md](uc-13-time.md) — Time tracking | 11 | ✅ Đã viết |
-| uc-14-version.md — Version & Release | 12 | ⬜ Chưa viết |
+| [uc-14-version.md](uc-14-version.md) — Version & Release | 12 | ✅ Đã viết |
 | uc-15-dashboard.md — Dashboard & Report | 13 | ⬜ Chưa viết |
 | uc-16-automation.md — Automation | 14 | ⬜ Chưa viết |
 | uc-17-bulk.md — Bulk & Import/Export | 15 | ⬜ Chưa viết |

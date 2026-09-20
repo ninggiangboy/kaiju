@@ -377,12 +377,12 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-VER-01 | Tạo và quản lý version | KJ-PRJ-01 | TODO | — | |
-| KJ-VER-02 | Gán version cho issue | KJ-VER-01, KJ-ISS-05 | TODO | — | |
-| KJ-VER-03 | Trang release với tiến độ | KJ-VER-02 | TODO | — | |
-| KJ-VER-04 | Cảnh báo khi phát hành còn issue chưa xong | KJ-VER-03 | TODO | — | |
-| KJ-VER-05 | Sinh ghi chú phát hành | KJ-VER-03 | TODO | — | |
-| KJ-VER-06 | Lưu trữ version | KJ-VER-01 | TODO | — | |
+| KJ-VER-01 | Tạo và quản lý version | KJ-PRJ-01 | TODO | ✅ [uc-14-version](usecases/uc-14-version.md) | |
+| KJ-VER-02 | Gán version cho issue | KJ-VER-01, KJ-ISS-05 | TODO | ✅ [uc-14-version](usecases/uc-14-version.md) | |
+| KJ-VER-03 | Trang release với tiến độ | KJ-VER-02 | TODO | ✅ [uc-14-version](usecases/uc-14-version.md) | |
+| KJ-VER-04 | Cảnh báo khi phát hành còn issue chưa xong | KJ-VER-03 | TODO | ✅ [uc-14-version](usecases/uc-14-version.md) | |
+| KJ-VER-05 | Sinh ghi chú phát hành | KJ-VER-03 | TODO | ✅ [uc-14-version](usecases/uc-14-version.md) | |
+| KJ-VER-06 | Lưu trữ version | KJ-VER-01 | TODO | ✅ [uc-14-version](usecases/uc-14-version.md) | |
 
 ---
 
