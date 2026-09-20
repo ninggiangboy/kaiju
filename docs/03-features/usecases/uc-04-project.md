@@ -4,7 +4,7 @@ Project là ranh giới tổ chức công việc bên trong workspace, và đồ
 scope thứ hai. Key của project là thứ sinh ra mã issue.
 
 **Phase:** 2 · **Feature:** KJ-PRJ-01 → KJ-PRJ-12
-**Liên quan:** [uc-workspace.md](uc-workspace.md) · [uc-member-invite.md](uc-member-invite.md) · [realtime-and-sync.md](../../04-system-design/realtime-and-sync.md)
+**Liên quan:** [uc-02-workspace.md](uc-02-workspace.md) · [uc-03-member-invite.md](uc-03-member-invite.md) · [realtime-and-sync.md](../../04-system-design/realtime-and-sync.md)
 
 ---
 
@@ -87,7 +87,7 @@ dạng chuỗi trong từng issue.
 1. Mở trang thành viên của project
 2. Thêm thành viên từ danh bạ workspace, chọn vai trò trong project
 3. Hoặc mời email mới — lời mời này vừa vào workspace vừa vào project (xem
-   [uc-member-invite](uc-member-invite.md))
+   [uc-member-invite](uc-03-member-invite.md))
 4. Bớt thành viên khỏi project
 
 ### Ngoại lệ

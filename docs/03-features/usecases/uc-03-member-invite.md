@@ -5,7 +5,7 @@ thứ gọn lại: **token lời mời chính là một magic link** — ngườ
 trong hộp thư của họ đã chứng minh sở hữu email đó.
 
 **Phase:** 1 · **Feature:** KJ-WSP-04 → KJ-WSP-11, KJ-WSP-15, KJ-WSP-20
-**Liên quan:** [ADR-0009](../../adr/0009-magic-link-only.md) · [ADR-0011](../../adr/0011-account-vs-member.md) · [uc-auth.md](uc-auth.md) · [identity-and-permission.md](../../04-system-design/identity-and-permission.md)
+**Liên quan:** [ADR-0009](../../adr/0009-magic-link-only.md) · [ADR-0011](../../adr/0011-account-vs-member.md) · [uc-01-auth.md](uc-01-auth.md) · [identity-and-permission.md](../../04-system-design/identity-and-permission.md)
 
 ---
 

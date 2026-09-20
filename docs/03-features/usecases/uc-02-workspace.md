@@ -4,7 +4,7 @@ Workspace là đơn vị tenancy của Kaiju. Một người tham gia nhiều wo
 sơ của họ ở mỗi nơi là độc lập.
 
 **Phase:** 1 · **Feature:** KJ-WSP-01 → KJ-WSP-03, KJ-WSP-12 → KJ-WSP-14, KJ-WSP-21
-**Liên quan:** [ADR-0011](../../adr/0011-account-vs-member.md) · [ADR-0012](../../adr/0012-shared-schema-tenancy-rls.md) · [uc-member-invite.md](uc-member-invite.md) · [uc-project.md](uc-project.md)
+**Liên quan:** [ADR-0011](../../adr/0011-account-vs-member.md) · [ADR-0012](../../adr/0012-shared-schema-tenancy-rls.md) · [uc-03-member-invite.md](uc-03-member-invite.md) · [uc-04-project.md](uc-04-project.md)
 
 ---
 

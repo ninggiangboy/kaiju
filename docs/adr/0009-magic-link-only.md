@@ -2,7 +2,7 @@
 
 - **Trạng thái:** Accepted
 - **Ngày:** 2026-09-17
-- **Liên quan:** [ADR-0011](0011-account-vs-member.md), [identity-and-permission.md](../04-system-design/identity-and-permission.md), [uc-auth.md](../03-features/usecases/uc-auth.md)
+- **Liên quan:** [ADR-0011](0011-account-vs-member.md), [identity-and-permission.md](../04-system-design/identity-and-permission.md), [uc-01-auth.md](../03-features/usecases/uc-01-auth.md)
 
 ## Bối cảnh
 

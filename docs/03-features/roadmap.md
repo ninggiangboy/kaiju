@@ -143,9 +143,9 @@ và hệ thống phân quyền hoạt động đầy đủ.
 
 ### Definition of Done
 
-- Mọi nhánh trong [uc-auth.md](usecases/uc-auth.md),
-  [uc-workspace.md](usecases/uc-workspace.md) và
-  [uc-member-invite.md](usecases/uc-member-invite.md) đều chạy đúng và có test
+- Mọi nhánh trong [uc-01-auth.md](usecases/uc-01-auth.md),
+  [uc-02-workspace.md](usecases/uc-02-workspace.md) và
+  [uc-03-member-invite.md](usecases/uc-03-member-invite.md) đều chạy đúng và có test
 - Người bị xoá khỏi workspace mất quyền **ngay**, dữ liệu cục bộ bị xoá
 - GUEST không thấy được thứ không được phép thấy, kiểm chứng bằng test
 - Ô chọn người hoạt động **hoàn toàn cục bộ**, kể cả khi offline
@@ -179,7 +179,7 @@ lại được, nhật ký thay đổi cấp project, scope đồng bộ `proj:`
 
 ### Definition of Done
 
-- Mọi nhánh trong [uc-project.md](usecases/uc-project.md) chạy đúng và có test
+- Mọi nhánh trong [uc-04-project.md](usecases/uc-04-project.md) chạy đúng và có test
 - Key duy nhất trong workspace, và kiểm chứng được là **không** duy nhất toàn cục
 - Project ở chế độ chỉ người được mời không lộ ra với thành viên khác
 - Scope `proj:` đăng ký, bootstrap và thu hồi đúng
