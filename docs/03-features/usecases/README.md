@@ -16,7 +16,7 @@ nhưng đầy đủ, chính các nhánh này mới là phần quyết định m�
 | [uc-02-workspace.md](uc-02-workspace.md) — Workspace | 1 | ✅ Đã viết |
 | [uc-03-member-invite.md](uc-03-member-invite.md) — Thành viên và lời mời | 1 | ✅ Đã viết |
 | [uc-04-project.md](uc-04-project.md) — Project | 2 | ✅ Đã viết |
-| uc-05-issue.md — Issue | 3 | ⬜ Chưa viết |
+| [uc-05-issue.md](uc-05-issue.md) — Issue | 3 | ✅ Đã viết |
 | uc-06-collaboration.md — Collaboration | 4 | ⬜ Chưa viết |
 | uc-07-workflow.md — Workflow | 5 | ⬜ Chưa viết |
 | uc-08-field.md — Custom field & Screen | 6 | ⬜ Chưa viết |

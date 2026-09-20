@@ -222,22 +222,22 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-ISS-01 | Tạo, xem, sửa issue | KJ-PRJ-12 | TODO | — | |
-| KJ-ISS-02 | Xoá mềm và khôi phục | KJ-ISS-01 | TODO | — | |
-| KJ-ISS-03 | Năm loại issue và cấu hình loại theo project | KJ-ISS-01 | TODO | — | |
-| KJ-ISS-04 | Sinh mã issue an toàn khi tạo đồng thời | KJ-ISS-01, KJ-PRJ-02 | TODO | — | Test song song |
-| KJ-ISS-05 | Đầy đủ trường hệ thống | KJ-ISS-01 | TODO | — | |
-| KJ-ISS-06 | Mô tả định dạng phong phú kèm ảnh nhúng | KJ-ISS-05 | TODO | — | |
-| KJ-ISS-07 | Phân cấp ba tầng có chống vòng lặp | KJ-ISS-03 | TODO | — | |
-| KJ-ISS-08 | Liên kết hai chiều giữa issue | KJ-ISS-01 | TODO | — | |
-| KJ-ISS-09 | Loại liên kết cấu hình được | KJ-ISS-08 | TODO | — | |
-| KJ-ISS-10 | Thứ hạng cho phép chèn vô hạn | KJ-ISS-01 | TODO | — | Có cơ chế cân bằng lại |
-| KJ-ISS-11 | Nhân bản issue | KJ-ISS-07, KJ-ISS-08 | TODO | — | |
-| KJ-ISS-12 | Chuyển issue sang project khác | KJ-ISS-04 | TODO | — | Giữ nguyên lịch sử |
-| KJ-ISS-13 | Chuyển đổi giữa task và sub-task | KJ-ISS-07 | TODO | — | |
-| KJ-ISS-14 | Xem dạng bảng với cột cấu hình được | KJ-ISS-05 | TODO | — | |
-| KJ-ISS-15 | Nhật ký thay đổi đầy đủ trên issue | KJ-ISS-05, KJ-SYN-02 | TODO | — | |
-| KJ-ISS-16 | Tầng phân giải trường cho phép cắm trường động | KJ-ISS-05 | TODO | — | **Contract cho Phase 6** |
+| KJ-ISS-01 | Tạo, xem, sửa issue | KJ-PRJ-12 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-02 | Xoá mềm và khôi phục | KJ-ISS-01 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-03 | Năm loại issue và cấu hình loại theo project | KJ-ISS-01 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-04 | Sinh mã issue an toàn khi tạo đồng thời | KJ-ISS-01, KJ-PRJ-02 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | Test song song |
+| KJ-ISS-05 | Đầy đủ trường hệ thống | KJ-ISS-01 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-06 | Mô tả định dạng phong phú kèm ảnh nhúng | KJ-ISS-05 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-07 | Phân cấp ba tầng có chống vòng lặp | KJ-ISS-03 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-08 | Liên kết hai chiều giữa issue | KJ-ISS-01 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-09 | Loại liên kết cấu hình được | KJ-ISS-08 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-10 | Thứ hạng cho phép chèn vô hạn | KJ-ISS-01 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | Có cơ chế cân bằng lại |
+| KJ-ISS-11 | Nhân bản issue | KJ-ISS-07, KJ-ISS-08 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-12 | Chuyển issue sang project khác | KJ-ISS-04 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | Giữ nguyên lịch sử |
+| KJ-ISS-13 | Chuyển đổi giữa task và sub-task | KJ-ISS-07 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-14 | Xem dạng bảng với cột cấu hình được | KJ-ISS-05 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-15 | Nhật ký thay đổi đầy đủ trên issue | KJ-ISS-05, KJ-SYN-02 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-16 | Tầng phân giải trường cho phép cắm trường động | KJ-ISS-05 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | **Contract cho Phase 6** |
 
 ---
 
