@@ -351,12 +351,12 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-RDM-01 | Trục thời gian hiển thị epic | KJ-ISS-07 | TODO | — | |
-| KJ-RDM-02 | Tổng hợp ngày từ issue con qua sự kiện | KJ-RDM-01, KJ-EVT-03 | TODO | — | |
-| KJ-RDM-03 | Phụ thuộc giữa các epic | KJ-RDM-01, KJ-ISS-08 | TODO | — | |
-| KJ-RDM-04 | Phát hiện phụ thuộc vòng và xung đột lịch | KJ-RDM-03 | TODO | — | |
-| KJ-RDM-05 | Kéo đổi ngày và thu phóng | KJ-RDM-01 | TODO | — | |
-| KJ-RDM-06 | Lọc, chia sẻ và xuất ảnh roadmap | KJ-RDM-01 | TODO | — | |
+| KJ-RDM-01 | Trục thời gian hiển thị epic | KJ-ISS-07 | TODO | ✅ [uc-12-roadmap](usecases/uc-12-roadmap.md) | |
+| KJ-RDM-02 | Tổng hợp ngày từ issue con qua sự kiện | KJ-RDM-01, KJ-EVT-03 | TODO | ✅ [uc-12-roadmap](usecases/uc-12-roadmap.md) | |
+| KJ-RDM-03 | Phụ thuộc giữa các epic | KJ-RDM-01, KJ-ISS-08 | TODO | ✅ [uc-12-roadmap](usecases/uc-12-roadmap.md) | |
+| KJ-RDM-04 | Phát hiện phụ thuộc vòng và xung đột lịch | KJ-RDM-03 | TODO | ✅ [uc-12-roadmap](usecases/uc-12-roadmap.md) | |
+| KJ-RDM-05 | Kéo đổi ngày và thu phóng | KJ-RDM-01 | TODO | ✅ [uc-12-roadmap](usecases/uc-12-roadmap.md) | |
+| KJ-RDM-06 | Lọc, chia sẻ và xuất ảnh roadmap | KJ-RDM-01 | TODO | ✅ [uc-12-roadmap](usecases/uc-12-roadmap.md) | |
 
 ---
 
