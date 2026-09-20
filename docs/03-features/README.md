@@ -335,15 +335,15 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-SPR-01 | Màn hình backlog kéo thả và gom nhóm theo epic | KJ-BRD-08, KJ-ISS-07 | TODO | — | |
-| KJ-SPR-02 | Tạo sprint với mục tiêu và thời gian | KJ-PRJ-04 | TODO | — | |
-| KJ-SPR-03 | Bắt đầu sprint | KJ-SPR-02 | TODO | — | |
-| KJ-SPR-04 | Kết thúc sprint và xử lý issue chưa xong | KJ-SPR-03 | TODO | — | Mọi lựa chọn phải đúng |
-| KJ-SPR-05 | Nhiều sprint song song | KJ-SPR-03 | TODO | — | |
-| KJ-SPR-06 | Story point và lập kế hoạch theo năng lực | KJ-SPR-01 | TODO | — | |
-| KJ-SPR-07 | Board của sprint hiện tại | KJ-SPR-03, KJ-BRD-02 | TODO | — | |
-| KJ-SPR-08 | Báo cáo burndown, burnup và velocity | KJ-SPR-04 | TODO | — | Đúng cả khi thêm bớt giữa sprint |
-| KJ-SPR-09 | Báo cáo sprint và báo cáo epic | KJ-SPR-08 | TODO | — | |
+| KJ-SPR-01 | Màn hình backlog kéo thả và gom nhóm theo epic | KJ-BRD-08, KJ-ISS-07 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
+| KJ-SPR-02 | Tạo sprint với mục tiêu và thời gian | KJ-PRJ-04 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
+| KJ-SPR-03 | Bắt đầu sprint | KJ-SPR-02 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
+| KJ-SPR-04 | Kết thúc sprint và xử lý issue chưa xong | KJ-SPR-03 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | Mọi lựa chọn phải đúng |
+| KJ-SPR-05 | Nhiều sprint song song | KJ-SPR-03 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
+| KJ-SPR-06 | Story point và lập kế hoạch theo năng lực | KJ-SPR-01 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
+| KJ-SPR-07 | Board của sprint hiện tại | KJ-SPR-03, KJ-BRD-02 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
+| KJ-SPR-08 | Báo cáo burndown, burnup và velocity | KJ-SPR-04 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | Đúng cả khi thêm bớt giữa sprint |
+| KJ-SPR-09 | Báo cáo sprint và báo cáo epic | KJ-SPR-08 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
 
 ---
 

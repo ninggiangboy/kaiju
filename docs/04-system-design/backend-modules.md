@@ -134,7 +134,7 @@ suy nghĩ về nó.
 | `workflow` | Trạng thái, bước chuyển, điều kiện, kết quả xử lý | status, transition, workflow, resolution |
 | `field` | Trường tuỳ biến, cấu hình theo ngữ cảnh, màn hình | custom field, screen |
 | `board` | Board, cột, làn, bộ lọc nhanh | board, column, swimlane |
-| `sprint` | Backlog, sprint, năng lực, báo cáo agile | sprint, story point |
+| `sprint` | Backlog, sprint, năng lực, báo cáo agile | sprint |
 | `search` | Phân tích truy vấn, chỉ mục, bộ lọc đã lưu | truy vấn, saved filter |
 | `activity` | Dòng hoạt động và nhật ký thay đổi hiển thị cho người dùng | activity entry |
 | `notification` | Thông báo trong ứng dụng và qua email, cấu hình thông báo | notification, notification scheme |
@@ -142,6 +142,15 @@ suy nghĩ về nó.
 
 **Một khái niệm chỉ có một chủ sở hữu.** Module khác muốn dùng thì đi qua API
 công khai hoặc nghe sự kiện, không tự đọc bảng.
+
+> **Changed (2026-09-20):** Bảng trước đây liệt kê `story point` thuộc sở hữu
+> của module `sprint`. `functional.md` (FR-ISS-04) và
+> [uc-05-issue.md](../03-features/usecases/uc-05-issue.md#uc-iss-01--tạo-issue)
+> đã chốt từ Phase 3 rằng story point là một trường hệ thống của issue, do
+> module `issue` sở hữu và lưu trữ — mâu thuẫn với dòng cũ ở đây. Sửa lại:
+> `issue` sở hữu story point; module `sprint` chỉ đọc giá trị đó qua API công
+> khai của `issue` khi tính năng lực và báo cáo agile (xem
+> [uc-11-sprint.md — UC-SPR-06](../03-features/usecases/uc-11-sprint.md#uc-spr-06--story-point-và-lập-kế-hoạch-theo-năng-lực)).
 
 ---
 
