@@ -318,16 +318,16 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-BRD-01 | Board gắn với bộ lọc | KJ-SRC-08 | TODO | — | |
-| KJ-BRD-02 | Cột ánh xạ nhiều trạng thái | KJ-BRD-01, KJ-WKF-02 | TODO | — | |
-| KJ-BRD-03 | Giới hạn số việc đang làm và cảnh báo | KJ-BRD-02 | TODO | — | |
-| KJ-BRD-04 | Làn ngang theo nhiều tiêu chí | KJ-BRD-01 | TODO | — | |
-| KJ-BRD-05 | Bộ lọc nhanh | KJ-BRD-01 | TODO | — | |
-| KJ-BRD-06 | Tuỳ biến thẻ và tô màu theo quy tắc | KJ-BRD-01 | TODO | — | |
-| KJ-BRD-07 | Kéo thả cập nhật trạng thái và thứ hạng | KJ-BRD-02, KJ-ISS-10, KJ-SYN-14 | TODO | — | Hoàn tác khi bước chuyển bị từ chối |
-| KJ-BRD-08 | Backlog cho board Kanban | KJ-BRD-01 | TODO | — | |
-| KJ-BRD-09 | Biểu đồ dòng tích luỹ và biểu đồ kiểm soát | KJ-BRD-02 | TODO | — | |
-| KJ-BRD-10 | Ảo hoá danh sách cho board lớn | KJ-BRD-01 | TODO | — | Hàng nghìn issue |
+| KJ-BRD-01 | Board gắn với bộ lọc | KJ-SRC-08 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-02 | Cột ánh xạ nhiều trạng thái | KJ-BRD-01, KJ-WKF-02 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-03 | Giới hạn số việc đang làm và cảnh báo | KJ-BRD-02 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-04 | Làn ngang theo nhiều tiêu chí | KJ-BRD-01 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-05 | Bộ lọc nhanh | KJ-BRD-01 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-06 | Tuỳ biến thẻ và tô màu theo quy tắc | KJ-BRD-01 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-07 | Kéo thả cập nhật trạng thái và thứ hạng | KJ-BRD-02, KJ-ISS-10, KJ-SYN-14 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | Hoàn tác khi bước chuyển bị từ chối |
+| KJ-BRD-08 | Backlog cho board Kanban | KJ-BRD-01 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-09 | Biểu đồ dòng tích luỹ và biểu đồ kiểm soát | KJ-BRD-02 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-10 | Ảo hoá danh sách cho board lớn | KJ-BRD-01 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | Hàng nghìn issue |
 
 ---
 
