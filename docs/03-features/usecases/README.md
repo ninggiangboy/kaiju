@@ -29,7 +29,7 @@ nhưng đầy đủ, chính các nhánh này mới là phần quyết định m�
 | [uc-15-dashboard.md](uc-15-dashboard.md) — Dashboard & Report | 13 | ✅ Đã viết |
 | [uc-16-automation.md](uc-16-automation.md) — Automation | 14 | ✅ Đã viết |
 | [uc-17-bulk.md](uc-17-bulk.md) — Bulk & Import/Export | 15 | ✅ Đã viết |
-| uc-18-integration.md — Integration & Public API | 16 | ⬜ Chưa viết |
+| [uc-18-integration.md](uc-18-integration.md) — Integration & Public API | 16 | ✅ Đã viết |
 
 Số trong tên file là **thứ tự viết**, tăng dần và không tái sử dụng — giống
 cách đánh ID feature — để đọc theo đúng thứ tự dự kiến triển khai mà không cần

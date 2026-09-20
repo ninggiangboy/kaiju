@@ -435,13 +435,13 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-INT-01 | REST API công khai có phiên bản | KJ-ISS-01 | TODO | — | |
-| KJ-INT-02 | Tài liệu OpenAPI | KJ-INT-01 | TODO | — | |
-| KJ-INT-03 | Token có phạm vi quyền | KJ-INT-01, KJ-WSP-16 | TODO | — | Không vượt quyền người tạo |
-| KJ-INT-04 | Đăng ký webhook đi ra | KJ-EVT-03 | TODO | — | |
-| KJ-INT-05 | Thử lại, nhật ký gửi và chữ ký cho webhook | KJ-INT-04 | TODO | — | Thất bại không ảnh hưởng nghiệp vụ |
-| KJ-INT-06 | Nhận diện mã issue trong commit và nhánh | KJ-ISS-04 | TODO | — | |
-| KJ-INT-07 | Bảng thông tin phát triển trên issue | KJ-INT-06 | TODO | — | |
-| KJ-INT-08 | Lệnh trong commit | KJ-INT-06, KJ-WKF-03 | TODO | — | |
-| KJ-INT-09 | Thông báo sang công cụ chat | KJ-INT-04 | TODO | — | |
-| KJ-INT-10 | Đăng nhập một lần và cấp phát tài khoản tự động | KJ-IDN-04 | TODO | — | |
+| KJ-INT-01 | REST API công khai có phiên bản | KJ-ISS-01 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-02 | Tài liệu OpenAPI | KJ-INT-01 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-03 | Token có phạm vi quyền | KJ-INT-01, KJ-WSP-16 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | Không vượt quyền người tạo |
+| KJ-INT-04 | Đăng ký webhook đi ra | KJ-EVT-03 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-05 | Thử lại, nhật ký gửi và chữ ký cho webhook | KJ-INT-04 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | Thất bại không ảnh hưởng nghiệp vụ |
+| KJ-INT-06 | Nhận diện mã issue trong commit và nhánh | KJ-ISS-04 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-07 | Bảng thông tin phát triển trên issue | KJ-INT-06 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-08 | Lệnh trong commit | KJ-INT-06, KJ-WKF-03 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-09 | Thông báo sang công cụ chat | KJ-INT-04 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-10 | Đăng nhập một lần và cấp phát tài khoản tự động | KJ-IDN-04 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
