@@ -268,17 +268,17 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-WKF-01 | Rà soát và gỡ mọi chỗ gắn cứng trạng thái cố định | KJ-ISS-05 | TODO | — | Việc đầu tiên của phase |
-| KJ-WKF-02 | Trạng thái do người dùng định nghĩa và nhóm trạng thái | KJ-WKF-01 | TODO | — | |
-| KJ-WKF-03 | Workflow với các bước chuyển | KJ-WKF-02 | TODO | — | |
-| KJ-WKF-04 | Điều kiện trên bước chuyển | KJ-WKF-03, KJ-WSP-16 | TODO | — | |
-| KJ-WKF-05 | Kiểm tra hợp lệ trên bước chuyển | KJ-WKF-03 | TODO | — | |
-| KJ-WKF-06 | Hành động sau bước chuyển | KJ-WKF-03 | TODO | — | |
-| KJ-WKF-07 | Màn hình nhập liệu khi chuyển trạng thái | KJ-WKF-05 | TODO | — | |
-| KJ-WKF-08 | Workflow scheme ánh xạ theo loại issue | KJ-WKF-03, KJ-ISS-03 | TODO | — | |
-| KJ-WKF-09 | Trình soạn workflow có bản nháp và xuất bản | KJ-WKF-03 | TODO | — | |
-| KJ-WKF-10 | Chuyển đổi issue đang tồn tại khi đổi workflow | KJ-WKF-08 | TODO | — | Có xem trước và đường lùi |
-| KJ-WKF-11 | Quản lý kết quả xử lý | KJ-WKF-06 | TODO | — | |
+| KJ-WKF-01 | Rà soát và gỡ mọi chỗ gắn cứng trạng thái cố định | KJ-ISS-05 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | Việc đầu tiên của phase |
+| KJ-WKF-02 | Trạng thái do người dùng định nghĩa và nhóm trạng thái | KJ-WKF-01 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-03 | Workflow với các bước chuyển | KJ-WKF-02 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-04 | Điều kiện trên bước chuyển | KJ-WKF-03, KJ-WSP-16 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-05 | Kiểm tra hợp lệ trên bước chuyển | KJ-WKF-03 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-06 | Hành động sau bước chuyển | KJ-WKF-03 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-07 | Màn hình nhập liệu khi chuyển trạng thái | KJ-WKF-05 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-08 | Workflow scheme ánh xạ theo loại issue | KJ-WKF-03, KJ-ISS-03 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-09 | Trình soạn workflow có bản nháp và xuất bản | KJ-WKF-03 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-10 | Chuyển đổi issue đang tồn tại khi đổi workflow | KJ-WKF-08 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | Có xem trước và đường lùi |
+| KJ-WKF-11 | Quản lý kết quả xử lý | KJ-WKF-06 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
 
 ---
 

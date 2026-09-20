@@ -18,7 +18,7 @@ nhưng đầy đủ, chính các nhánh này mới là phần quyết định m�
 | [uc-04-project.md](uc-04-project.md) — Project | 2 | ✅ Đã viết |
 | [uc-05-issue.md](uc-05-issue.md) — Issue | 3 | ✅ Đã viết |
 | [uc-06-collaboration.md](uc-06-collaboration.md) — Collaboration | 4 | ✅ Đã viết |
-| uc-07-workflow.md — Workflow | 5 | ⬜ Chưa viết |
+| [uc-07-workflow.md](uc-07-workflow.md) — Workflow | 5 | ✅ Đã viết |
 | uc-08-field.md — Custom field & Screen | 6 | ⬜ Chưa viết |
 | uc-09-search.md — Search & Query | 7 | ⬜ Chưa viết |
 | uc-10-board.md — Board | 8 | ⬜ Chưa viết |
