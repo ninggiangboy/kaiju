@@ -189,13 +189,13 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 | KJ-WSP-13 | Chuyển quyền sở hữu | KJ-WSP-10 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | Luôn còn ít nhất một chủ sở hữu |
 | KJ-WSP-14 | Xoá workspace mềm kèm ân hạn và khôi phục | KJ-WSP-13 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | |
 | KJ-WSP-15 | Group thành viên và cấp quyền theo group | KJ-WSP-16 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | |
-| KJ-WSP-16 | Mặt nạ bit hai cấp và tính quyền hiệu lực | KJ-PLT-05 | TODO | — | Dự phòng vượt 64 bit |
-| KJ-WSP-17 | Cache quyền và xoá cache khi thay đổi | KJ-WSP-16, KJ-PLT-11 | TODO | — | Kèm phát sự kiện thu hồi |
-| KJ-WSP-18 | Chỗ nối cho tầng permission condition | KJ-WSP-16 | TODO | — | Bắt buộc, dù chưa có điều kiện nào |
-| KJ-WSP-19 | Scope workspace và danh bạ thành viên đồng bộ | KJ-SYN-07, KJ-WSP-03 | TODO | — | Ô chọn người chạy cục bộ |
+| KJ-WSP-16 | Mặt nạ bit hai cấp và tính quyền hiệu lực | KJ-PLT-05 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Dự phòng vượt 64 bit |
+| KJ-WSP-17 | Cache quyền và xoá cache khi thay đổi | KJ-WSP-16, KJ-PLT-11 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Kèm phát sự kiện thu hồi |
+| KJ-WSP-18 | Chỗ nối cho tầng permission condition | KJ-WSP-16 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Bắt buộc, dù chưa có điều kiện nào |
+| KJ-WSP-19 | Scope workspace và danh bạ thành viên đồng bộ | KJ-SYN-07, KJ-WSP-03 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | Ô chọn người chạy cục bộ |
 | KJ-WSP-20 | Giới hạn số lời mời trong một khoảng thời gian | KJ-WSP-04 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Chống dùng để gửi thư rác |
 | KJ-WSP-21 | Cấu hình workspace | KJ-WSP-01 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | |
-| KJ-WSP-22 | Danh mục quyền tập trung và kiểm tra mặc định từ chối | KJ-WSP-16 | TODO | — | Có test bắt hành động chưa khai báo quyền |
+| KJ-WSP-22 | Danh mục quyền tập trung và kiểm tra mặc định từ chối | KJ-WSP-16 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Có test bắt hành động chưa khai báo quyền |
 
 ---
 

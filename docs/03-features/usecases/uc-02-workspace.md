@@ -3,8 +3,8 @@
 Workspace là đơn vị tenancy của Kaiju. Một người tham gia nhiều workspace, và hồ
 sơ của họ ở mỗi nơi là độc lập.
 
-**Phase:** 1 · **Feature:** KJ-WSP-01 → KJ-WSP-03, KJ-WSP-12 → KJ-WSP-14, KJ-WSP-21
-**Liên quan:** [ADR-0011](../../adr/0011-account-vs-member.md) · [ADR-0012](../../adr/0012-shared-schema-tenancy-rls.md) · [uc-03-member-invite.md](uc-03-member-invite.md) · [uc-04-project.md](uc-04-project.md)
+**Phase:** 1 · **Feature:** KJ-WSP-01 → KJ-WSP-03, KJ-WSP-12 → KJ-WSP-14, KJ-WSP-19, KJ-WSP-21
+**Liên quan:** [ADR-0011](../../adr/0011-account-vs-member.md) · [ADR-0012](../../adr/0012-shared-schema-tenancy-rls.md) · [uc-03-member-invite.md](uc-03-member-invite.md) · [uc-04-project.md](uc-04-project.md) · [realtime-and-sync.md](../../04-system-design/realtime-and-sync.md)
 
 ---
 
@@ -180,6 +180,47 @@ làm vỡ toàn bộ lịch sử. Giao diện hiển thị họ kèm chú thích
 
 ---
 
+## UC-WSP-08 — Scope workspace và danh bạ thành viên đồng bộ
+
+**Actor:** hệ thống (không có giao diện riêng — cơ chế nền cho mọi client đã đăng nhập)
+
+### Luồng chính
+
+1. Đơn vị đăng ký nhận thay đổi của sync engine, đồng thời là ranh giới phân
+   quyền của luồng đồng bộ, là **scope**. Scope `ws:{workspaceId}` chứa danh
+   sách project, danh bạ thành viên, vai trò, cấu hình workspace, và lời mời
+2. Client đăng ký scope workspace cho **mọi workspace người dùng thuộc về**,
+   giữ thường trực — vì dữ liệu này nhẹ — khác với scope `proj:{projectId}`
+   chỉ đăng ký khi project đang mở hoặc được đánh dấu yêu thích (UC-WSP-02)
+3. Việc đặt danh bạ thành viên vào scope workspace là **có chủ đích**: nhờ đó
+   mọi ô chọn người (người được gán, người theo dõi, nhắc tên) hoạt động
+   **hoàn toàn cục bộ**, không gọi API, và dùng được khi offline
+4. Khi mở kết nối, server tính danh sách scope người dùng được phép nhận từ
+   mặt nạ quyền hiệu lực ([UC-INV-07](uc-03-member-invite.md#uc-inv-07--mặt-nạ-bit-hai-cấp-và-tính-quyền-hiệu-lực)) —
+   client **không** tự khai mình muốn scope nào, nó chỉ nhận những gì được phép
+
+### Ngoại lệ
+
+| Trường hợp | Phản ứng |
+|---|---|
+| Lời mời được chấp nhận (UC-INV-02) | Danh bạ thành viên trong scope workspace cập nhật ngay, người mới xuất hiện trong mọi ô chọn người trên mọi client đang mở workspace |
+| Người dùng thuộc rất nhiều workspace | Chỉ scope workspace giữ thường trực toàn bộ; scope project của các project không mở được tải lại khi mở, để không làm cursor phình ra |
+
+### Ảnh hưởng tới đồng bộ
+
+Xoá thành viên hoặc thu hẹp quyền xử lý theo đúng cơ chế thu hồi chung của sync
+engine: xoá cache quyền, phát sự kiện thu hồi cho scope tương ứng, client xoá
+sạch dữ liệu cục bộ của scope đó và huỷ mọi mutation đang chờ thuộc về nó (xem
+[UC-INV-08](uc-03-member-invite.md#uc-inv-08--cache-quyền-và-xoá-cache-khi-thay-đổi)).
+
+> **Chưa chốt:** `realtime-and-sync.md` mô tả ô chọn người là hoạt động hoàn
+> toàn cục bộ nhờ danh bạ nằm sẵn trong scope workspace, nhưng chưa nói rõ ô
+> chọn này có cần lọc theo quyền xem của từng project hay không (ví dụ vai trò
+> khách chỉ thấy project được mời đích danh, QT-10 của uc-03-member-invite.md).
+> Để lại cho lúc thiết kế chi tiết ô chọn người.
+
+---
+
 ## Quy tắc nghiệp vụ
 
 | # | Quy tắc |
@@ -193,6 +234,7 @@ làm vỡ toàn bộ lịch sử. Giao diện hiển thị họ kèm chú thích
 | QT-07 | Rời hoặc bị xoá khỏi workspace thì hồ sơ bị vô hiệu chứ không bị xoá cứng |
 | QT-08 | Xoá workspace là xoá mềm kèm thời hạn ân hạn |
 | QT-09 | Mất quyền truy cập thì client phải xoá dữ liệu cục bộ của workspace đó |
+| QT-10 | Danh bạ thành viên nằm trong scope workspace để ô chọn người hoạt động hoàn toàn cục bộ, kể cả khi offline |
 
 ## Yêu cầu phi chức năng liên quan
 

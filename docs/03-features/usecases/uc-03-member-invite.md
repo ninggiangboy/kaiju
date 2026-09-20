@@ -4,7 +4,7 @@ Mời được cả người đã có tài khoản lẫn người chưa có. Ý 
 thứ gọn lại: **token lời mời chính là một magic link** — người bấm được liên kết
 trong hộp thư của họ đã chứng minh sở hữu email đó.
 
-**Phase:** 1 · **Feature:** KJ-WSP-04 → KJ-WSP-11, KJ-WSP-15, KJ-WSP-20
+**Phase:** 1 · **Feature:** KJ-WSP-04 → KJ-WSP-11, KJ-WSP-15 → KJ-WSP-18, KJ-WSP-20, KJ-WSP-22
 **Liên quan:** [ADR-0009](../../adr/0009-magic-link-only.md) · [ADR-0011](../../adr/0011-account-vs-member.md) · [uc-01-auth.md](uc-01-auth.md) · [identity-and-permission.md](../../04-system-design/identity-and-permission.md)
 
 ---
@@ -206,6 +206,122 @@ người thực hiện thao tác.
 
 ---
 
+## UC-INV-07 — Mặt nạ bit hai cấp và tính quyền hiệu lực
+
+**Actor:** hệ thống (không có giao diện riêng — cơ chế nền cho mọi kiểm tra quyền)
+
+### Luồng chính
+
+1. Quyền chia hai nhóm theo phạm vi: cấp workspace (quản trị workspace, mời
+   thành viên, xoá thành viên, tạo project, sửa cấu hình…) và cấp project (xem
+   issue, tạo issue, sửa issue, xoá issue, gán người, thực hiện bước chuyển,
+   quản trị workflow, quản trị board, quản lý sprint…)
+2. Mặt nạ hiệu lực của một người trên một phạm vi = mặt nạ vai trò workspace ∪
+   mặt nạ vai trò project ∪ mặt nạ từ các group người dùng thuộc về (UC-INV-06)
+3. Kiểm tra một quyền là phép giao bit — rẻ, và đẩy được xuống tầng SQL để lọc
+   danh sách trong một truy vấn duy nhất thay vì tải về rồi lọc ở tầng ứng dụng
+
+### Ngoại lệ
+
+| Trường hợp | Phản ứng |
+|---|---|
+| Số quyền cần biểu diễn vượt quá 63 bit an toàn của một số nguyên 64 bit | Thiết kế lưu trữ mặt nạ bằng nhiều phần ghép lại hoặc một kiểu chuỗi bit ngay từ đầu, không bắt đầu bằng một số nguyên đơn rồi đổi sau — đổi sau nghĩa là sửa lại mọi truy vấn đã dùng phép giao bit |
+| Một quyền bị bỏ khỏi hệ thống | Vị trí bit của nó để trống vĩnh viễn, **không bao giờ** gán lại cho quyền khác — dùng lại nghĩa là mọi vai trò đã lưu trong cơ sở dữ liệu đột nhiên mang một quyền khác, và không cách nào phát hiện bằng test |
+
+### Hậu điều kiện
+
+Mọi vị trí bit đã cấp là một hợp đồng dữ liệu cố định. Có tiện ích giải mã mặt
+nạ thành danh sách tên quyền để gỡ lỗi; nhật ký ghi tên quyền, không ghi giá trị số.
+
+---
+
+## UC-INV-08 — Cache quyền và xoá cache khi thay đổi
+
+**Actor:** hệ thống (không có giao diện riêng — chạy sau mọi thao tác đổi quyền của UC-INV-04, UC-INV-05, UC-INV-06)
+
+### Luồng chính
+
+1. Mặt nạ quyền hiệu lực được tra lại phía server theo từng request — token
+   truy cập không bao giờ mang quyền
+   ([identity-and-permission.md](../../04-system-design/identity-and-permission.md))
+2. Chi phí tra lại này được bù bằng cache: khoá theo cặp người dùng và phạm vi
+   (workspace hoặc project), lưu ở Redis, có đường dự phòng tính lại từ cơ sở
+   dữ liệu khi cache trống
+3. Thời hạn cache ngắn — cache chỉ để giảm tải, không phải để giảm độ trễ thu hồi
+
+### Ngoại lệ
+
+| Trường hợp | Phản ứng |
+|---|---|
+| Vai trò đổi, thành viên bị thêm hoặc bớt khỏi group, group đổi thành viên, hoặc permission scheme đổi | Xoá ngay cache của mọi người bị ảnh hưởng |
+| Xoá cache mà không báo cho client | Không được phép — **xoá cache luôn phải đi kèm phát sự kiện thu hồi cho sync engine**, nếu không server đã chặn nhưng client vẫn giữ nguyên dữ liệu cũ trên máy |
+
+### Ảnh hưởng tới đồng bộ
+
+Cùng cơ chế đã mô tả ở UC-INV-04: quyền mở rộng → client đăng ký scope mới;
+quyền thu hẹp → phát sự kiện thu hồi đúng scope, client xoá dữ liệu cục bộ và
+huỷ mutation đang chờ của scope đó.
+
+---
+
+## UC-INV-09 — Chỗ nối cho tầng permission condition
+
+**Actor:** đội phát triển (quy ước bắt buộc cho mọi lời gọi kiểm tra quyền trong toàn hệ thống)
+
+### Luồng chính
+
+1. Mặt nạ bit không biểu diễn được quyền phụ thuộc dữ liệu ("chỉ sửa issue
+   mình tạo", "chỉ xem issue của team mình") — đó không phải một bit
+2. Mọi lời gọi kiểm tra quyền đi qua **một điểm vào duy nhất** nhận cả mặt nạ
+   cần thiết lẫn ngữ cảnh dữ liệu: `require(permission, context)`, với
+   `context` mang workspace, project, và đối tượng bị tác động khi có
+3. Phase 1 chưa hiện thực điều kiện nào — chỉ có chỗ nối. Công thức đầy đủ
+   `kiểm tra quyền = mặt nạ cho phép VÀ mọi điều kiện gắn với quyền đó đều thoả`
+   sẽ được lấp dần ở phase sau (điều kiện dự kiến: chỉ người báo cáo, chỉ người
+   được gán, chỉ người dẫn dắt project, chỉ thành viên của một group)
+
+### Hậu điều kiện
+
+Chỗ nối này là **bắt buộc ngay từ Phase 1**, dù chưa có điều kiện nào cắm vào.
+Thêm tham số `context` sau nghĩa là phải sửa mọi lời gọi kiểm tra quyền trong
+toàn hệ thống — đây là lý do chi phí trì hoãn cao hơn nhiều chi phí làm ngay.
+
+---
+
+## UC-INV-10 — Danh mục quyền tập trung và kiểm tra mặc định từ chối
+
+**Actor:** đội phát triển (áp dụng cho mọi hành động được khai báo trong hệ thống)
+
+### Luồng chính
+
+1. Mỗi hành động khai báo **đúng một** quyền cần có; không có hành động nào
+   "không cần quyền"
+2. Danh mục quyền nằm ở **một chỗ duy nhất**, để đối chiếu được với vị trí bit
+   đã cấp (UC-INV-07) và tránh trùng hoặc lệch tên
+3. Kiểm tra quyền diễn ra ở bốn chỗ bắt buộc — không chỗ nào được bỏ qua, vì
+   một hành động có thể được kích hoạt từ nhiều đường vào khác nhau:
+
+| Chỗ | Kiểm tra gì |
+|---|---|
+| Command và query handler | Quyền tương ứng với hành động — đây là chỗ duy nhất mọi đường vào đều đi qua: HTTP, tác vụ nền, quy tắc tự động, thao tác hàng loạt |
+| Truy vấn danh sách | Điều kiện quyền ghép thẳng vào SQL, không tải về rồi lọc |
+| Cấp scope đồng bộ | Người dùng được nhận scope nào — sai ở đây là gửi thẳng dữ liệu của người khác xuống máy client |
+| Quy tắc tự động | Quyền của người mà quy tắc chạy dưới danh nghĩa, để automation không trở thành đường leo thang quyền |
+
+### Ngoại lệ
+
+| Trường hợp | Phản ứng |
+|---|---|
+| Hành động không khai báo quyền | **Bị từ chối**, không phải được cho qua — quên khai báo là lỗi hiển nhiên, không phải lỗ hổng âm thầm |
+| Một lần từ chối vì thiếu quyền | Ghi nhật ký kèm người thực hiện, hành động, phạm vi và quyền còn thiếu — ghi tên quyền, không ghi giá trị số. Một chuỗi từ chối liên tiếp của cùng một người là tín hiệu đáng xem |
+
+### Hậu điều kiện
+
+Có test liệt kê mọi hành động đã khai báo trong hệ thống và **bắt lỗi** khi có
+hành động chưa khai báo quyền — chỉ dựa vào review thì sớm muộn sẽ lọt.
+
+---
+
 ## Quy tắc nghiệp vụ
 
 | # | Quy tắc |
@@ -220,6 +336,10 @@ người thực hiện thao tác.
 | QT-08 | Số lời mời gửi ra bị giới hạn theo khoảng thời gian |
 | QT-09 | Mọi thay đổi quyền phải xoá cache và phát sự kiện thu hồi cho người bị ảnh hưởng |
 | QT-10 | Vai trò khách chỉ thấy project được mời đích danh và không thấy danh bạ thành viên |
+| QT-11 | Không bao giờ đổi ý nghĩa hay dùng lại một vị trí bit quyền đã cấp |
+| QT-12 | Danh mục quyền nằm ở một chỗ duy nhất; mọi hành động khai báo đúng một quyền |
+| QT-13 | Hành động chưa khai báo quyền thì bị từ chối theo mặc định, không phải được cho qua |
+| QT-14 | Mọi lời gọi kiểm tra quyền đi qua một điểm vào duy nhất nhận cả ngữ cảnh dữ liệu, để tầng permission condition cắm vào được mà không phải sửa chỗ gọi |
 
 ## Yêu cầu phi chức năng liên quan
 
