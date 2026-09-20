@@ -390,13 +390,13 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-DSH-01 | Tạo dashboard với bố cục kéo thả | KJ-SRC-08 | TODO | — | |
-| KJ-DSH-02 | Chia sẻ và đặt dashboard mặc định | KJ-DSH-01 | TODO | — | |
-| KJ-DSH-03 | Gadget dựa trên bộ lọc | KJ-DSH-01 | TODO | — | |
-| KJ-DSH-04 | Gadget biểu đồ và thống kê | KJ-DSH-03 | TODO | — | |
-| KJ-DSH-05 | Gadget dòng hoạt động và ghi chú | KJ-DSH-01, KJ-COL-12 | TODO | — | |
-| KJ-DSH-06 | Phân quyền theo người xem trên mọi gadget | KJ-DSH-02, KJ-SRC-05 | TODO | — | Không lộ dữ liệu của người tạo |
-| KJ-DSH-07 | Các báo cáo dựng sẵn | KJ-SRC-02 | TODO | — | |
+| KJ-DSH-01 | Tạo dashboard với bố cục kéo thả | KJ-SRC-08 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | |
+| KJ-DSH-02 | Chia sẻ và đặt dashboard mặc định | KJ-DSH-01 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | |
+| KJ-DSH-03 | Gadget dựa trên bộ lọc | KJ-DSH-01 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | |
+| KJ-DSH-04 | Gadget biểu đồ và thống kê | KJ-DSH-03 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | |
+| KJ-DSH-05 | Gadget dòng hoạt động và ghi chú | KJ-DSH-01, KJ-COL-12 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | |
+| KJ-DSH-06 | Phân quyền theo người xem trên mọi gadget | KJ-DSH-02, KJ-SRC-05 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | Không lộ dữ liệu của người tạo |
+| KJ-DSH-07 | Các báo cáo dựng sẵn | KJ-SRC-02 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | |
 
 ---
 
