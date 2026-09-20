@@ -20,7 +20,7 @@ nhưng đầy đủ, chính các nhánh này mới là phần quyết định m�
 | [uc-06-collaboration.md](uc-06-collaboration.md) — Collaboration | 4 | ✅ Đã viết |
 | [uc-07-workflow.md](uc-07-workflow.md) — Workflow | 5 | ✅ Đã viết |
 | [uc-08-field.md](uc-08-field.md) — Custom field & Screen | 6 | ✅ Đã viết |
-| uc-09-search.md — Search & Query | 7 | ⬜ Chưa viết |
+| [uc-09-search.md](uc-09-search.md) — Search & Query | 7 | ✅ Đã viết |
 | uc-10-board.md — Board | 8 | ⬜ Chưa viết |
 | uc-11-sprint.md — Sprint & Scrum | 9 | ⬜ Chưa viết |
 | uc-12-roadmap.md — Roadmap & Timeline | 10 | ⬜ Chưa viết |

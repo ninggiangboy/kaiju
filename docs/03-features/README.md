@@ -301,16 +301,16 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-SRC-01 | Bộ phân tích cú pháp ngôn ngữ truy vấn | KJ-ISS-05 | TODO | — | Lỗi phải chỉ rõ vị trí |
-| KJ-SRC-02 | Dựng SQL động từ cây cú pháp | KJ-SRC-01, KJ-PLT-06 | TODO | — | |
-| KJ-SRC-03 | Hàm dựng sẵn trong truy vấn | KJ-SRC-01 | TODO | — | |
-| KJ-SRC-04 | Truy vấn trên trường tuỳ biến | KJ-SRC-02, KJ-FLD-08 | TODO | — | |
-| KJ-SRC-05 | Ghép điều kiện phân quyền vào truy vấn | KJ-SRC-02, KJ-WSP-16 | TODO | — | Ghép lúc dựng SQL, không lọc sau |
-| KJ-SRC-06 | Tìm kiếm toàn văn và đồng bộ chỉ mục | KJ-SRC-02, KJ-EVT-03 | TODO | — | |
-| KJ-SRC-07 | Giao diện lọc cơ bản chuyển đổi hai chiều | KJ-SRC-01 | TODO | — | Không mất thông tin |
-| KJ-SRC-08 | Lưu và chia sẻ bộ lọc | KJ-SRC-02 | TODO | — | |
-| KJ-SRC-09 | Xuất kết quả tìm kiếm | KJ-SRC-02 | TODO | — | |
-| KJ-SRC-10 | Tìm kiếm nhanh toàn cục | KJ-SRC-06 | TODO | — | |
+| KJ-SRC-01 | Bộ phân tích cú pháp ngôn ngữ truy vấn | KJ-ISS-05 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | Lỗi phải chỉ rõ vị trí |
+| KJ-SRC-02 | Dựng SQL động từ cây cú pháp | KJ-SRC-01, KJ-PLT-06 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
+| KJ-SRC-03 | Hàm dựng sẵn trong truy vấn | KJ-SRC-01 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
+| KJ-SRC-04 | Truy vấn trên trường tuỳ biến | KJ-SRC-02, KJ-FLD-08 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
+| KJ-SRC-05 | Ghép điều kiện phân quyền vào truy vấn | KJ-SRC-02, KJ-WSP-16 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | Ghép lúc dựng SQL, không lọc sau |
+| KJ-SRC-06 | Tìm kiếm toàn văn và đồng bộ chỉ mục | KJ-SRC-02, KJ-EVT-03 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
+| KJ-SRC-07 | Giao diện lọc cơ bản chuyển đổi hai chiều | KJ-SRC-01 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | Không mất thông tin |
+| KJ-SRC-08 | Lưu và chia sẻ bộ lọc | KJ-SRC-02 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
+| KJ-SRC-09 | Xuất kết quả tìm kiếm | KJ-SRC-02 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
+| KJ-SRC-10 | Tìm kiếm nhanh toàn cục | KJ-SRC-06 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
 
 ---
 
