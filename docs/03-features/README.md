@@ -28,12 +28,29 @@ chốt của nguyên tắc làm từng tính năng một nhưng đầy đủ.
 Đánh dấu riêng, độc lập với cột Trạng thái, việc feature đó **đã có tài liệu use
 case** ([usecases/](usecases/)) chưa. Hai cột này lệch pha có chủ đích: một use
 case được viết **trước khi** code, nên `✅` ở cột này không kéo Trạng thái ra
-khỏi `TODO`, và ngược lại một feature không có use case riêng (ví dụ phần lớn
-Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có thể tiến tới
-`DONE` mà không cần cột này chuyển `✅`.
+khỏi `TODO`, và ngược lại một feature không cần use case riêng (`KJ-PLT`,
+`KJ-EVT` — hạ tầng thuần, không có luồng người dùng nào để đặc tả) vẫn có thể
+tiến tới `DONE` mà không cần cột này chuyển `✅`.
 
-- `✅ [uc-xxx](usecases/uc-xxx.md)` — đã có use case, kèm link
+> **Changed (2026-09-20):** Trước đây toàn bộ Phase 0 bị coi là "hạ tầng,
+> không có người dùng" nên không có use case nào. Lý do đó đúng với `KJ-PLT`
+> và `KJ-EVT`, nhưng sai với `KJ-SYN`: hàng đợi offline, hoàn tác khi bị từ
+> chối, trạng thái kết nối, và xoá dữ liệu khi bị thu hồi quyền đều là hành vi
+> người dùng nhìn thấy trực tiếp, và đều là `FR-SYN-01..10` (MUST). Phần lớn
+> `KJ-SYN` nay có use case trong
+> [uc-19-sync.md](usecases/uc-19-sync.md); các feature thuần nội bộ của nhóm
+> này (`KJ-SYN-18..21` — dọn dẹp lưu trữ, tầng truyền tải, bộ test, cổng ra
+> phase) vẫn giữ `—` vì không có luồng người dùng tương ứng.
+
+- `✅` kèm link tới use case thật, ví dụ `[uc-05-issue.md](usecases/uc-05-issue.md)` — đã có use case
 - `—` — chưa có, hoặc feature không cần use case riêng
+
+Bảng này không có cột `FR` (requirement). Mỗi use case đã tự liệt kê các
+`FR-xx` nó hiện thực hoá ở dòng `**Requirement:**` của từng section — xem
+[usecases/README.md](usecases/README.md#cách-đánh-id). `KJ → UC` (bảng này) và
+`FR → UC` (trong use case) là đủ để trả lời cả hai chiều tra cứu, qua use case
+làm bảng nối; thêm `FR → KJ` trực tiếp vào đây là một mapping thứ ba trùng
+thông tin và sẽ lệch pha theo thời gian.
 
 ### Quy tắc cập nhật
 
@@ -128,23 +145,23 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-SYN-01 | Nhật ký thay đổi và cấp số thứ tự theo scope | KJ-PLT-07 | TODO | — | Phương án bộ đếm theo scope |
-| KJ-SYN-02 | Sinh patch bằng diff tường minh khi ghi | KJ-SYN-01, KJ-PLT-05 | TODO | — | Chỉ trường đã đổi |
-| KJ-SYN-03 | Endpoint bắt kịp theo cursor | KJ-SYN-01 | TODO | — | |
-| KJ-SYN-04 | Bootstrap với ảnh chụp nhất quán | KJ-SYN-03 | TODO | — | Ảnh chụp và số thứ tự cùng thời điểm |
-| KJ-SYN-05 | Mã hoá và giải mã cursor đa scope | KJ-SYN-03 | TODO | — | Chuỗi mờ, client không diễn giải |
-| KJ-SYN-06 | Luồng SSE với xác thực và nhịp tim | KJ-SYN-05 | TODO | — | |
-| KJ-SYN-07 | Phân quyền scope khi mở kết nối | KJ-SYN-06 | TODO | — | Client không tự khai scope |
-| KJ-SYN-08 | Phát tán giữa các instance qua Redis | KJ-SYN-06, KJ-EVT-03 | TODO | — | Gửi rồi quên, chấp nhận mất |
-| KJ-SYN-09 | Sự kiện thu hồi scope | KJ-SYN-07 | TODO | — | |
-| KJ-SYN-10 | SharedWorker và phương án bầu tab chủ | | TODO | — | Làm cả hai trong phase này |
-| KJ-SYN-11 | Bản sao cục bộ chuẩn hoá theo thực thể | KJ-SYN-10 | TODO | — | Không tổ chức theo khoá truy vấn |
-| KJ-SYN-12 | Tầng truy vấn phản ứng cho React | KJ-SYN-11 | TODO | — | |
-| KJ-SYN-13 | Hàng đợi mutation bền | KJ-SYN-11 | TODO | — | Sống sót qua tải lại trang |
-| KJ-SYN-14 | Áp lạc quan và hoàn tác | KJ-SYN-13 | TODO | — | |
-| KJ-SYN-15 | Rebase mutation chưa được xác nhận | KJ-SYN-14 | TODO | — | Hai tầng trạng thái |
-| KJ-SYN-16 | Endpoint mutation với khoá chống trùng | KJ-SYN-02 | TODO | — | |
-| KJ-SYN-17 | Hiển thị trạng thái kết nối và mutation chờ | KJ-SYN-13 | TODO | — | |
+| KJ-SYN-01 | Nhật ký thay đổi và cấp số thứ tự theo scope | KJ-PLT-07 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-06--nối-lại-sau-khi-mất-kết-nối-bắt-kịp-theo-cursor-không-sót) | Phương án bộ đếm theo scope |
+| KJ-SYN-02 | Sinh patch bằng diff tường minh khi ghi | KJ-SYN-01, KJ-PLT-05 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-03--áp-lạc-quan-hoàn-tác-kèm-lý-do-khi-server-từ-chối) | Chỉ trường đã đổi |
+| KJ-SYN-03 | Endpoint bắt kịp theo cursor | KJ-SYN-01 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-06--nối-lại-sau-khi-mất-kết-nối-bắt-kịp-theo-cursor-không-sót) | |
+| KJ-SYN-04 | Bootstrap với ảnh chụp nhất quán | KJ-SYN-03 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-02--bootstrap-lần-đầu-và-khi-vắng-mặt-quá-lâu) | Ảnh chụp và số thứ tự cùng thời điểm |
+| KJ-SYN-05 | Mã hoá và giải mã cursor đa scope | KJ-SYN-03 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-06--nối-lại-sau-khi-mất-kết-nối-bắt-kịp-theo-cursor-không-sót) | Chuỗi mờ, client không diễn giải |
+| KJ-SYN-06 | Luồng SSE với xác thực và nhịp tim | KJ-SYN-05 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-05--nhận-thay-đổi-của-người-khác-không-cần-tải-lại) | |
+| KJ-SYN-07 | Phân quyền scope khi mở kết nối | KJ-SYN-06 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-09--thu-hồi-quyền-xoá-dữ-liệu-scope-đó-khỏi-máy) | Client không tự khai scope |
+| KJ-SYN-08 | Phát tán giữa các instance qua Redis | KJ-SYN-06, KJ-EVT-03 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-05--nhận-thay-đổi-của-người-khác-không-cần-tải-lại) | Gửi rồi quên, chấp nhận mất |
+| KJ-SYN-09 | Sự kiện thu hồi scope | KJ-SYN-07 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-09--thu-hồi-quyền-xoá-dữ-liệu-scope-đó-khỏi-máy) | |
+| KJ-SYN-10 | SharedWorker và phương án bầu tab chủ | | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-07--nhiều-tab-chia-sẻ-một-kết-nối-và-một-bộ-ghi-cục-bộ) | Làm cả hai trong phase này |
+| KJ-SYN-11 | Bản sao cục bộ chuẩn hoá theo thực thể | KJ-SYN-10 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-01--mở-ứng-dụng-hiển-thị-ngay-từ-bản-sao-cục-bộ) | Không tổ chức theo khoá truy vấn |
+| KJ-SYN-12 | Tầng truy vấn phản ứng cho React | KJ-SYN-11 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-01--mở-ứng-dụng-hiển-thị-ngay-từ-bản-sao-cục-bộ) | |
+| KJ-SYN-13 | Hàng đợi mutation bền | KJ-SYN-11 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-04--thao-tác-khi-mất-mạng-hàng-đợi-sống-sót-qua-tải-lại-trang) | Sống sót qua tải lại trang |
+| KJ-SYN-14 | Áp lạc quan và hoàn tác | KJ-SYN-13 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-03--áp-lạc-quan-hoàn-tác-kèm-lý-do-khi-server-từ-chối) | |
+| KJ-SYN-15 | Rebase mutation chưa được xác nhận | KJ-SYN-14 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-03--áp-lạc-quan-hoàn-tác-kèm-lý-do-khi-server-từ-chối) | Hai tầng trạng thái |
+| KJ-SYN-16 | Endpoint mutation với khoá chống trùng | KJ-SYN-02 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-04--thao-tác-khi-mất-mạng-hàng-đợi-sống-sót-qua-tải-lại-trang) | |
+| KJ-SYN-17 | Hiển thị trạng thái kết nối và mutation chờ | KJ-SYN-13 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-08--hiển-thị-trạng-thái-kết-nối-và-số-thay-đổi-đang-chờ) | |
 | KJ-SYN-18 | Chính sách dọn dẹp lưu trữ cục bộ | KJ-SYN-11 | TODO | — | |
 | KJ-SYN-19 | Tầng truyền tải nằm sau interface | KJ-SYN-06 | TODO | — | Để đổi sang WebSocket được |
 | KJ-SYN-20 | Bộ test sync engine theo bảng kịch bản | KJ-SYN-15, KJ-SYN-09 | TODO | — | [testing-strategy](../04-system-design/testing-strategy.md) |
@@ -189,13 +206,13 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 | KJ-WSP-13 | Chuyển quyền sở hữu | KJ-WSP-10 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | Luôn còn ít nhất một chủ sở hữu |
 | KJ-WSP-14 | Xoá workspace mềm kèm ân hạn và khôi phục | KJ-WSP-13 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | |
 | KJ-WSP-15 | Group thành viên và cấp quyền theo group | KJ-WSP-16 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | |
-| KJ-WSP-16 | Mặt nạ bit hai cấp và tính quyền hiệu lực | KJ-PLT-05 | TODO | — | Dự phòng vượt 64 bit |
-| KJ-WSP-17 | Cache quyền và xoá cache khi thay đổi | KJ-WSP-16, KJ-PLT-11 | TODO | — | Kèm phát sự kiện thu hồi |
-| KJ-WSP-18 | Chỗ nối cho tầng permission condition | KJ-WSP-16 | TODO | — | Bắt buộc, dù chưa có điều kiện nào |
-| KJ-WSP-19 | Scope workspace và danh bạ thành viên đồng bộ | KJ-SYN-07, KJ-WSP-03 | TODO | — | Ô chọn người chạy cục bộ |
+| KJ-WSP-16 | Mặt nạ bit hai cấp và tính quyền hiệu lực | KJ-PLT-05 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Dự phòng vượt 64 bit |
+| KJ-WSP-17 | Cache quyền và xoá cache khi thay đổi | KJ-WSP-16, KJ-PLT-11 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Kèm phát sự kiện thu hồi |
+| KJ-WSP-18 | Chỗ nối cho tầng permission condition | KJ-WSP-16 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Bắt buộc, dù chưa có điều kiện nào |
+| KJ-WSP-19 | Scope workspace và danh bạ thành viên đồng bộ | KJ-SYN-07, KJ-WSP-03 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | Ô chọn người chạy cục bộ |
 | KJ-WSP-20 | Giới hạn số lời mời trong một khoảng thời gian | KJ-WSP-04 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Chống dùng để gửi thư rác |
 | KJ-WSP-21 | Cấu hình workspace | KJ-WSP-01 | TODO | ✅ [uc-02-workspace](usecases/uc-02-workspace.md) | |
-| KJ-WSP-22 | Danh mục quyền tập trung và kiểm tra mặc định từ chối | KJ-WSP-16 | TODO | — | Có test bắt hành động chưa khai báo quyền |
+| KJ-WSP-22 | Danh mục quyền tập trung và kiểm tra mặc định từ chối | KJ-WSP-16 | TODO | ✅ [uc-03-member-invite](usecases/uc-03-member-invite.md) | Có test bắt hành động chưa khai báo quyền |
 
 ---
 
@@ -222,22 +239,22 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-ISS-01 | Tạo, xem, sửa issue | KJ-PRJ-12 | TODO | — | |
-| KJ-ISS-02 | Xoá mềm và khôi phục | KJ-ISS-01 | TODO | — | |
-| KJ-ISS-03 | Năm loại issue và cấu hình loại theo project | KJ-ISS-01 | TODO | — | |
-| KJ-ISS-04 | Sinh mã issue an toàn khi tạo đồng thời | KJ-ISS-01, KJ-PRJ-02 | TODO | — | Test song song |
-| KJ-ISS-05 | Đầy đủ trường hệ thống | KJ-ISS-01 | TODO | — | |
-| KJ-ISS-06 | Mô tả định dạng phong phú kèm ảnh nhúng | KJ-ISS-05 | TODO | — | |
-| KJ-ISS-07 | Phân cấp ba tầng có chống vòng lặp | KJ-ISS-03 | TODO | — | |
-| KJ-ISS-08 | Liên kết hai chiều giữa issue | KJ-ISS-01 | TODO | — | |
-| KJ-ISS-09 | Loại liên kết cấu hình được | KJ-ISS-08 | TODO | — | |
-| KJ-ISS-10 | Thứ hạng cho phép chèn vô hạn | KJ-ISS-01 | TODO | — | Có cơ chế cân bằng lại |
-| KJ-ISS-11 | Nhân bản issue | KJ-ISS-07, KJ-ISS-08 | TODO | — | |
-| KJ-ISS-12 | Chuyển issue sang project khác | KJ-ISS-04 | TODO | — | Giữ nguyên lịch sử |
-| KJ-ISS-13 | Chuyển đổi giữa task và sub-task | KJ-ISS-07 | TODO | — | |
-| KJ-ISS-14 | Xem dạng bảng với cột cấu hình được | KJ-ISS-05 | TODO | — | |
-| KJ-ISS-15 | Nhật ký thay đổi đầy đủ trên issue | KJ-ISS-05, KJ-SYN-02 | TODO | — | |
-| KJ-ISS-16 | Tầng phân giải trường cho phép cắm trường động | KJ-ISS-05 | TODO | — | **Contract cho Phase 6** |
+| KJ-ISS-01 | Tạo, xem, sửa issue | KJ-PRJ-12 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-02 | Xoá mềm và khôi phục | KJ-ISS-01 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-03 | Năm loại issue và cấu hình loại theo project | KJ-ISS-01 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-04 | Sinh mã issue an toàn khi tạo đồng thời | KJ-ISS-01, KJ-PRJ-02 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | Test song song |
+| KJ-ISS-05 | Đầy đủ trường hệ thống | KJ-ISS-01 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-06 | Mô tả định dạng phong phú kèm ảnh nhúng | KJ-ISS-05 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-07 | Phân cấp ba tầng có chống vòng lặp | KJ-ISS-03 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-08 | Liên kết hai chiều giữa issue | KJ-ISS-01 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-09 | Loại liên kết cấu hình được | KJ-ISS-08 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-10 | Thứ hạng cho phép chèn vô hạn | KJ-ISS-01 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | Có cơ chế cân bằng lại |
+| KJ-ISS-11 | Nhân bản issue | KJ-ISS-07, KJ-ISS-08 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-12 | Chuyển issue sang project khác | KJ-ISS-04 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | Giữ nguyên lịch sử |
+| KJ-ISS-13 | Chuyển đổi giữa task và sub-task | KJ-ISS-07 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-14 | Xem dạng bảng với cột cấu hình được | KJ-ISS-05 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-15 | Nhật ký thay đổi đầy đủ trên issue | KJ-ISS-05, KJ-SYN-02 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | |
+| KJ-ISS-16 | Tầng phân giải trường cho phép cắm trường động | KJ-ISS-05 | TODO | ✅ [uc-05-issue](usecases/uc-05-issue.md) | **Contract cho Phase 6** |
 
 ---
 
@@ -245,22 +262,22 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-COL-01 | Bình luận định dạng phong phú | KJ-ISS-01 | TODO | — | |
-| KJ-COL-02 | Lịch sử chỉnh sửa bình luận | KJ-COL-01 | TODO | — | |
-| KJ-COL-03 | Nhắc tên người và group | KJ-COL-01, KJ-WSP-19 | TODO | — | Hoạt động cục bộ |
-| KJ-COL-04 | Trả lời theo luồng | KJ-COL-01 | TODO | — | |
-| KJ-COL-05 | Giới hạn người xem bình luận | KJ-COL-01, KJ-WSP-16 | TODO | — | |
-| KJ-COL-06 | Biểu tượng cảm xúc | KJ-COL-01 | TODO | — | |
-| KJ-COL-07 | Đính kèm tệp, xem trước, tải về | KJ-ISS-01 | TODO | — | |
-| KJ-COL-08 | Giới hạn dung lượng và điểm móc quét mã độc | KJ-COL-07 | TODO | — | |
-| KJ-COL-09 | Đính kèm trong bình luận | KJ-COL-07, KJ-COL-01 | TODO | — | |
-| KJ-COL-10 | Theo dõi issue | KJ-ISS-01 | TODO | — | |
-| KJ-COL-11 | Bình chọn | KJ-ISS-01 | TODO | — | |
-| KJ-COL-12 | Dòng hoạt động gộp và lọc được | KJ-ISS-15, KJ-COL-01 | TODO | — | |
-| KJ-COL-13 | Thông báo trong ứng dụng | KJ-EVT-08 | TODO | — | Phải chống trùng |
-| KJ-COL-14 | Thông báo email có gom nhóm | KJ-COL-13, KJ-IDN-11 | TODO | — | Rủi ro gửi trùng cao nhất |
-| KJ-COL-15 | Cấu hình thông báo theo project và cá nhân | KJ-COL-14 | TODO | — | Tuỳ chọn thuộc hồ sơ workspace |
-| KJ-COL-16 | Tích hợp kho lưu trữ đối tượng: tải lên và tải xuống bằng liên kết có chữ ký | KJ-COL-07 | TODO | — | Tệp không đi qua backend |
+| KJ-COL-01 | Bình luận định dạng phong phú | KJ-ISS-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-02 | Lịch sử chỉnh sửa bình luận | KJ-COL-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-03 | Nhắc tên người và group | KJ-COL-01, KJ-WSP-19 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | Hoạt động cục bộ |
+| KJ-COL-04 | Trả lời theo luồng | KJ-COL-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-05 | Giới hạn người xem bình luận | KJ-COL-01, KJ-WSP-16 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-06 | Biểu tượng cảm xúc | KJ-COL-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-07 | Đính kèm tệp, xem trước, tải về | KJ-ISS-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-08 | Giới hạn dung lượng và điểm móc quét mã độc | KJ-COL-07 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-09 | Đính kèm trong bình luận | KJ-COL-07, KJ-COL-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-10 | Theo dõi issue | KJ-ISS-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-11 | Bình chọn | KJ-ISS-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-12 | Dòng hoạt động gộp và lọc được | KJ-ISS-15, KJ-COL-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-13 | Thông báo trong ứng dụng | KJ-EVT-08 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | Phải chống trùng |
+| KJ-COL-14 | Thông báo email có gom nhóm | KJ-COL-13, KJ-IDN-11 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | Rủi ro gửi trùng cao nhất |
+| KJ-COL-15 | Cấu hình thông báo theo project và cá nhân | KJ-COL-14 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | Tuỳ chọn thuộc hồ sơ workspace |
+| KJ-COL-16 | Tích hợp kho lưu trữ đối tượng: tải lên và tải xuống bằng liên kết có chữ ký | KJ-COL-07 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | Tệp không đi qua backend |
 
 ---
 
@@ -268,17 +285,17 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-WKF-01 | Rà soát và gỡ mọi chỗ gắn cứng trạng thái cố định | KJ-ISS-05 | TODO | — | Việc đầu tiên của phase |
-| KJ-WKF-02 | Trạng thái do người dùng định nghĩa và nhóm trạng thái | KJ-WKF-01 | TODO | — | |
-| KJ-WKF-03 | Workflow với các bước chuyển | KJ-WKF-02 | TODO | — | |
-| KJ-WKF-04 | Điều kiện trên bước chuyển | KJ-WKF-03, KJ-WSP-16 | TODO | — | |
-| KJ-WKF-05 | Kiểm tra hợp lệ trên bước chuyển | KJ-WKF-03 | TODO | — | |
-| KJ-WKF-06 | Hành động sau bước chuyển | KJ-WKF-03 | TODO | — | |
-| KJ-WKF-07 | Màn hình nhập liệu khi chuyển trạng thái | KJ-WKF-05 | TODO | — | |
-| KJ-WKF-08 | Workflow scheme ánh xạ theo loại issue | KJ-WKF-03, KJ-ISS-03 | TODO | — | |
-| KJ-WKF-09 | Trình soạn workflow có bản nháp và xuất bản | KJ-WKF-03 | TODO | — | |
-| KJ-WKF-10 | Chuyển đổi issue đang tồn tại khi đổi workflow | KJ-WKF-08 | TODO | — | Có xem trước và đường lùi |
-| KJ-WKF-11 | Quản lý kết quả xử lý | KJ-WKF-06 | TODO | — | |
+| KJ-WKF-01 | Rà soát và gỡ mọi chỗ gắn cứng trạng thái cố định | KJ-ISS-05 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | Việc đầu tiên của phase |
+| KJ-WKF-02 | Trạng thái do người dùng định nghĩa và nhóm trạng thái | KJ-WKF-01 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-03 | Workflow với các bước chuyển | KJ-WKF-02 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-04 | Điều kiện trên bước chuyển | KJ-WKF-03, KJ-WSP-16 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-05 | Kiểm tra hợp lệ trên bước chuyển | KJ-WKF-03 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-06 | Hành động sau bước chuyển | KJ-WKF-03 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-07 | Màn hình nhập liệu khi chuyển trạng thái | KJ-WKF-05 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-08 | Workflow scheme ánh xạ theo loại issue | KJ-WKF-03, KJ-ISS-03 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-09 | Trình soạn workflow có bản nháp và xuất bản | KJ-WKF-03 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
+| KJ-WKF-10 | Chuyển đổi issue đang tồn tại khi đổi workflow | KJ-WKF-08 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | Có xem trước và đường lùi |
+| KJ-WKF-11 | Quản lý kết quả xử lý | KJ-WKF-06 | TODO | ✅ [uc-07-workflow](usecases/uc-07-workflow.md) | |
 
 ---
 
@@ -286,14 +303,14 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-FLD-01 | Đầy đủ các kiểu trường | KJ-ISS-16 | TODO | — | Kiểm tra contract Phase 3 |
-| KJ-FLD-02 | Cấu hình trường theo ngữ cảnh project và loại issue | KJ-FLD-01 | TODO | — | |
-| KJ-FLD-03 | Bắt buộc, quy tắc hợp lệ, giá trị mặc định | KJ-FLD-02 | TODO | — | |
-| KJ-FLD-04 | Màn hình và screen scheme cho ba thao tác | KJ-FLD-02 | TODO | — | |
-| KJ-FLD-05 | Sắp xếp trường và chia tab | KJ-FLD-04 | TODO | — | |
-| KJ-FLD-06 | Xử lý dữ liệu khi xoá hoặc đổi trường | KJ-FLD-02 | TODO | — | |
-| KJ-FLD-07 | Trường tuỳ biến vào nhật ký thay đổi và delta | KJ-FLD-01, KJ-ISS-15 | TODO | — | Phải giống hệt trường hệ thống |
-| KJ-FLD-08 | Trường tuỳ biến dùng được trong bộ lọc và báo cáo | KJ-FLD-01 | TODO | — | Chuẩn bị cho Phase 7 |
+| KJ-FLD-01 | Đầy đủ các kiểu trường | KJ-ISS-16 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | Kiểm tra contract Phase 3 |
+| KJ-FLD-02 | Cấu hình trường theo ngữ cảnh project và loại issue | KJ-FLD-01 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | |
+| KJ-FLD-03 | Bắt buộc, quy tắc hợp lệ, giá trị mặc định | KJ-FLD-02 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | |
+| KJ-FLD-04 | Màn hình và screen scheme cho ba thao tác | KJ-FLD-02 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | |
+| KJ-FLD-05 | Sắp xếp trường và chia tab | KJ-FLD-04 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | |
+| KJ-FLD-06 | Xử lý dữ liệu khi xoá hoặc đổi trường | KJ-FLD-02 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | |
+| KJ-FLD-07 | Trường tuỳ biến vào nhật ký thay đổi và delta | KJ-FLD-01, KJ-ISS-15 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | Phải giống hệt trường hệ thống |
+| KJ-FLD-08 | Trường tuỳ biến dùng được trong bộ lọc và báo cáo | KJ-FLD-01 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | Chuẩn bị cho Phase 7 |
 
 ---
 
@@ -301,16 +318,16 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-SRC-01 | Bộ phân tích cú pháp ngôn ngữ truy vấn | KJ-ISS-05 | TODO | — | Lỗi phải chỉ rõ vị trí |
-| KJ-SRC-02 | Dựng SQL động từ cây cú pháp | KJ-SRC-01, KJ-PLT-06 | TODO | — | |
-| KJ-SRC-03 | Hàm dựng sẵn trong truy vấn | KJ-SRC-01 | TODO | — | |
-| KJ-SRC-04 | Truy vấn trên trường tuỳ biến | KJ-SRC-02, KJ-FLD-08 | TODO | — | |
-| KJ-SRC-05 | Ghép điều kiện phân quyền vào truy vấn | KJ-SRC-02, KJ-WSP-16 | TODO | — | Ghép lúc dựng SQL, không lọc sau |
-| KJ-SRC-06 | Tìm kiếm toàn văn và đồng bộ chỉ mục | KJ-SRC-02, KJ-EVT-03 | TODO | — | |
-| KJ-SRC-07 | Giao diện lọc cơ bản chuyển đổi hai chiều | KJ-SRC-01 | TODO | — | Không mất thông tin |
-| KJ-SRC-08 | Lưu và chia sẻ bộ lọc | KJ-SRC-02 | TODO | — | |
-| KJ-SRC-09 | Xuất kết quả tìm kiếm | KJ-SRC-02 | TODO | — | |
-| KJ-SRC-10 | Tìm kiếm nhanh toàn cục | KJ-SRC-06 | TODO | — | |
+| KJ-SRC-01 | Bộ phân tích cú pháp ngôn ngữ truy vấn | KJ-ISS-05 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | Lỗi phải chỉ rõ vị trí |
+| KJ-SRC-02 | Dựng SQL động từ cây cú pháp | KJ-SRC-01, KJ-PLT-06 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
+| KJ-SRC-03 | Hàm dựng sẵn trong truy vấn | KJ-SRC-01 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
+| KJ-SRC-04 | Truy vấn trên trường tuỳ biến | KJ-SRC-02, KJ-FLD-08 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
+| KJ-SRC-05 | Ghép điều kiện phân quyền vào truy vấn | KJ-SRC-02, KJ-WSP-16 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | Ghép lúc dựng SQL, không lọc sau |
+| KJ-SRC-06 | Tìm kiếm toàn văn và đồng bộ chỉ mục | KJ-SRC-02, KJ-EVT-03 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
+| KJ-SRC-07 | Giao diện lọc cơ bản chuyển đổi hai chiều | KJ-SRC-01 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | Không mất thông tin |
+| KJ-SRC-08 | Lưu và chia sẻ bộ lọc | KJ-SRC-02 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
+| KJ-SRC-09 | Xuất kết quả tìm kiếm | KJ-SRC-02 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
+| KJ-SRC-10 | Tìm kiếm nhanh toàn cục | KJ-SRC-06 | TODO | ✅ [uc-09-search](usecases/uc-09-search.md) | |
 
 ---
 
@@ -318,16 +335,16 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-BRD-01 | Board gắn với bộ lọc | KJ-SRC-08 | TODO | — | |
-| KJ-BRD-02 | Cột ánh xạ nhiều trạng thái | KJ-BRD-01, KJ-WKF-02 | TODO | — | |
-| KJ-BRD-03 | Giới hạn số việc đang làm và cảnh báo | KJ-BRD-02 | TODO | — | |
-| KJ-BRD-04 | Làn ngang theo nhiều tiêu chí | KJ-BRD-01 | TODO | — | |
-| KJ-BRD-05 | Bộ lọc nhanh | KJ-BRD-01 | TODO | — | |
-| KJ-BRD-06 | Tuỳ biến thẻ và tô màu theo quy tắc | KJ-BRD-01 | TODO | — | |
-| KJ-BRD-07 | Kéo thả cập nhật trạng thái và thứ hạng | KJ-BRD-02, KJ-ISS-10, KJ-SYN-14 | TODO | — | Hoàn tác khi bước chuyển bị từ chối |
-| KJ-BRD-08 | Backlog cho board Kanban | KJ-BRD-01 | TODO | — | |
-| KJ-BRD-09 | Biểu đồ dòng tích luỹ và biểu đồ kiểm soát | KJ-BRD-02 | TODO | — | |
-| KJ-BRD-10 | Ảo hoá danh sách cho board lớn | KJ-BRD-01 | TODO | — | Hàng nghìn issue |
+| KJ-BRD-01 | Board gắn với bộ lọc | KJ-SRC-08 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-02 | Cột ánh xạ nhiều trạng thái | KJ-BRD-01, KJ-WKF-02 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-03 | Giới hạn số việc đang làm và cảnh báo | KJ-BRD-02 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-04 | Làn ngang theo nhiều tiêu chí | KJ-BRD-01 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-05 | Bộ lọc nhanh | KJ-BRD-01 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-06 | Tuỳ biến thẻ và tô màu theo quy tắc | KJ-BRD-01 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-07 | Kéo thả cập nhật trạng thái và thứ hạng | KJ-BRD-02, KJ-ISS-10, KJ-SYN-14 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | Hoàn tác khi bước chuyển bị từ chối |
+| KJ-BRD-08 | Backlog cho board Kanban | KJ-BRD-01 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-09 | Biểu đồ dòng tích luỹ và biểu đồ kiểm soát | KJ-BRD-02 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | |
+| KJ-BRD-10 | Ảo hoá danh sách cho board lớn | KJ-BRD-01 | TODO | ✅ [uc-10-board](usecases/uc-10-board.md) | Hàng nghìn issue |
 
 ---
 
@@ -335,15 +352,15 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-SPR-01 | Màn hình backlog kéo thả và gom nhóm theo epic | KJ-BRD-08, KJ-ISS-07 | TODO | — | |
-| KJ-SPR-02 | Tạo sprint với mục tiêu và thời gian | KJ-PRJ-04 | TODO | — | |
-| KJ-SPR-03 | Bắt đầu sprint | KJ-SPR-02 | TODO | — | |
-| KJ-SPR-04 | Kết thúc sprint và xử lý issue chưa xong | KJ-SPR-03 | TODO | — | Mọi lựa chọn phải đúng |
-| KJ-SPR-05 | Nhiều sprint song song | KJ-SPR-03 | TODO | — | |
-| KJ-SPR-06 | Story point và lập kế hoạch theo năng lực | KJ-SPR-01 | TODO | — | |
-| KJ-SPR-07 | Board của sprint hiện tại | KJ-SPR-03, KJ-BRD-02 | TODO | — | |
-| KJ-SPR-08 | Báo cáo burndown, burnup và velocity | KJ-SPR-04 | TODO | — | Đúng cả khi thêm bớt giữa sprint |
-| KJ-SPR-09 | Báo cáo sprint và báo cáo epic | KJ-SPR-08 | TODO | — | |
+| KJ-SPR-01 | Màn hình backlog kéo thả và gom nhóm theo epic | KJ-BRD-08, KJ-ISS-07 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
+| KJ-SPR-02 | Tạo sprint với mục tiêu và thời gian | KJ-PRJ-04 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
+| KJ-SPR-03 | Bắt đầu sprint | KJ-SPR-02 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
+| KJ-SPR-04 | Kết thúc sprint và xử lý issue chưa xong | KJ-SPR-03 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | Mọi lựa chọn phải đúng |
+| KJ-SPR-05 | Nhiều sprint song song | KJ-SPR-03 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
+| KJ-SPR-06 | Story point và lập kế hoạch theo năng lực | KJ-SPR-01 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
+| KJ-SPR-07 | Board của sprint hiện tại | KJ-SPR-03, KJ-BRD-02 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
+| KJ-SPR-08 | Báo cáo burndown, burnup và velocity | KJ-SPR-04 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | Đúng cả khi thêm bớt giữa sprint |
+| KJ-SPR-09 | Báo cáo sprint và báo cáo epic | KJ-SPR-08 | TODO | ✅ [uc-11-sprint](usecases/uc-11-sprint.md) | |
 
 ---
 
@@ -351,12 +368,12 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-RDM-01 | Trục thời gian hiển thị epic | KJ-ISS-07 | TODO | — | |
-| KJ-RDM-02 | Tổng hợp ngày từ issue con qua sự kiện | KJ-RDM-01, KJ-EVT-03 | TODO | — | |
-| KJ-RDM-03 | Phụ thuộc giữa các epic | KJ-RDM-01, KJ-ISS-08 | TODO | — | |
-| KJ-RDM-04 | Phát hiện phụ thuộc vòng và xung đột lịch | KJ-RDM-03 | TODO | — | |
-| KJ-RDM-05 | Kéo đổi ngày và thu phóng | KJ-RDM-01 | TODO | — | |
-| KJ-RDM-06 | Lọc, chia sẻ và xuất ảnh roadmap | KJ-RDM-01 | TODO | — | |
+| KJ-RDM-01 | Trục thời gian hiển thị epic | KJ-ISS-07 | TODO | ✅ [uc-12-roadmap](usecases/uc-12-roadmap.md) | |
+| KJ-RDM-02 | Tổng hợp ngày từ issue con qua sự kiện | KJ-RDM-01, KJ-EVT-03 | TODO | ✅ [uc-12-roadmap](usecases/uc-12-roadmap.md) | |
+| KJ-RDM-03 | Phụ thuộc giữa các epic | KJ-RDM-01, KJ-ISS-08 | TODO | ✅ [uc-12-roadmap](usecases/uc-12-roadmap.md) | |
+| KJ-RDM-04 | Phát hiện phụ thuộc vòng và xung đột lịch | KJ-RDM-03 | TODO | ✅ [uc-12-roadmap](usecases/uc-12-roadmap.md) | |
+| KJ-RDM-05 | Kéo đổi ngày và thu phóng | KJ-RDM-01 | TODO | ✅ [uc-12-roadmap](usecases/uc-12-roadmap.md) | |
+| KJ-RDM-06 | Lọc, chia sẻ và xuất ảnh roadmap | KJ-RDM-01 | TODO | ✅ [uc-12-roadmap](usecases/uc-12-roadmap.md) | |
 
 ---
 
@@ -364,12 +381,12 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-TIM-01 | Ba giá trị thời gian trên issue | KJ-ISS-05 | TODO | — | |
-| KJ-TIM-02 | Nhật ký công việc theo ngày | KJ-TIM-01 | TODO | — | |
-| KJ-TIM-03 | Sửa và xoá bản ghi công việc | KJ-TIM-02 | TODO | — | Tổng phải luôn khớp |
-| KJ-TIM-04 | Tự điều chỉnh thời gian còn lại | KJ-TIM-02 | TODO | — | |
-| KJ-TIM-05 | Đơn vị thời gian cấu hình được | KJ-TIM-01 | TODO | — | |
-| KJ-TIM-06 | Báo cáo thời gian theo nhiều chiều | KJ-TIM-02 | TODO | — | |
+| KJ-TIM-01 | Ba giá trị thời gian trên issue | KJ-ISS-05 | TODO | ✅ [uc-13-time](usecases/uc-13-time.md) | |
+| KJ-TIM-02 | Nhật ký công việc theo ngày | KJ-TIM-01 | TODO | ✅ [uc-13-time](usecases/uc-13-time.md) | |
+| KJ-TIM-03 | Sửa và xoá bản ghi công việc | KJ-TIM-02 | TODO | ✅ [uc-13-time](usecases/uc-13-time.md) | Tổng phải luôn khớp |
+| KJ-TIM-04 | Tự điều chỉnh thời gian còn lại | KJ-TIM-02 | TODO | ✅ [uc-13-time](usecases/uc-13-time.md) | |
+| KJ-TIM-05 | Đơn vị thời gian cấu hình được | KJ-TIM-01 | TODO | ✅ [uc-13-time](usecases/uc-13-time.md) | |
+| KJ-TIM-06 | Báo cáo thời gian theo nhiều chiều | KJ-TIM-02 | TODO | ✅ [uc-13-time](usecases/uc-13-time.md) | |
 
 ---
 
@@ -377,12 +394,12 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-VER-01 | Tạo và quản lý version | KJ-PRJ-01 | TODO | — | |
-| KJ-VER-02 | Gán version cho issue | KJ-VER-01, KJ-ISS-05 | TODO | — | |
-| KJ-VER-03 | Trang release với tiến độ | KJ-VER-02 | TODO | — | |
-| KJ-VER-04 | Cảnh báo khi phát hành còn issue chưa xong | KJ-VER-03 | TODO | — | |
-| KJ-VER-05 | Sinh ghi chú phát hành | KJ-VER-03 | TODO | — | |
-| KJ-VER-06 | Lưu trữ version | KJ-VER-01 | TODO | — | |
+| KJ-VER-01 | Tạo và quản lý version | KJ-PRJ-01 | TODO | ✅ [uc-14-version](usecases/uc-14-version.md) | |
+| KJ-VER-02 | Gán version cho issue | KJ-VER-01, KJ-ISS-05 | TODO | ✅ [uc-14-version](usecases/uc-14-version.md) | |
+| KJ-VER-03 | Trang release với tiến độ | KJ-VER-02 | TODO | ✅ [uc-14-version](usecases/uc-14-version.md) | |
+| KJ-VER-04 | Cảnh báo khi phát hành còn issue chưa xong | KJ-VER-03 | TODO | ✅ [uc-14-version](usecases/uc-14-version.md) | |
+| KJ-VER-05 | Sinh ghi chú phát hành | KJ-VER-03 | TODO | ✅ [uc-14-version](usecases/uc-14-version.md) | |
+| KJ-VER-06 | Lưu trữ version | KJ-VER-01 | TODO | ✅ [uc-14-version](usecases/uc-14-version.md) | |
 
 ---
 
@@ -390,13 +407,13 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-DSH-01 | Tạo dashboard với bố cục kéo thả | KJ-SRC-08 | TODO | — | |
-| KJ-DSH-02 | Chia sẻ và đặt dashboard mặc định | KJ-DSH-01 | TODO | — | |
-| KJ-DSH-03 | Gadget dựa trên bộ lọc | KJ-DSH-01 | TODO | — | |
-| KJ-DSH-04 | Gadget biểu đồ và thống kê | KJ-DSH-03 | TODO | — | |
-| KJ-DSH-05 | Gadget dòng hoạt động và ghi chú | KJ-DSH-01, KJ-COL-12 | TODO | — | |
-| KJ-DSH-06 | Phân quyền theo người xem trên mọi gadget | KJ-DSH-02, KJ-SRC-05 | TODO | — | Không lộ dữ liệu của người tạo |
-| KJ-DSH-07 | Các báo cáo dựng sẵn | KJ-SRC-02 | TODO | — | |
+| KJ-DSH-01 | Tạo dashboard với bố cục kéo thả | KJ-SRC-08 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | |
+| KJ-DSH-02 | Chia sẻ và đặt dashboard mặc định | KJ-DSH-01 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | |
+| KJ-DSH-03 | Gadget dựa trên bộ lọc | KJ-DSH-01 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | |
+| KJ-DSH-04 | Gadget biểu đồ và thống kê | KJ-DSH-03 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | |
+| KJ-DSH-05 | Gadget dòng hoạt động và ghi chú | KJ-DSH-01, KJ-COL-12 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | |
+| KJ-DSH-06 | Phân quyền theo người xem trên mọi gadget | KJ-DSH-02, KJ-SRC-05 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | Không lộ dữ liệu của người tạo |
+| KJ-DSH-07 | Các báo cáo dựng sẵn | KJ-SRC-02 | TODO | ✅ [uc-15-dashboard](usecases/uc-15-dashboard.md) | |
 
 ---
 
@@ -404,16 +421,16 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-AUT-01 | Mô hình quy tắc: kích hoạt, điều kiện, hành động | KJ-EVT-03 | TODO | — | |
-| KJ-AUT-02 | Các loại điều kiện kích hoạt | KJ-AUT-01 | TODO | — | Gồm cả theo lịch và thủ công |
-| KJ-AUT-03 | Các loại điều kiện lọc | KJ-AUT-01, KJ-SRC-02 | TODO | — | |
-| KJ-AUT-04 | Các loại hành động | KJ-AUT-01, KJ-WKF-03 | TODO | — | |
-| KJ-AUT-05 | Nhánh rẽ sang issue liên quan | KJ-AUT-04, KJ-ISS-07 | TODO | — | |
-| KJ-AUT-06 | Giá trị động trong nội dung hành động | KJ-AUT-04 | TODO | — | |
-| KJ-AUT-07 | Quy tắc chạy dưới danh nghĩa một người và tôn trọng quyền | KJ-AUT-04, KJ-WSP-16 | TODO | — | |
-| KJ-AUT-08 | Chống vòng lặp và giới hạn số lần chạy | KJ-AUT-04 | TODO | — | Giới hạn cả độ sâu lẫn tần suất |
-| KJ-AUT-09 | Nhật ký chạy đủ chi tiết để tự gỡ lỗi | KJ-AUT-04 | TODO | — | |
-| KJ-AUT-10 | Bật tắt và phạm vi áp dụng của quy tắc | KJ-AUT-01 | TODO | — | |
+| KJ-AUT-01 | Mô hình quy tắc: kích hoạt, điều kiện, hành động | KJ-EVT-03 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-02 | Các loại điều kiện kích hoạt | KJ-AUT-01 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | Gồm cả theo lịch và thủ công |
+| KJ-AUT-03 | Các loại điều kiện lọc | KJ-AUT-01, KJ-SRC-02 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-04 | Các loại hành động | KJ-AUT-01, KJ-WKF-03 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-05 | Nhánh rẽ sang issue liên quan | KJ-AUT-04, KJ-ISS-07 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-06 | Giá trị động trong nội dung hành động | KJ-AUT-04 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-07 | Quy tắc chạy dưới danh nghĩa một người và tôn trọng quyền | KJ-AUT-04, KJ-WSP-16 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-08 | Chống vòng lặp và giới hạn số lần chạy | KJ-AUT-04 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | Giới hạn cả độ sâu lẫn tần suất |
+| KJ-AUT-09 | Nhật ký chạy đủ chi tiết để tự gỡ lỗi | KJ-AUT-04 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-10 | Bật tắt và phạm vi áp dụng của quy tắc | KJ-AUT-01 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
 
 ---
 
@@ -421,13 +438,13 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-BLK-01 | Thao tác hàng loạt với xem trước và xác nhận | KJ-SRC-02 | TODO | — | |
-| KJ-BLK-02 | Chia lô và chống làm ngập luồng đồng bộ | KJ-BLK-01, KJ-SYN-08 | TODO | — | Gộp delta hoặc buộc tải lại scope |
-| KJ-BLK-03 | Nhập từ CSV với ánh xạ cột | KJ-ISS-01 | TODO | — | |
-| KJ-BLK-04 | Chạy thử và báo lỗi theo từng dòng | KJ-BLK-03 | TODO | — | Thất bại không để lại dữ liệu nửa vời |
-| KJ-BLK-05 | Nhập từ các công cụ khác | KJ-BLK-03 | TODO | — | |
-| KJ-BLK-06 | Xuất dữ liệu project | KJ-ISS-01 | TODO | — | |
-| KJ-BLK-07 | Sao lưu và khôi phục cấp workspace | KJ-BLK-06 | TODO | — | |
+| KJ-BLK-01 | Thao tác hàng loạt với xem trước và xác nhận | KJ-SRC-02 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | |
+| KJ-BLK-02 | Chia lô và chống làm ngập luồng đồng bộ | KJ-BLK-01, KJ-SYN-08 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | Gộp delta hoặc buộc tải lại scope |
+| KJ-BLK-03 | Nhập từ CSV với ánh xạ cột | KJ-ISS-01 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | |
+| KJ-BLK-04 | Chạy thử và báo lỗi theo từng dòng | KJ-BLK-03 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | Thất bại không để lại dữ liệu nửa vời |
+| KJ-BLK-05 | Nhập từ các công cụ khác | KJ-BLK-03 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | |
+| KJ-BLK-06 | Xuất dữ liệu project | KJ-ISS-01 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | |
+| KJ-BLK-07 | Sao lưu và khôi phục cấp workspace | KJ-BLK-06 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | |
 
 ---
 
@@ -435,13 +452,13 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-INT-01 | REST API công khai có phiên bản | KJ-ISS-01 | TODO | — | |
-| KJ-INT-02 | Tài liệu OpenAPI | KJ-INT-01 | TODO | — | |
-| KJ-INT-03 | Token có phạm vi quyền | KJ-INT-01, KJ-WSP-16 | TODO | — | Không vượt quyền người tạo |
-| KJ-INT-04 | Đăng ký webhook đi ra | KJ-EVT-03 | TODO | — | |
-| KJ-INT-05 | Thử lại, nhật ký gửi và chữ ký cho webhook | KJ-INT-04 | TODO | — | Thất bại không ảnh hưởng nghiệp vụ |
-| KJ-INT-06 | Nhận diện mã issue trong commit và nhánh | KJ-ISS-04 | TODO | — | |
-| KJ-INT-07 | Bảng thông tin phát triển trên issue | KJ-INT-06 | TODO | — | |
-| KJ-INT-08 | Lệnh trong commit | KJ-INT-06, KJ-WKF-03 | TODO | — | |
-| KJ-INT-09 | Thông báo sang công cụ chat | KJ-INT-04 | TODO | — | |
-| KJ-INT-10 | Đăng nhập một lần và cấp phát tài khoản tự động | KJ-IDN-04 | TODO | — | |
+| KJ-INT-01 | REST API công khai có phiên bản | KJ-ISS-01 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-02 | Tài liệu OpenAPI | KJ-INT-01 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-03 | Token có phạm vi quyền | KJ-INT-01, KJ-WSP-16 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | Không vượt quyền người tạo |
+| KJ-INT-04 | Đăng ký webhook đi ra | KJ-EVT-03 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-05 | Thử lại, nhật ký gửi và chữ ký cho webhook | KJ-INT-04 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | Thất bại không ảnh hưởng nghiệp vụ |
+| KJ-INT-06 | Nhận diện mã issue trong commit và nhánh | KJ-ISS-04 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-07 | Bảng thông tin phát triển trên issue | KJ-INT-06 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-08 | Lệnh trong commit | KJ-INT-06, KJ-WKF-03 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-09 | Thông báo sang công cụ chat | KJ-INT-04 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |
+| KJ-INT-10 | Đăng nhập một lần và cấp phát tài khoản tự động | KJ-IDN-04 | TODO | ✅ [uc-18-integration](usecases/uc-18-integration.md) | |

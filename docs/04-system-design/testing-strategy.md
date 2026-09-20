@@ -177,10 +177,20 @@ Theo nguyên tắc làm từng tính năng một nhưng đầy đủ, một feat
 dấu hoàn thành khi:
 
 - Luồng chính có test
-- **Các nhánh ngoại lệ nêu trong use case đều có test**
+- **Mọi nhánh `<UC>/NT-nn` và `<UC>/NL-nn` nêu trong use case đều có test trích
+  dẫn đúng ID nhánh đó** (ví dụ tên hoặc mô tả test chứa `UC-VER-01/NL-01`), để
+  đối chiếu ngược lại được nhánh nào đã có test và nhánh nào chưa
 - Phân quyền có test, gồm cả trường hợp không đủ quyền
 - Cách ly tenant có test
 - Nếu feature sinh sự kiện: có test chống trùng
 - Nếu feature ảnh hưởng dữ liệu client: có test đồng bộ
 
 Thiếu bất kỳ mục nào thì trạng thái vẫn là `IN_PROGRESS`, không phải `DONE`.
+
+> **Changed (2026-09-20):** Trước đây mục này chỉ yêu cầu "các nhánh ngoại lệ
+> nêu trong use case đều có test", không nói rõ nhánh nào đã có và nhánh nào
+> chưa vì các nhánh trong use case không có ID để trích dẫn. Từ khi
+> `docs/03-features/usecases/` dùng hệ ID `<UC>/NT-nn` / `<UC>/NL-nn` (xem
+> [usecases/README.md](../03-features/usecases/README.md#cách-đánh-id)), yêu
+> cầu được viết lại để đòi hỏi test trích dẫn đúng ID nhánh, nhờ đó việc "đã
+> đủ test chưa" đối chiếu được bằng cách so ID thay vì đọc lại toàn bộ luồng.
