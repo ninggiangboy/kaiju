@@ -286,14 +286,14 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-FLD-01 | Đầy đủ các kiểu trường | KJ-ISS-16 | TODO | — | Kiểm tra contract Phase 3 |
-| KJ-FLD-02 | Cấu hình trường theo ngữ cảnh project và loại issue | KJ-FLD-01 | TODO | — | |
-| KJ-FLD-03 | Bắt buộc, quy tắc hợp lệ, giá trị mặc định | KJ-FLD-02 | TODO | — | |
-| KJ-FLD-04 | Màn hình và screen scheme cho ba thao tác | KJ-FLD-02 | TODO | — | |
-| KJ-FLD-05 | Sắp xếp trường và chia tab | KJ-FLD-04 | TODO | — | |
-| KJ-FLD-06 | Xử lý dữ liệu khi xoá hoặc đổi trường | KJ-FLD-02 | TODO | — | |
-| KJ-FLD-07 | Trường tuỳ biến vào nhật ký thay đổi và delta | KJ-FLD-01, KJ-ISS-15 | TODO | — | Phải giống hệt trường hệ thống |
-| KJ-FLD-08 | Trường tuỳ biến dùng được trong bộ lọc và báo cáo | KJ-FLD-01 | TODO | — | Chuẩn bị cho Phase 7 |
+| KJ-FLD-01 | Đầy đủ các kiểu trường | KJ-ISS-16 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | Kiểm tra contract Phase 3 |
+| KJ-FLD-02 | Cấu hình trường theo ngữ cảnh project và loại issue | KJ-FLD-01 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | |
+| KJ-FLD-03 | Bắt buộc, quy tắc hợp lệ, giá trị mặc định | KJ-FLD-02 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | |
+| KJ-FLD-04 | Màn hình và screen scheme cho ba thao tác | KJ-FLD-02 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | |
+| KJ-FLD-05 | Sắp xếp trường và chia tab | KJ-FLD-04 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | |
+| KJ-FLD-06 | Xử lý dữ liệu khi xoá hoặc đổi trường | KJ-FLD-02 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | |
+| KJ-FLD-07 | Trường tuỳ biến vào nhật ký thay đổi và delta | KJ-FLD-01, KJ-ISS-15 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | Phải giống hệt trường hệ thống |
+| KJ-FLD-08 | Trường tuỳ biến dùng được trong bộ lọc và báo cáo | KJ-FLD-01 | TODO | ✅ [uc-08-field](usecases/uc-08-field.md) | Chuẩn bị cho Phase 7 |
 
 ---
 
