@@ -404,16 +404,16 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-AUT-01 | Mô hình quy tắc: kích hoạt, điều kiện, hành động | KJ-EVT-03 | TODO | — | |
-| KJ-AUT-02 | Các loại điều kiện kích hoạt | KJ-AUT-01 | TODO | — | Gồm cả theo lịch và thủ công |
-| KJ-AUT-03 | Các loại điều kiện lọc | KJ-AUT-01, KJ-SRC-02 | TODO | — | |
-| KJ-AUT-04 | Các loại hành động | KJ-AUT-01, KJ-WKF-03 | TODO | — | |
-| KJ-AUT-05 | Nhánh rẽ sang issue liên quan | KJ-AUT-04, KJ-ISS-07 | TODO | — | |
-| KJ-AUT-06 | Giá trị động trong nội dung hành động | KJ-AUT-04 | TODO | — | |
-| KJ-AUT-07 | Quy tắc chạy dưới danh nghĩa một người và tôn trọng quyền | KJ-AUT-04, KJ-WSP-16 | TODO | — | |
-| KJ-AUT-08 | Chống vòng lặp và giới hạn số lần chạy | KJ-AUT-04 | TODO | — | Giới hạn cả độ sâu lẫn tần suất |
-| KJ-AUT-09 | Nhật ký chạy đủ chi tiết để tự gỡ lỗi | KJ-AUT-04 | TODO | — | |
-| KJ-AUT-10 | Bật tắt và phạm vi áp dụng của quy tắc | KJ-AUT-01 | TODO | — | |
+| KJ-AUT-01 | Mô hình quy tắc: kích hoạt, điều kiện, hành động | KJ-EVT-03 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-02 | Các loại điều kiện kích hoạt | KJ-AUT-01 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | Gồm cả theo lịch và thủ công |
+| KJ-AUT-03 | Các loại điều kiện lọc | KJ-AUT-01, KJ-SRC-02 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-04 | Các loại hành động | KJ-AUT-01, KJ-WKF-03 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-05 | Nhánh rẽ sang issue liên quan | KJ-AUT-04, KJ-ISS-07 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-06 | Giá trị động trong nội dung hành động | KJ-AUT-04 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-07 | Quy tắc chạy dưới danh nghĩa một người và tôn trọng quyền | KJ-AUT-04, KJ-WSP-16 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-08 | Chống vòng lặp và giới hạn số lần chạy | KJ-AUT-04 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | Giới hạn cả độ sâu lẫn tần suất |
+| KJ-AUT-09 | Nhật ký chạy đủ chi tiết để tự gỡ lỗi | KJ-AUT-04 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
+| KJ-AUT-10 | Bật tắt và phạm vi áp dụng của quy tắc | KJ-AUT-01 | TODO | ✅ [uc-16-automation](usecases/uc-16-automation.md) | |
 
 ---
 
