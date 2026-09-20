@@ -364,12 +364,12 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-TIM-01 | Ba giá trị thời gian trên issue | KJ-ISS-05 | TODO | — | |
-| KJ-TIM-02 | Nhật ký công việc theo ngày | KJ-TIM-01 | TODO | — | |
-| KJ-TIM-03 | Sửa và xoá bản ghi công việc | KJ-TIM-02 | TODO | — | Tổng phải luôn khớp |
-| KJ-TIM-04 | Tự điều chỉnh thời gian còn lại | KJ-TIM-02 | TODO | — | |
-| KJ-TIM-05 | Đơn vị thời gian cấu hình được | KJ-TIM-01 | TODO | — | |
-| KJ-TIM-06 | Báo cáo thời gian theo nhiều chiều | KJ-TIM-02 | TODO | — | |
+| KJ-TIM-01 | Ba giá trị thời gian trên issue | KJ-ISS-05 | TODO | ✅ [uc-13-time](usecases/uc-13-time.md) | |
+| KJ-TIM-02 | Nhật ký công việc theo ngày | KJ-TIM-01 | TODO | ✅ [uc-13-time](usecases/uc-13-time.md) | |
+| KJ-TIM-03 | Sửa và xoá bản ghi công việc | KJ-TIM-02 | TODO | ✅ [uc-13-time](usecases/uc-13-time.md) | Tổng phải luôn khớp |
+| KJ-TIM-04 | Tự điều chỉnh thời gian còn lại | KJ-TIM-02 | TODO | ✅ [uc-13-time](usecases/uc-13-time.md) | |
+| KJ-TIM-05 | Đơn vị thời gian cấu hình được | KJ-TIM-01 | TODO | ✅ [uc-13-time](usecases/uc-13-time.md) | |
+| KJ-TIM-06 | Báo cáo thời gian theo nhiều chiều | KJ-TIM-02 | TODO | ✅ [uc-13-time](usecases/uc-13-time.md) | |
 
 ---
 
