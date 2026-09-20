@@ -245,22 +245,22 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-COL-01 | Bình luận định dạng phong phú | KJ-ISS-01 | TODO | — | |
-| KJ-COL-02 | Lịch sử chỉnh sửa bình luận | KJ-COL-01 | TODO | — | |
-| KJ-COL-03 | Nhắc tên người và group | KJ-COL-01, KJ-WSP-19 | TODO | — | Hoạt động cục bộ |
-| KJ-COL-04 | Trả lời theo luồng | KJ-COL-01 | TODO | — | |
-| KJ-COL-05 | Giới hạn người xem bình luận | KJ-COL-01, KJ-WSP-16 | TODO | — | |
-| KJ-COL-06 | Biểu tượng cảm xúc | KJ-COL-01 | TODO | — | |
-| KJ-COL-07 | Đính kèm tệp, xem trước, tải về | KJ-ISS-01 | TODO | — | |
-| KJ-COL-08 | Giới hạn dung lượng và điểm móc quét mã độc | KJ-COL-07 | TODO | — | |
-| KJ-COL-09 | Đính kèm trong bình luận | KJ-COL-07, KJ-COL-01 | TODO | — | |
-| KJ-COL-10 | Theo dõi issue | KJ-ISS-01 | TODO | — | |
-| KJ-COL-11 | Bình chọn | KJ-ISS-01 | TODO | — | |
-| KJ-COL-12 | Dòng hoạt động gộp và lọc được | KJ-ISS-15, KJ-COL-01 | TODO | — | |
-| KJ-COL-13 | Thông báo trong ứng dụng | KJ-EVT-08 | TODO | — | Phải chống trùng |
-| KJ-COL-14 | Thông báo email có gom nhóm | KJ-COL-13, KJ-IDN-11 | TODO | — | Rủi ro gửi trùng cao nhất |
-| KJ-COL-15 | Cấu hình thông báo theo project và cá nhân | KJ-COL-14 | TODO | — | Tuỳ chọn thuộc hồ sơ workspace |
-| KJ-COL-16 | Tích hợp kho lưu trữ đối tượng: tải lên và tải xuống bằng liên kết có chữ ký | KJ-COL-07 | TODO | — | Tệp không đi qua backend |
+| KJ-COL-01 | Bình luận định dạng phong phú | KJ-ISS-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-02 | Lịch sử chỉnh sửa bình luận | KJ-COL-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-03 | Nhắc tên người và group | KJ-COL-01, KJ-WSP-19 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | Hoạt động cục bộ |
+| KJ-COL-04 | Trả lời theo luồng | KJ-COL-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-05 | Giới hạn người xem bình luận | KJ-COL-01, KJ-WSP-16 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-06 | Biểu tượng cảm xúc | KJ-COL-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-07 | Đính kèm tệp, xem trước, tải về | KJ-ISS-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-08 | Giới hạn dung lượng và điểm móc quét mã độc | KJ-COL-07 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-09 | Đính kèm trong bình luận | KJ-COL-07, KJ-COL-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-10 | Theo dõi issue | KJ-ISS-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-11 | Bình chọn | KJ-ISS-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-12 | Dòng hoạt động gộp và lọc được | KJ-ISS-15, KJ-COL-01 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | |
+| KJ-COL-13 | Thông báo trong ứng dụng | KJ-EVT-08 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | Phải chống trùng |
+| KJ-COL-14 | Thông báo email có gom nhóm | KJ-COL-13, KJ-IDN-11 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | Rủi ro gửi trùng cao nhất |
+| KJ-COL-15 | Cấu hình thông báo theo project và cá nhân | KJ-COL-14 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | Tuỳ chọn thuộc hồ sơ workspace |
+| KJ-COL-16 | Tích hợp kho lưu trữ đối tượng: tải lên và tải xuống bằng liên kết có chữ ký | KJ-COL-07 | TODO | ✅ [uc-06-collaboration](usecases/uc-06-collaboration.md) | Tệp không đi qua backend |
 
 ---
 
