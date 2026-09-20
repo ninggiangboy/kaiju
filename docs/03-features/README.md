@@ -421,13 +421,13 @@ Phase 0 — hạ tầng, không có "người dùng" theo nghĩa đó) vẫn có
 
 | ID | Feature | Phụ thuộc | Trạng thái | Use case | Ghi chú |
 |---|---|---|---|---|---|
-| KJ-BLK-01 | Thao tác hàng loạt với xem trước và xác nhận | KJ-SRC-02 | TODO | — | |
-| KJ-BLK-02 | Chia lô và chống làm ngập luồng đồng bộ | KJ-BLK-01, KJ-SYN-08 | TODO | — | Gộp delta hoặc buộc tải lại scope |
-| KJ-BLK-03 | Nhập từ CSV với ánh xạ cột | KJ-ISS-01 | TODO | — | |
-| KJ-BLK-04 | Chạy thử và báo lỗi theo từng dòng | KJ-BLK-03 | TODO | — | Thất bại không để lại dữ liệu nửa vời |
-| KJ-BLK-05 | Nhập từ các công cụ khác | KJ-BLK-03 | TODO | — | |
-| KJ-BLK-06 | Xuất dữ liệu project | KJ-ISS-01 | TODO | — | |
-| KJ-BLK-07 | Sao lưu và khôi phục cấp workspace | KJ-BLK-06 | TODO | — | |
+| KJ-BLK-01 | Thao tác hàng loạt với xem trước và xác nhận | KJ-SRC-02 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | |
+| KJ-BLK-02 | Chia lô và chống làm ngập luồng đồng bộ | KJ-BLK-01, KJ-SYN-08 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | Gộp delta hoặc buộc tải lại scope |
+| KJ-BLK-03 | Nhập từ CSV với ánh xạ cột | KJ-ISS-01 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | |
+| KJ-BLK-04 | Chạy thử và báo lỗi theo từng dòng | KJ-BLK-03 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | Thất bại không để lại dữ liệu nửa vời |
+| KJ-BLK-05 | Nhập từ các công cụ khác | KJ-BLK-03 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | |
+| KJ-BLK-06 | Xuất dữ liệu project | KJ-ISS-01 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | |
+| KJ-BLK-07 | Sao lưu và khôi phục cấp workspace | KJ-BLK-06 | TODO | ✅ [uc-17-bulk](usecases/uc-17-bulk.md) | |
 
 ---
 

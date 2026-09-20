@@ -28,7 +28,7 @@ nhưng đầy đủ, chính các nhánh này mới là phần quyết định m�
 | [uc-14-version.md](uc-14-version.md) — Version & Release | 12 | ✅ Đã viết |
 | [uc-15-dashboard.md](uc-15-dashboard.md) — Dashboard & Report | 13 | ✅ Đã viết |
 | [uc-16-automation.md](uc-16-automation.md) — Automation | 14 | ✅ Đã viết |
-| uc-17-bulk.md — Bulk & Import/Export | 15 | ⬜ Chưa viết |
+| [uc-17-bulk.md](uc-17-bulk.md) — Bulk & Import/Export | 15 | ✅ Đã viết |
 | uc-18-integration.md — Integration & Public API | 16 | ⬜ Chưa viết |
 
 Số trong tên file là **thứ tự viết**, tăng dần và không tái sử dụng — giống
