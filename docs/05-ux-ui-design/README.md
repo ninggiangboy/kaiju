@@ -46,9 +46,14 @@ Về cách dùng các file này:
   để bản trong repo không bị lệch.
 - Dữ liệu trong màn hình (tên người, số liệu, token mẫu) là dữ liệu minh hoạ.
 
-> **Chưa chốt:** `tokens.json` hiện chỉ có theme sáng và viết dưới dạng hex, trong
-> khi ràng buộc bên dưới yêu cầu token theme của shadcn/ui kèm chế độ tối. Cần
-> quyết định cách ánh xạ các token này sang biến CSS của shadcn và bổ sung theme tối.
+> **Changed (2026-09-23):** lúc export, `tokens.json` chỉ có theme sáng. Theme tối
+> (`dark`) đã được thêm cho mọi token màu, cùng tên token, với mọi cặp chữ/nền đạt
+> tương phản AA (≥ 4.5:1). Theme tối mới chỉ có ở bản trong repo: canvas gốc và
+> các màn hình `.dc.html` vẫn ghi màu sáng trực tiếp bằng hex, chưa đọc từ token.
+
+> **Chưa chốt:** token vẫn viết dưới dạng hex, trong khi ràng buộc bên dưới yêu cầu
+> token theme của shadcn/ui. Cần quyết định cách ánh xạ các token này sang biến CSS
+> của shadcn (`--background`, `--primary`, …) cho cả hai theme.
 
 ## Sẽ chứa gì
 
