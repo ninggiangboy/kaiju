@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Project settings — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .navitem{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13px;font-weight:600;color:#767B8C;cursor:pointer;}
+  .navitem.active{background:#EDF0FE;color:#4C63F5;}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px;}
+  label{font-size:12px;font-weight:600;}
+  input,select,textarea{height:36px;box-sizing:border-box;padding:0 12px;font-size:13px;font-family:inherit;color:#1B1D27;background:#FAFBFE;border:1px solid #DEE1EC;border-radius:8px;}
+  textarea{height:72px;padding:10px 12px;resize:none;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:#4C63F5!important;box-shadow:0 0 0 3px #EDF0FE}
+  .radio{display:flex;gap:10px;padding:10px 12px;border:1px solid #DEE1EC;border-radius:8px;cursor:pointer;}
+  .radio.selected{border-color:#4C63F5;background:#EDF0FE;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="settings" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Settings" search-placeholder="Search…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 32px 40px; box-sizing: border-box;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+        <div style="width: 40px; height: 40px; border-radius: 10px; background: #FFEEE9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: #FF6A45;">PAY</span>
+        </div>
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Payments Platform settings</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">Software project · Open in workspace · Led by Jamie Diaz</p>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 24px; align-items: flex-start;">
+        <div style="width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0;">
+          <div class="navitem active">Details</div>
+          <a href="ProjectIssueTypes.dc.html" class="navitem">Issue types</a>
+          <a href="ProjectFields.dc.html" class="navitem">Fields</a>
+          <a href="ScreenSchemes.dc.html" class="navitem">Screens</a>
+          <a href="ProjectMembers.dc.html" class="navitem">Members</a>
+          <a href="ProjectComponents.dc.html" class="navitem">Components</a>
+          <a href="PermissionSchemes.dc.html" class="navitem">Permission scheme</a>
+          <a href="ProjectChangeLog.dc.html" class="navitem">Change log</a>
+          <a href="ProjectNotifications.dc.html" class="navitem">Notifications</a>
+          <div style="height: 1px; background: #ECEEF6; margin: 6px 4px;"></div>
+          <a href="ExportPanel.dc.html" class="navitem">Import &amp; export</a>
+          <a href="ApiTokens.dc.html" class="navitem">API tokens</a>
+          <a href="Webhooks.dc.html" class="navitem">Webhooks</a>
+        </div>
+
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 16px; max-width: 760px;">
+
+          <div class="card">
+            <h2 style="margin: 0; font-size: 14px; font-weight: 700;">Details</h2>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label>Project name</label>
+              <input value="Payments Platform">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label>Key</label>
+              <input value="PAY" style="width: 160px; font-family: 'JetBrains Mono', monospace; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;">
+              <span style="font-size: 11px; color: #A7ABBB;">Changing the key changes how new issue codes look. Old codes such as PAY-142 keep working and redirect — the previous key is kept in history and can never be reused by another project.</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label>Description</label>
+              <textarea placeholder="What this project is for…">Card issuing, ledger and payout services for the core platform.</textarea>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 style="margin: 0; font-size: 14px; font-weight: 700;">Visibility</h2>
+            <div onClick="{{selectOpenVis}}" class="radio {{visOpenCls}}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2" style="margin-top:1px;flex-shrink:0;"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5" fill="{{visOpenDot}}" stroke="none"></circle></svg>
+              <div style="display: flex; flex-direction: column;">
+                <span style="font-size: 13px; font-weight: 700;">Open in workspace</span>
+                <span style="font-size: 11px; color: #767B8C;">Every member can view — guests still excluded until invited.</span>
+              </div>
+            </div>
+            <div onClick="{{selectRestrictedVis}}" class="radio {{visRestrictedCls}}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2" style="margin-top:1px;flex-shrink:0;"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5" fill="{{visRestrictedDot}}" stroke="none"></circle></svg>
+              <div style="display: flex; flex-direction: column;">
+                <span style="font-size: 13px; font-weight: 700;">Only invited people</span>
+                <span style="font-size: 11px; color: #767B8C;">Visible only to members and guests added by name.</span>
+              </div>
+            </div>
+            <sc-if value="{{showNarrowWarning}}" hint-placeholder-val="{{false}}">
+              <div style="display: flex; align-items: flex-start; gap: 8px; background: #FFF8F0; border: 1px solid #F3DFB8; border-radius: 8px; padding: 10px 12px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A5A0F" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+                <span style="font-size: 12px; color: #8A5A0F;"><b>21 people</b> outside this project's member list will lose access the moment you save. They won't be added back automatically — add them below first if they should keep access.</span>
+              </div>
+            </sc-if>
+          </div>
+
+          <div class="card">
+            <h2 style="margin: 0; font-size: 14px; font-weight: 700;">Permission scheme</h2>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <select style="flex-grow: 1;">
+                <option>Default project scheme</option>
+                <option>Support desk scheme</option>
+                <option>Engineering — restricted</option>
+              </select>
+              <a href="PermissionSchemes.dc.html" style="font-size: 12px; font-weight: 700; white-space: nowrap;">Manage schemes</a>
+            </div>
+            <span style="font-size: 11px; color: #A7ABBB;">Maps roles in this project to permissions. Editing a shared scheme changes every project using it.</span>
+          </div>
+
+          <div class="card" style="border-color: #FDEBEA;">
+            <h2 style="margin: 0; font-size: 14px; font-weight: 700; color: #A9302B;">Danger zone</h2>
+
+            <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #F5F6FA;">
+              <div>
+                <div style="font-size: 13px; font-weight: 700;">Archive this project</div>
+                <div style="font-size: 11px; color: #767B8C; margin-top: 2px;">Hides it from the default list. Data stays readable; no new or edited issues. Restore anytime.</div>
+              </div>
+              <div style="flex-grow: 1;"></div>
+              <div onClick="{{openArchive}}" style="height: 34px; padding: 0 14px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; cursor: pointer; white-space: nowrap;">Archive</div>
+            </div>
+
+            <div style="display: flex; align-items: center; padding: 12px 0 0;">
+              <div>
+                <div style="font-size: 13px; font-weight: 700; color: #A9302B;">Delete this project</div>
+                <div style="font-size: 11px; color: #767B8C; margin-top: 2px;">Soft-deleted with a grace period, then removed for good. Issue links from other projects into this one break.</div>
+              </div>
+              <div style="flex-grow: 1;"></div>
+              <div onClick="{{openDelete}}" style="height: 34px; padding: 0 14px; border-radius: 8px; background: #F0453F; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; cursor: pointer; white-space: nowrap;">Delete project…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{archiveOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 420px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Archive Payments Platform?</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeArchive}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">It drops off the default project list and its issues become read-only. Nothing is deleted — restore it from the Archived tab whenever you want, with everything intact.</p>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeArchive}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Archive</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{deleteOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 440px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: #A9302B;">Delete Payments Platform?</h2>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">This soft-deletes the project and its 18 issues. Anyone with it open loses access immediately, and links from other projects into this one will break. It's gone for good after the grace period.</p>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Type <b>PAY</b> to confirm</label>
+          <input placeholder="PAY">
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeDelete}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #F0453F; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Delete project</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const vis = this.state.vis ?? 'open';
+    return {
+      visOpenCls: vis === 'open' ? 'selected' : '',
+      visRestrictedCls: vis === 'restricted' ? 'selected' : '',
+      visOpenDot: vis === 'open' ? '#4C63F5' : 'transparent',
+      visRestrictedDot: vis === 'restricted' ? '#4C63F5' : 'transparent',
+      selectOpenVis: () => this.setState({ vis: 'open' }),
+      selectRestrictedVis: () => this.setState({ vis: 'restricted' }),
+      showNarrowWarning: vis === 'restricted',
+      archiveOpen: !!this.state.archiveOpen,
+      openArchive: () => this.setState({ archiveOpen: true }),
+      closeArchive: () => this.setState({ archiveOpen: false }),
+      deleteOpen: !!this.state.deleteOpen,
+      openDelete: () => this.setState({ deleteOpen: true }),
+      closeDelete: () => this.setState({ deleteOpen: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

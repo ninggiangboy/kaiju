@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Automation — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .chip{font-size:12px;font-weight:600;color:#767B8C;background:#FFFFFF;border:1px solid #ECEEF6;border-radius:999px;padding:6px 12px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+  .row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid #F5F6FA;}
+  .row:hover{background:#FAFBFE;}
+  .toggle{width:34px;height:20px;border-radius:999px;position:relative;flex-shrink:0;cursor:pointer;transition:background .15s;}
+  .toggle-dot{position:absolute;top:2px;width:16px;height:16px;border-radius:999px;background:#fff;transition:left .15s;box-shadow:0 1px 2px rgba(0,0,0,.2);}
+  .pill{font-size:11px;font-weight:700;border-radius:999px;padding:3px 9px;width:fit-content;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="automation" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Automation" search-placeholder="Search…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 24px 40px; display: flex; flex-direction: column; gap: 16px; box-sizing: border-box;">
+
+      <div style="display: flex; align-items: center;">
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Automation rules</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">4 rules · 2 active</p>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{openCreate}}" style="height: 36px; padding: 0 16px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Create rule
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="position: relative;">
+          <div onClick="{{toggleStatusFilter}}" class="chip">Status: {{statusFilterLabel}}
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg>
+          </div>
+          <sc-if value="{{statusFilterOpen}}" hint-placeholder-val="{{false}}">
+            <div style="position: absolute; top: 38px; left: 0; width: 160px; background: #fff; border: 1px solid #ECEEF6; border-radius: 10px; box-shadow: 0 12px 28px rgba(27,29,39,0.14); padding: 6px; z-index: 15; display: flex; flex-direction: column; gap: 1px;">
+              <div onClick="{{setStatusFilter('All')}}" style="padding: 7px 10px; border-radius: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer;">All</div>
+              <div onClick="{{setStatusFilter('Active')}}" style="padding: 7px 10px; border-radius: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer;">Active</div>
+              <div onClick="{{setStatusFilter('Off')}}" style="padding: 7px 10px; border-radius: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer;">Off</div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <sc-if value="{{hasRules}}" hint-placeholder-val="{{true}}">
+        <div style="background: #FFFFFF; border: 1px solid #ECEEF6; border-radius: 12px; overflow: hidden;">
+          <sc-for list="{{rules}}" as="r" hint-placeholder-count="4">
+            <a href="AutomationEditor.dc.html" class="row" style="color: inherit;">
+              <div onClick="{{r.toggleEnabled}}" class="toggle" style="background: {{r.toggleBg}};">
+                <div class="toggle-dot" style="left: {{r.dotLeft}};"></div>
+              </div>
+              <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px;">
+                <span style="font-size: 13.5px; font-weight: 600;">{{r.name}}</span>
+                <span style="font-size: 11px; color: #767B8C;">When {{r.trigger}} → {{r.actionSummary}}</span>
+              </div>
+              <span class="pill" style="color: {{r.statusFg}}; background: {{r.statusBg}};">{{r.statusLabel}}</span>
+              <div style="width: 150px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
+                <span style="font-size: 11px; font-weight: 600; color: #767B8C;">{{r.runsToday}} runs today</span>
+                <span style="font-size: 10.5px; color: {{r.lastRunFg}};">{{r.lastRun}}</span>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{!hasRules}}" hint-placeholder-val="{{false}}">
+        <div style="border: 1px dashed #DEE1EC; border-radius: 12px; padding: 56px 28px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; background: #fff;">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="1.5"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"></path></svg>
+          <span style="font-size: 14px; font-weight: 700;">No automation rules yet</span>
+          <span style="font-size: 12px; color: #767B8C; max-width: 320px;">Automate repetitive work — for example, auto-assign new bugs or close stale issues after a sprint ends.</span>
+          <div onClick="{{openCreate}}" style="margin-top: 8px; height: 34px; padding: 0 16px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; cursor: pointer;">Create your first rule</div>
+        </div>
+      </sc-if>
+
+      <div style="display: flex; align-items: flex-start; gap: 8px; background: #FFF8F0; border: 1px solid #F3DFB8; border-radius: 8px; padding: 10px 12px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A5A0F" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+        <span style="font-size: 12px; color: #8A5A0F;"><b>"Auto-close stale bugs"</b> is running under Jamie Diaz, who no longer has admin access to this project. Actions requiring admin rights are being skipped — <a href="AutomationEditor.dc.html" style="color:#8A5A0F;font-weight:700;text-decoration:underline;">change who it runs as</a>.</span>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{createOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 420px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Create rule</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeCreate}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Rule name</label>
+          <input placeholder="e.g. Assign new bugs to triage" style="height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; font-family: inherit; color: #1B1D27; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+        </div>
+        <span style="font-size: 11px; color: #A7ABBB;">You'll set the trigger, conditions and actions on the next screen. The rule runs under your name and can never exceed your own permissions.</span>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeCreate}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <a href="AutomationEditor.dc.html" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Continue</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const enabled = this.state.enabled ?? { r1: true, r2: true, r3: false, r4: false };
+    const defs = [
+      ['r1', 'Assign new bugs to triage', 'issue is created (type = Bug)', 'assign to Triage Lead', 12, '2 min ago', '#767B8C'],
+      ['r2', 'Auto-close stale bugs', 'schedule (daily at 09:00)', 'transition 3 issues to Done', 1, '18h ago', '#767B8C'],
+      ['r3', 'Notify #payments on blocker', 'issue transitions to Blocked', 'send Slack notification', 0, 'Stopped due to loop limit · 2d ago', '#A9302B'],
+      ['r4', 'Sync labels from component', 'field "Component" changes', 'add label matching component', 0, 'Never run', '#A7ABBB'],
+    ];
+    const statusFilter = this.state.statusFilter ?? 'All';
+    return {
+      hasRules: true,
+      statusFilterLabel: statusFilter,
+      statusFilterOpen: !!this.state.statusFilterOpen,
+      toggleStatusFilter: () => this.setState({ statusFilterOpen: !this.state.statusFilterOpen }),
+      setStatusFilter: (v) => () => this.setState({ statusFilter: v, statusFilterOpen: false }),
+      rules: defs
+        .filter(([id]) => statusFilter === 'All' || (statusFilter === 'Active') === !!enabled[id])
+        .map(([id, name, trigger, actionSummary, runsToday, lastRun, lastRunFg]) => ({
+          name, trigger, actionSummary, runsToday, lastRun, lastRunFg,
+          toggleBg: enabled[id] ? '#4C63F5' : '#DEE1EC',
+          dotLeft: enabled[id] ? '16px' : '2px',
+          toggleEnabled: (e) => { e?.preventDefault?.(); this.setState({ enabled: { ...enabled, [id]: !enabled[id] } }); },
+          statusLabel: enabled[id] ? 'Active' : 'Off',
+          statusFg: enabled[id] ? '#16A34A' : '#767B8C',
+          statusBg: enabled[id] ? '#E7F9F1' : '#F0F1F7',
+        })),
+      createOpen: !!this.state.createOpen,
+      openCreate: () => this.setState({ createOpen: true }),
+      closeCreate: () => this.setState({ createOpen: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

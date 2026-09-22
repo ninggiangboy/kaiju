@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Accept invite — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FFFFFF; display: flex;">
+
+  <dc-import name="AuthPanel" hint-size="360px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 48px; box-sizing: border-box;">
+    <div style="width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 16px;">
+
+      <sc-if value="{{differentEmail}}" hint-placeholder-val="{{false}}">
+        <div style="background: #FDEBEA; border-radius: 10px; padding: 12px 14px; display: flex; align-items: flex-start; gap: 10px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2" style="flex-shrink:0; margin-top:1px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span style="font-size: 12px; color: #A9302B; line-height: 17px;">You're signed in as <strong>jordan@other.com</strong>, but this invite is for <strong>alex@acme.dev</strong>.</span>
+            <a href="Login.dc.html" style="font-size: 12px; font-weight: 700;">Sign out and use alex@acme.dev →</a>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="display: flex; flex-direction: column; gap: 24px; opacity: {{formOpacity}};">
+
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 28px; height: 28px; border-radius: 7px; background: #FFEEE9; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; color: #FF6A45;">JD</div>
+          <span style="font-size: 13px; color: #767B8C;">Jamie Diaz invited you</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; line-height: 26px; font-weight: 700;">Join Acme Inc on Kaiju?</h1>
+          <p style="margin: 0; font-size: 13px; line-height: 19px; color: #767B8C;">You'll join as <strong style="color:#1B1D27;">Member</strong> and get access to every project that isn't invite-only.</p>
+        </div>
+
+        <div style="background: #FAFBFE; border: 1px solid #F0F1F7; border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 12px;">
+          <div style="width: 36px; height: 36px; border-radius: 9px; background: #4C63F5; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; color: #fff;">A</div>
+          <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 13px; font-weight: 700;">Acme Inc</span>
+            <span style="font-size: 11px; color: #767B8C;">12 members · 4 projects</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <a href="AppShell.dc.html" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">
+            Accept invite
+          </a>
+          <a href="Login.dc.html" style="height: 36px; padding: 0 16px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">
+            Decline
+          </a>
+        </div>
+
+        <span style="font-size: 11px; color: #A7ABBB; text-align: center;">Signed in as alex@acme.dev</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"differentEmail":{"editor":"boolean","default":false,"section":"Variant"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const diff = !!this.props.differentEmail;
+    return { differentEmail: diff, formOpacity: diff ? 0.45 : 1 };
+  }
+}
+</script>
+</body>
+</html>

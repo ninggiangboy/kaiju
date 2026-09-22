@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Issues — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .chip{font-size:12px;font-weight:600;color:#767B8C;background:#FFFFFF;border:1px solid #ECEEF6;border-radius:999px;padding:6px 12px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+  .th{font-size:11px;font-weight:700;color:#A7ABBB;text-transform:uppercase;letter-spacing:0.03em;}
+  .row{display:flex;align-items:center;gap:12px;height:44px;padding:0 16px;border-bottom:1px solid #F5F6FA;color:inherit;}
+  .row:hover{background:#FAFBFE;}
+  .ty{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;}
+  .pill{font-size:11px;font-weight:700;border-radius:999px;padding:3px 9px;width:fit-content;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="issues" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Issues" search-placeholder="Search this project…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 24px 40px; display: flex; flex-direction: column; gap: 16px; box-sizing: border-box;">
+
+      <div style="display: flex; align-items: center;">
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Issues</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">14 open · 4 done</p>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{openCreate}}" style="height: 36px; padding: 0 16px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Create issue
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 240px; height: 32px; background: #FFFFFF; border: 1px solid #ECEEF6; border-radius: 8px; display: flex; align-items: center; padding: 0 10px; gap: 8px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <span style="font-size: 12px; color: #A7ABBB;">Search issues…</span>
+        </div>
+        <div class="chip">Type: All <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg></div>
+        <div class="chip">Status: All <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg></div>
+        <div class="chip">Assignee: Anyone <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg></div>
+        <div style="flex-grow: 1;"></div>
+        <a href="ProjectDeletedIssues.dc.html" class="chip">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"></path></svg>
+          Deleted
+        </a>
+        <div style="position: relative;">
+          <div onClick="{{toggleCols}}" class="chip">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2"><rect x="3" y="4" width="18" height="4" rx="1"></rect><rect x="3" y="10" width="18" height="4" rx="1"></rect><rect x="3" y="16" width="18" height="4" rx="1"></rect></svg>
+            Columns
+          </div>
+          <sc-if value="{{colsOpen}}" hint-placeholder-val="{{false}}">
+            <div style="position: absolute; top: 38px; right: 0; width: 220px; background: #fff; border: 1px solid #ECEEF6; border-radius: 10px; box-shadow: 0 12px 28px rgba(27,29,39,0.14); padding: 8px; z-index: 15; display: flex; flex-direction: column; gap: 1px;">
+              <span style="font-size: 10px; font-weight: 700; color: #A7ABBB; text-transform: uppercase; letter-spacing: 0.03em; padding: 4px 8px;">Show columns</span>
+              <sc-for list="{{colOptions}}" as="c" hint-placeholder-count="6">
+                <div onClick="{{c.toggle}}" style="display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 7px; cursor: pointer;">
+                  <span style="width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid {{c.border}}; background: {{c.bg}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <sc-if value="{{c.on}}"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="M20 6L9 17l-5-5"></path></svg></sc-if>
+                  </span>
+                  <span style="font-size: 12.5px; font-weight: 600;">{{c.label}}</span>
+                </div>
+              </sc-for>
+              <span style="font-size: 10.5px; color: #A7ABBB; padding: 6px 8px 2px; line-height: 1.4;">Remembered for next time you open this view.</span>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <div style="background: #FFFFFF; border: 1px solid #ECEEF6; border-radius: 12px; overflow: hidden;">
+        <div class="row th" style="height: 36px; background: #FAFBFE;">
+          <span style="width: 26px;"></span>
+          <span style="width: 70px;">Key</span>
+          <span style="flex-grow: 1; min-width: 0;">Title</span>
+          <span style="width: 100px;">Status</span>
+          <span style="width: 84px;">Priority</span>
+          <sc-if value="{{colOn.reporter}}"><span style="width: 90px;">Reporter</span></sc-if>
+          <sc-if value="{{colOn.due}}"><span style="width: 78px;">Due</span></sc-if>
+          <sc-if value="{{colOn.component}}"><span style="width: 90px;">Component</span></sc-if>
+          <sc-if value="{{colOn.labels}}"><span style="width: 120px;">Labels</span></sc-if>
+          <span style="width: 26px; text-align: center;">Pts</span>
+          <span style="width: 22px;"></span>
+        </div>
+
+        <sc-for list="{{issues}}" as="i" hint-placeholder-count="9">
+          <a href="IssueDetail.dc.html" class="row">
+            <span class="ty" style="width: 18px; height: 18px; flex-shrink: 0; background: {{i.typeBg}};">{{i.typeLetter}}</span>
+            <span style="width: 70px; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #767B8C;">{{i.key}}</span>
+            <span style="flex-grow: 1; min-width: 0; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{i.title}}</span>
+            <span class="pill" style="width: 84px; flex-shrink: 0; box-sizing: border-box; color: {{i.statusFg}}; background: {{i.statusBg}};">{{i.status}}</span>
+            <span style="width: 84px; flex-shrink: 0; display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: {{i.prioFg}};">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="{{i.prioFg}}" stroke-width="3"><path d="{{i.prioPath}}"></path></svg>
+              {{i.priority}}
+            </span>
+            <sc-if value="{{colOn.reporter}}"><span style="width: 90px; flex-shrink: 0; font-size: 11px; font-weight: 600; color: #767B8C; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{i.reporter}}</span></sc-if>
+            <sc-if value="{{colOn.due}}"><span style="width: 78px; flex-shrink: 0; font-size: 11px; font-weight: 600; color: #767B8C;">{{i.due}}</span></sc-if>
+            <sc-if value="{{colOn.component}}"><span style="width: 90px; flex-shrink: 0; font-size: 11px; font-weight: 600; color: #767B8C; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{i.component}}</span></sc-if>
+            <sc-if value="{{colOn.labels}}">
+              <span style="width: 120px; flex-shrink: 0; display: flex; gap: 4px; overflow: hidden;">
+                <sc-for list="{{i.labels}}" as="l" hint-placeholder-count="1">
+                  <span style="font-size: 10.5px; font-weight: 700; background: #F0F1F7; color: #767B8C; border-radius: 999px; padding: 2px 7px; white-space: nowrap;">{{l}}</span>
+                </sc-for>
+              </span>
+            </sc-if>
+            <span style="width: 26px; flex-shrink: 0; font-size: 11px; font-weight: 700; color: #767B8C; text-align: center;">{{i.points}}</span>
+            <div style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 999px; background: {{i.assigneeBg}}; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: {{i.assigneeFg}};">{{i.assignee}}</div>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{createOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 480px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Create issue</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeCreate}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Type</label>
+          <div style="display: flex; gap: 6px;">
+            <div onClick="{{selectType('story')}}" style="display: flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 8px; border: 1px solid {{typeBorder.story}}; background: {{typeBg.story}}; cursor: pointer;">
+              <span class="ty-swatch" style="width: 14px; height: 14px; border-radius: 4px; background: #22B573; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: #fff;">S</span>
+              <span style="font-size: 12px; font-weight: 700;">Story</span>
+            </div>
+            <div onClick="{{selectType('task')}}" style="display: flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 8px; border: 1px solid {{typeBorder.task}}; background: {{typeBg.task}}; cursor: pointer;">
+              <span style="width: 14px; height: 14px; border-radius: 4px; background: #4C63F5; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: #fff;">✓</span>
+              <span style="font-size: 12px; font-weight: 700;">Task</span>
+            </div>
+            <div onClick="{{selectType('bug')}}" style="display: flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 8px; border: 1px solid {{typeBorder.bug}}; background: {{typeBg.bug}}; cursor: pointer;">
+              <span style="width: 14px; height: 14px; border-radius: 4px; background: #F0453F; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: #fff;">B</span>
+              <span style="font-size: 12px; font-weight: 700;">Bug</span>
+            </div>
+          </div>
+          <span style="font-size: 11px; color: #A7ABBB;">Only types enabled for this project are offered — Epic and Sub-task open a parent picker instead.</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Title</label>
+          <input placeholder="What needs to be done?" style="height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; font-family: inherit; color: #1B1D27; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 12px; font-weight: 600;">Assignee</label>
+            <select style="height: 36px; box-sizing: border-box; padding: 0 10px; font-size: 13px; font-family: inherit; color: #1B1D27; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+              <option>Unassigned</option>
+              <option>Jamie Diaz</option>
+              <option>Nina Park</option>
+            </select>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 12px; font-weight: 600;">Priority</label>
+            <select style="height: 36px; box-sizing: border-box; padding: 0 10px; font-size: 13px; font-family: inherit; color: #1B1D27; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+              <option>Medium</option>
+              <option>High</option>
+              <option>Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeCreate}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Create issue</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const typeSwatch = { story: ['S', '#22B573'], task: ['✓', '#4C63F5'], bug: ['B', '#F0453F'] };
+    const statusColor = {
+      'To do': ['#767B8C', '#F0F1F7'],
+      'In progress': ['#8B6FFF', '#F1EDFF'],
+      'Done': ['#1A8F5C', '#E7F9F1'],
+    };
+    const prioColor = {
+      High: ['#F0453F', 'M12 19V5', 'M5 12l7-7 7 7'],
+      Medium: ['#B8790F', 'M5 12h14'],
+      Low: ['#1A8F5C', 'M12 5v14', 'M5 12l7 7 7-7'],
+    };
+    const avatarPalette = {
+      JD: ['#FFEEE9', '#FF6A45'], NP: ['#FDEBEA', '#F0453F'], SO: ['#F1EDFF', '#8B6FFF'], AL: ['#EDF0FE', '#4C63F5'], '--': ['#F0F1F7', '#A7ABBB'],
+    };
+    const rows = [
+      ['PAY-142', 'story', 'Ledger entry reversal on failed payout', 'In progress', 'High', 'JD', 5, 'Alex Lam', 'Oct 3', 'Ledger', ['ledger', 'payouts']],
+      ['PAY-141', 'bug', 'Duplicate webhook delivery double-charges card', 'To do', 'High', 'NP', 3, 'Jamie Diaz', 'Sep 28', 'Webhooks', ['billing']],
+      ['PAY-139', 'task', 'Add idempotency key to payout retry job', 'In progress', 'Medium', 'JD', 2, 'Alex Lam', '—', 'Ledger', []],
+      ['PAY-137', 'story', 'Support partial refunds on card issuing', 'To do', 'Medium', '--', 8, 'Sam Osei', 'Oct 15', 'Card issuing', ['refunds']],
+      ['PAY-135', 'task', 'Migrate ledger writes to the outbox pattern', 'Done', 'Low', 'SO', 3, 'Jamie Diaz', '—', 'Ledger', []],
+      ['PAY-134', 'bug', 'Currency rounding off by one cent on JPY', 'Done', 'Medium', 'NP', 1, 'Alex Lam', '—', 'Ledger', []],
+      ['PAY-131', 'story', 'Payout status page for merchants', 'To do', 'Low', 'AL', 5, 'Sam Osei', 'Nov 1', 'Payouts', []],
+      ['PAY-129', 'task', 'Rate limit the payout creation endpoint', 'To do', 'Medium', 'JD', 2, 'Jamie Diaz', '—', 'Payouts', ['perf']],
+      ['PAY-126', 'story', 'Card issuing: spending limit rules', 'In progress', 'High', 'SO', 8, 'Alex Lam', 'Oct 20', 'Card issuing', []],
+    ];
+    const colOn = this.state.colOn ?? { reporter: false, due: true, component: false, labels: true };
+    const colDefs = [
+      ['reporter', 'Reporter'],
+      ['due', 'Due date'],
+      ['component', 'Component'],
+      ['labels', 'Labels'],
+    ];
+    return {
+      issues: rows.map(([key, type, title, status, priority, assignee, points, reporter, due, component, labels]) => {
+        const [typeLetter, typeBg] = typeSwatch[type];
+        const [statusFg, statusBg] = statusColor[status];
+        const [prioFg, ...prioSegs] = prioColor[priority];
+        const [ab, af] = avatarPalette[assignee];
+        return {
+          key, typeLetter, typeBg, title, status, statusFg, statusBg,
+          priority, prioFg, prioPath: prioSegs.join(' '),
+          assignee: assignee === '--' ? '' : assignee, assigneeBg: ab, assigneeFg: af,
+          points, reporter, due, component, labels,
+        };
+      }),
+      colOn,
+      colsOpen: !!this.state.colsOpen,
+      toggleCols: () => this.setState({ colsOpen: !this.state.colsOpen }),
+      colOptions: colDefs.map(([key, label]) => ({
+        label,
+        on: !!colOn[key],
+        border: colOn[key] ? '#4C63F5' : '#DEE1EC',
+        bg: colOn[key] ? '#4C63F5' : '#fff',
+        toggle: () => this.setState({ colOn: { ...colOn, [key]: !colOn[key] } }),
+      })),
+      createOpen: !!this.state.createOpen,
+      openCreate: () => this.setState({ createOpen: true }),
+      closeCreate: () => this.setState({ createOpen: false }),
+      typeBorder: {
+        story: (this.state.type ?? 'story') === 'story' ? '#4C63F5' : '#DEE1EC',
+        task: this.state.type === 'task' ? '#4C63F5' : '#DEE1EC',
+        bug: this.state.type === 'bug' ? '#4C63F5' : '#DEE1EC',
+      },
+      typeBg: {
+        story: (this.state.type ?? 'story') === 'story' ? '#EDF0FE' : '#fff',
+        task: this.state.type === 'task' ? '#EDF0FE' : '#fff',
+        bug: this.state.type === 'bug' ? '#EDF0FE' : '#fff',
+      },
+      selectType: (t) => () => this.setState({ type: t }),
+    };
+  }
+}
+</script>
+</body>
+</html>

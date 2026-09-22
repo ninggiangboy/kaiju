@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>API tokens — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid #F5F6FA;}
+  .pill{font-size:10.5px;font-weight:700;border-radius:999px;padding:2px 8px;width:fit-content;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="settings" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / API tokens" search-placeholder="Search…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 24px 40px; display: flex; flex-direction: column; gap: 16px; box-sizing: border-box;">
+
+      <div style="display: flex; align-items: center;">
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">API tokens</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">Public API access, scoped to what the creator can currently do</p>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{openCreate}}" style="height: 36px; padding: 0 16px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Create token
+        </div>
+      </div>
+
+      <div style="background: #FFFFFF; border: 1px solid #ECEEF6; border-radius: 12px; overflow: hidden;">
+        <sc-for list="{{tokens}}" as="t" hint-placeholder-count="4">
+          <div class="row">
+            <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px;">
+              <span style="font-size: 13.5px; font-weight: 600;">{{t.name}}</span>
+              <span class="mono" style="font-size: 11px; color: #767B8C;">{{t.prefix}}••••••••••••</span>
+            </div>
+            <span class="pill" style="color: {{t.scopeFg}}; background: {{t.scopeBg}};">{{t.scope}}</span>
+            <div style="width: 130px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-size: 11px; color: #767B8C;">Created by {{t.creator}}</span>
+              <span style="font-size: 10.5px; color: {{t.lastUsedFg}};">{{t.lastUsed}}</span>
+            </div>
+            <div onClick="{{t.openRevoke}}" style="height: 30px; padding: 0 12px; border-radius: 7px; background: #fff; border: 1px solid #DEE1EC; color: #A9302B; font-size: 12px; font-weight: 700; display: flex; align-items: center; cursor: pointer;">Revoke</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display: flex; align-items: flex-start; gap: 8px; background: #F0F1F7; border: 1px solid #ECEEF6; border-radius: 8px; padding: 10px 12px;">
+        <span style="font-size: 11.5px; color: #767B8C;">A token can never do more than its creator can do right now — if Jamie loses admin access, every token Jamie created is re-checked against Jamie's new permissions on the very next request, automatically.</span>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{createOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 440px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Create API token</h2>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Token name</label>
+          <input placeholder="e.g. CI export job" style="height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; font-family: inherit; color: #1B1D27; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Scope</label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;"><input type="radio" name="scope" checked="" style="width: 15px; height: 15px;"> Read-only (issues, comments, projects)</label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;"><input type="radio" name="scope" style="width: 15px; height: 15px;"> Read + write issues</label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;"><input type="radio" name="scope" style="width: 15px; height: 15px;"> Full access (same as your account)</label>
+        </div>
+        <span style="font-size: 11px; color: #A7ABBB;">This narrows what the token can do — it can never exceed your own permissions, and shrinks automatically if your permissions do.</span>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeCreate}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div onClick="{{createToken}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Create</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{revealOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 460px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 12px;">
+        <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Copy your token now</h2>
+        <span style="font-size: 12.5px; color: #767B8C;">This is the only time the full token is shown. If you lose it, you'll need to revoke it and create a new one.</span>
+        <div class="mono" style="background: #1B1D27; color: #E7F9F1; border-radius: 8px; padding: 12px; font-size: 12.5px; word-break: break-all;">kj_live_9fQm2xVh7pLr4tYw1sBc8nJk5eGd3RfA</div>
+        <div onClick="{{closeReveal}}" style="height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">I've copied it</div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      tokens: [
+        ['CI export job', 'kj_live_9fQm', 'Read-only', '#767B8C', '#F0F1F7', 'S. Amir', 'Used 4 min ago', '#767B8C'],
+        ['Datadog webhook relay', 'kj_live_2Lp8', 'Read + write issues', '#4C63F5', '#EDF0FE', 'A. Kovač', 'Used 2h ago', '#767B8C'],
+        ['Jamie’s local script', 'kj_live_7Vn1', 'Full access', '#B8790F', '#FFF3DE', 'J. Diaz', 'Blocked — creator lost admin access', '#A9302B'],
+        ['Old migration script', 'kj_live_5Rt3', 'Read-only', '#767B8C', '#F0F1F7', 'S. Amir', 'Unused for 96 days', '#A7ABBB'],
+      ].map(([name, prefix, scope, scopeFg, scopeBg, creator, lastUsed, lastUsedFg]) => ({
+        name, prefix, scope, scopeFg, scopeBg, creator, lastUsed, lastUsedFg,
+        openRevoke: () => {},
+      })),
+      createOpen: !!this.state.createOpen,
+      openCreate: () => this.setState({ createOpen: true }),
+      closeCreate: () => this.setState({ createOpen: false }),
+      revealOpen: !!this.state.revealOpen,
+      createToken: () => this.setState({ createOpen: false, revealOpen: true }),
+      closeReveal: () => this.setState({ revealOpen: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

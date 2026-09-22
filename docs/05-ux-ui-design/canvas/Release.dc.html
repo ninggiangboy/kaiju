@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Release — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:18px;}
+  .row{display:flex;align-items:center;gap:10px;height:40px;padding:0 4px;border-top:1px solid #F5F6FA;}
+  .ty{width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:800;flex-shrink:0;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="releases" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Versions / 2.5.0" search-placeholder="Search this project…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 24px 40px; display: flex; flex-direction: column; gap: 16px; box-sizing: border-box;">
+
+      <div style="display: flex; align-items: center;">
+        <a href="Versions.dc.html" style="font-size: 12px; font-weight: 700; color: #A7ABBB; display: flex; align-items: center; gap: 4px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.6"><path d="M15 18l-6-6 6-6"></path></svg>
+          Versions
+        </a>
+      </div>
+
+      <div style="display: flex; align-items: center;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">2.5.0</h1>
+            <span style="font-size: 10.5px; font-weight: 700; background: {{statusBg}}; color: {{statusFg}}; border-radius: 999px; padding: 3px 9px;">{{statusLabel}}</span>
+          </div>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">Merchant payout dashboard — planned release Sep 30, 2026<sc-if value="{{released}}" hint-placeholder-val="{{false}}"> · released {{actualReleaseDate}}</sc-if></p>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{openNotes}}" style="height: 36px; padding: 0 14px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer;">Generate release notes</div>
+        <sc-if value="{{canRelease}}" hint-placeholder-val="{{true}}">
+          <div onClick="{{openRelease}}" style="height: 36px; padding: 0 16px; margin-left: 8px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer;">Release</div>
+        </sc-if>
+      </div>
+
+      <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 13px; font-weight: 700;">{{donePct}}% done</span>
+          <div style="flex-grow: 1;"></div>
+          <span style="font-size: 11px; color: #A7ABBB;">{{doneCount}} of {{totalCount}} issues in a done status</span>
+        </div>
+        <div style="height: 8px; background: #F0F1F7; border-radius: 999px; overflow: hidden;">
+          <div style="width: {{donePct}}%; height: 100%; background: #22B573;"></div>
+        </div>
+        <span style="font-size: 10.5px; color: #A7ABBB; margin-top: 6px; display: block;">Each issue counts as done using its own workflow's done-status group — issue types on different workflows aren't compared against the same status name.</span>
+      </div>
+
+      <sc-if value="{{hasIssues}}" hint-placeholder-val="{{true}}">
+        <div class="card">
+          <span style="font-size: 13px; font-weight: 700;">Unfinished ({{unfinished.length}})</span>
+          <sc-for list="{{unfinished}}" as="i" hint-placeholder-count="2">
+            <div class="row">
+              <span class="ty" style="background: {{i.tyBg}};">{{i.tyLetter}}</span>
+              <a href="IssueDetail.dc.html" style="width: 70px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 700;">{{i.key}}</a>
+              <span style="flex-grow: 1; font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{i.title}}</span>
+              <span style="font-size: 10.5px; font-weight: 700; background: {{i.statusBg}}; color: {{i.statusFg}}; border-radius: 999px; padding: 3px 9px;">{{i.status}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div class="card">
+          <span style="font-size: 13px; font-weight: 700;">Done ({{done.length}})</span>
+          <sc-for list="{{done}}" as="i" hint-placeholder-count="2">
+            <div class="row">
+              <span class="ty" style="background: {{i.tyBg}};">{{i.tyLetter}}</span>
+              <a href="IssueDetail.dc.html" style="width: 70px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 700;">{{i.key}}</a>
+              <span style="flex-grow: 1; font-size: 12.5px; color: #A7ABBB; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{i.title}}</span>
+              <span style="font-size: 10.5px; font-weight: 700; background: {{i.statusBg}}; color: {{i.statusFg}}; border-radius: 999px; padding: 3px 9px;">{{i.status}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{hasIssues}}" hint-placeholder-val="{{false}}">
+        <div class="card" style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 40px 20px; gap: 10px;">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#DEE1EC" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 9h18"></path><path d="M8 4v-1"></path><path d="M16 4v-1"></path></svg>
+          <span style="font-size: 13px; font-weight: 700;">No issues assigned to this version yet</span>
+          <p style="margin: 0; font-size: 12px; color: #767B8C; max-width: 340px;">Set this as an issue's fix version to see it here — progress shows 0% until then.</p>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{releaseOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 460px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Release 2.5.0?</h2>
+        <sc-if value="{{hasUnfinished}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; gap: 8px; padding: 10px 12px; background: #FFF3E8; border-radius: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF9A3D" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+            <span style="font-size: 12px; color: #1B1D27; line-height: 1.5;">{{unfinished.length}} issues aren't done yet. You can still release — this is just a heads-up, not a block.</span>
+          </div>
+        </sc-if>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Actual release date</label>
+          <input value="Sep 21, 2026">
+          <span style="font-size: 10.5px; color: #A7ABBB;">Recorded separately from the planned release date set when the version was created.</span>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeRelease}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div onClick="{{confirmRelease}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Release</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{notesOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 600px; max-height: 720px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Release notes — 2.5.0</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeNotes}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <span style="font-size: 11px; color: #A7ABBB;">Grouped by issue type. Exact export formatting isn't settled yet — copy the text or download it as-is for now.</span>
+        <div style="flex-grow: 1; overflow: auto; background: #FAFBFE; border: 1px solid #ECEEF6; border-radius: 8px; padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.7; white-space: pre-wrap;">{{notesText}}</div>
+        <div style="display: flex; gap: 8px;">
+          <div onClick="{{closeNotes}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Close</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Copy</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Download</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const issueDefs = [
+      { key: 'PAY-201', title: 'Merchant payout dashboard — summary tab', type: 'story', tyLetter: 'S', tyBg: '#22B573', status: 'In review', statusBg: '#FFF3E8', statusFg: '#FF9A3D', done: false },
+      { key: 'PAY-202', title: 'Payout status filter chips', type: 'story', tyLetter: 'S', tyBg: '#22B573', status: 'In progress', statusBg: '#F1EDFF', statusFg: '#8B6FFF', done: false },
+      { key: 'PAY-203', title: 'CSV export of dashboard rows', type: 'task', tyLetter: 'T', tyBg: '#4C63F5', status: 'Done', statusBg: '#E7F9F1', statusFg: '#1A8F5C', done: true },
+      { key: 'PAY-204', title: 'Dashboard loads slowly with 500+ payouts', type: 'bug', tyLetter: 'B', tyBg: '#F0453F', status: 'Closed', statusBg: '#F0F1F7', statusFg: '#767B8C', done: true },
+      { key: 'PAY-205', title: 'Add per-merchant payout totals', type: 'story', tyLetter: 'S', tyBg: '#22B573', status: 'Done', statusBg: '#E7F9F1', statusFg: '#1A8F5C', done: true },
+    ];
+    const hasIssuesOverride = this.state.hasIssues;
+    const issues = hasIssuesOverride === false ? [] : issueDefs;
+    const totalCount = issues.length;
+    const doneList = issues.filter((i) => i.done);
+    const unfinishedList = issues.filter((i) => !i.done);
+    const donePct = totalCount === 0 ? 0 : Math.round((doneList.length / totalCount) * 100);
+
+    const released = !!this.state.released;
+    const releaseOpen = !!this.state.releaseOpen;
+    const notesOpen = !!this.state.notesOpen;
+
+    const byType = { story: [], task: [], bug: [] };
+    issues.forEach((i) => byType[i.type].push(i));
+    const typeLabel = { story: 'Story', task: 'Task', bug: 'Bug' };
+    const lines = ['2.5.0 — release notes', ''];
+    ['story', 'task', 'bug'].forEach((t) => {
+      if (!byType[t].length) return;
+      lines.push(typeLabel[t] + 's:');
+      byType[t].forEach((i) => lines.push('  - ' + i.key + '  ' + i.title));
+      lines.push('');
+    });
+
+    return {
+      statusLabel: released ? 'Released' : 'Unreleased',
+      statusBg: released ? '#E7F9F1' : '#EDF0FE',
+      statusFg: released ? '#1A8F5C' : '#4C63F5',
+      released,
+      actualReleaseDate: 'Sep 21, 2026',
+      canRelease: !released,
+
+      hasIssues: totalCount > 0,
+      totalCount,
+      doneCount: doneList.length,
+      donePct,
+      done: doneList,
+      unfinished: unfinishedList,
+      hasUnfinished: unfinishedList.length > 0,
+
+      releaseOpen,
+      openRelease: () => this.setState({ releaseOpen: true }),
+      closeRelease: () => this.setState({ releaseOpen: false }),
+      confirmRelease: () => this.setState({ releaseOpen: false, released: true }),
+
+      notesOpen,
+      openNotes: () => this.setState({ notesOpen: true }),
+      closeNotes: () => this.setState({ notesOpen: false }),
+      notesText: lines.join('\n'),
+    };
+  }
+}
+</script>
+</body>
+</html>

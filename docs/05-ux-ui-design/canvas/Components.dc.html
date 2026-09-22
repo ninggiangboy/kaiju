@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Components — Kaiju design system</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:20px;}
+  .label{font-size:11px;font-weight:700;color:#4C63F5;text-transform:uppercase;letter-spacing:.04em;}
+  .btn{height:36px;padding:0 16px;border-radius:8px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;}
+  .btn-sm{height:28px;padding:0 12px;border-radius:6px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:5px;box-sizing:border-box;}
+  input::placeholder,textarea::placeholder{color:#A7ABBB}
+  .tab{font-size:13px;font-weight:600;color:#767B8C;padding:8px 4px;border-bottom:2px solid transparent;}
+  .tab.active{color:#1B1D27;border-bottom-color:#4C63F5;}
+  .swtrack{width:36px;height:20px;border-radius:999px;position:relative;}
+  .swknob{width:16px;height:16px;border-radius:999px;background:#fff;position:absolute;top:2px;box-shadow:0 1px 2px rgba(27,29,39,0.2);}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1600px; box-sizing: border-box; background: #FAFBFE; padding: 40px; display: flex; flex-direction: column; gap: 28px;">
+
+  <div>
+    <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700;">Components</h1>
+    <p style="margin: 4px 0 0; font-size: 13px; color: #767B8C; max-width: 640px;">Base controls reused across every screen. Nothing here is drawn once-off — a new screen composes from this set before inventing a new control.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 20px;">
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Buttons</span>
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <span class="btn" style="background:#4C63F5;color:#fff;">Primary</span>
+        <span class="btn" style="background:#fff;border:1px solid #DEE1EC;color:#1B1D27;">Secondary</span>
+        <span class="btn" style="background:transparent;color:#4C63F5;">Ghost</span>
+        <span class="btn" style="background:#F0453F;color:#fff;">Destructive</span>
+        <span class="btn" style="background:#EDF0FE;color:#A9AEC7;">Disabled</span>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <span class="btn-sm" style="background:#4C63F5;color:#fff;">Small primary</span>
+        <span class="btn-sm" style="background:#fff;border:1px solid #DEE1EC;color:#1B1D27;">Small secondary</span>
+        <span class="btn-sm" style="background:transparent;color:#1B1D27;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>Icon + label</span>
+        <span style="width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid #DEE1EC;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2"><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg></span>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Form fields</span>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px;">
+        <div style="display:flex;flex-direction:column;gap:4px;"><span style="font-size:11px;color:#A7ABBB;">Default</span><input placeholder="you@company.com" style="height:36px;box-sizing:border-box;padding:0 10px;font-size:13px;font-family:inherit;background:#FAFBFE;border:1px solid #DEE1EC;border-radius:8px;"></div>
+        <div style="display:flex;flex-direction:column;gap:4px;"><span style="font-size:11px;color:#A7ABBB;">Focus</span><input value="alex@acme.dev" style="height:36px;box-sizing:border-box;padding:0 10px;font-size:13px;font-family:inherit;background:#FAFBFE;border:1px solid #4C63F5;box-shadow:0 0 0 3px #EDF0FE;border-radius:8px;"></div>
+        <div style="display:flex;flex-direction:column;gap:4px;"><span style="font-size:11px;color:#A7ABBB;">Error</span><input value="not-an-email" style="height:36px;box-sizing:border-box;padding:0 10px;font-size:13px;font-family:inherit;background:#FAFBFE;border:1px solid #F0453F;border-radius:8px;"></div>
+        <div style="display:flex;flex-direction:column;gap:4px;"><span style="font-size:11px;color:#A7ABBB;">Disabled</span><input value="Locked value" style="height:36px;box-sizing:border-box;padding:0 10px;font-size:13px;font-family:inherit;color:#A7ABBB;background:#F5F6FA;border:1px solid #ECEEF6;border-radius:8px;"></div>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Selection controls</span>
+      <div style="display: flex; gap: 28px; align-items: center; flex-wrap: wrap;">
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:18px;height:18px;border-radius:5px;background:#4C63F5;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6L9 17l-5-5"></path></svg></div><span style="font-size:12px;">Checked</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:18px;height:18px;border-radius:5px;border:1.5px solid #DEE1EC;"></div><span style="font-size:12px;">Unchecked</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:18px;height:18px;border-radius:999px;border:5px solid #4C63F5;box-sizing:border-box;"></div><span style="font-size:12px;">Radio selected</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:18px;height:18px;border-radius:999px;border:1.5px solid #DEE1EC;box-sizing:border-box;"></div><span style="font-size:12px;">Radio</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div class="swtrack" style="background:#4C63F5;"><div class="swknob" style="left:18px;"></div></div><span style="font-size:12px;">Toggle on</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div class="swtrack" style="background:#DEE1EC;"><div class="swknob" style="left:2px;"></div></div><span style="font-size:12px;">Toggle off</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Badges &amp; status pills</span>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <span style="font-size:11px;font-weight:700;color:#4C63F5;background:#EDF0FE;border-radius:999px;padding:3px 10px;">Owner</span>
+        <span style="font-size:11px;font-weight:700;color:#FF6A45;background:#FFEEE9;border-radius:999px;padding:3px 10px;">Admin</span>
+        <span style="font-size:11px;font-weight:700;color:#767B8C;background:#F0F1F7;border-radius:999px;padding:3px 10px;">Member</span>
+        <span style="font-size:11px;font-weight:700;color:#5B3FC9;background:#F1EDFF;border-radius:999px;padding:3px 10px;">Guest</span>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <span style="font-size:11px;font-weight:700;color:#1A8F5C;background:#E7F9F1;border-radius:999px;padding:3px 10px;">Active</span>
+        <span style="font-size:11px;font-weight:700;color:#5B3FC9;background:#F1EDFF;border-radius:999px;padding:3px 10px;">Invited</span>
+        <span style="font-size:11px;font-weight:700;color:#A9302B;background:#FDEBEA;border-radius:999px;padding:3px 10px;">Blocked</span>
+        <span style="font-size:11px;font-weight:700;color:#767B8C;background:#F0F1F7;border-radius:999px;padding:3px 10px;">Deactivated</span>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Avatars</span>
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <div style="width:20px;height:20px;border-radius:999px;background:#EDF0FE;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#4C63F5;">AL</div>
+        <div style="width:28px;height:28px;border-radius:999px;background:#EDF0FE;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#4C63F5;">AL</div>
+        <div style="width:36px;height:36px;border-radius:999px;background:#EDF0FE;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#4C63F5;">AL</div>
+        <div style="display:flex;">
+          <div style="width:28px;height:28px;border-radius:999px;background:#EDF0FE;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#4C63F5;margin-right:-8px;">AL</div>
+          <div style="width:28px;height:28px;border-radius:999px;background:#FFEEE9;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#FF6A45;margin-right:-8px;">JD</div>
+          <div style="width:28px;height:28px;border-radius:999px;background:#F0F1F7;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#767B8C;">+9</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Tabs</span>
+      <div style="display: flex; gap: 20px; border-bottom: 1px solid #ECEEF6;">
+        <span class="tab active">Active (12)</span>
+        <span class="tab">Pending invites (3)</span>
+        <span class="tab">Groups (2)</span>
+      </div>
+      <div style="display: flex; gap: 6px; background: #F0F1F7; border-radius: 8px; padding: 3px; width: fit-content;">
+        <span style="font-size:12px;font-weight:700;padding:6px 12px;border-radius:6px;background:#fff;box-shadow:0 1px 2px rgba(27,29,39,0.08);">Board</span>
+        <span style="font-size:12px;font-weight:600;padding:6px 12px;border-radius:6px;color:#767B8C;">Backlog</span>
+        <span style="font-size:12px;font-weight:600;padding:6px 12px;border-radius:6px;color:#767B8C;">Reports</span>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px; position: relative;">
+      <span class="label">Dropdown menu</span>
+      <div style="width: 200px; background: #fff; border: 1px solid #ECEEF6; border-radius: 10px; box-shadow: 0 8px 20px rgba(27,29,39,0.08); padding: 6px; display: flex; flex-direction: column; gap: 1px;">
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:6px;font-size:12px;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M3 10h18"></path></svg>View profile</div>
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:6px;font-size:12px;font-weight:600;background:#FAFBFE;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>Change role</div>
+        <div style="height:1px;background:#F0F1F7;margin:4px 2px;"></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:6px;font-size:12px;font-weight:600;color:#F0453F;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"></path></svg>Remove from workspace</div>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Tooltip</span>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid #DEE1EC;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></span>
+        <div style="background:#1B1D27;color:#fff;font-size:11px;font-weight:600;border-radius:6px;padding:6px 10px;position:relative;">
+          Guests only see projects they're invited to
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px; grid-column: span 2;">
+      <span class="label">Breadcrumb &amp; pagination</span>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 12px;">
+          <span style="color:#A7ABBB;font-weight:700;">Acme Inc</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#DEE1EC" stroke-width="2.5"><path d="M9 6l6 6-6 6"></path></svg>
+          <span style="color:#A7ABBB;font-weight:700;">Members</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#DEE1EC" stroke-width="2.5"><path d="M9 6l6 6-6 6"></path></svg>
+          <span style="color:#1B1D27;font-weight:700;">Pending invites</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="width:26px;height:26px;border-radius:6px;border:1px solid #DEE1EC;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.4"><path d="M15 18l-6-6 6-6"></path></svg></span>
+          <span style="width:26px;height:26px;border-radius:6px;background:#4C63F5;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;">1</span>
+          <span style="width:26px;height:26px;border-radius:6px;font-size:12px;font-weight:700;color:#767B8C;display:flex;align-items:center;justify-content:center;">2</span>
+          <span style="width:26px;height:26px;border-radius:6px;font-size:12px;font-weight:700;color:#767B8C;display:flex;align-items:center;justify-content:center;">3</span>
+          <span style="width:26px;height:26px;border-radius:6px;border:1px solid #DEE1EC;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2.4"><path d="M9 18l6-6-6-6"></path></svg></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1600}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

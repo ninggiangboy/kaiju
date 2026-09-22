@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Projects — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .tab{font-size:13px;font-weight:600;color:#767B8C;padding:8px 4px;border-bottom:2px solid transparent;cursor:pointer;}
+  .tab.active{color:#1B1D27;border-bottom-color:#4C63F5;}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px;}
+  .card:hover{border-color:#DEE1EC;}
+  input::placeholder,textarea::placeholder{color:#A7ABBB}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:#4C63F5!important;box-shadow:0 0 0 3px #EDF0FE}
+  .radio{display:flex;gap:10px;padding:10px 12px;border:1px solid #DEE1EC;border-radius:8px;cursor:pointer;}
+  .radio.selected{border-color:#4C63F5;background:#EDF0FE;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="Sidebar" active="projects" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Projects" search-placeholder="Search projects…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 32px 40px; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box;">
+
+      <div style="display: flex; align-items: center;">
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Projects</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">9 projects · 2 starred · 1 archived</p>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{openCreate}}" style="height: 36px; padding: 0 16px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          New project
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 20px; border-bottom: 1px solid #ECEEF6;">
+        <span class="tab active">All (9)</span>
+        <span class="tab">Starred (2)</span>
+        <span class="tab">Archived (1)</span>
+        <div style="flex-grow: 1;"></div>
+        <div style="max-width: 260px; height: 32px; background: #FFFFFF; border: 1px solid #ECEEF6; border-radius: 8px; display: flex; align-items: center; padding: 0 10px; gap: 8px; margin-bottom: 8px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <span style="font-size: 12px; color: #A7ABBB;">Filter by name or key…</span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;">
+        <sc-for list="{{projects}}" as="p" hint-placeholder-count="6">
+          <div class="card">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="width: 40px; height: 40px; border-radius: 10px; background: {{p.bg}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: {{p.fg}};">{{p.key}}</span>
+              </div>
+              <div style="flex-grow: 1; min-width: 0;">
+                <div style="font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{p.name}}</div>
+                <div style="font-size: 11px; color: #A7ABBB; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{p.type}} · Led by {{p.lead}} · {{p.componentCount}} components</div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="{{p.starFill}}" stroke="{{p.starStroke}}" stroke-width="1.6" style="flex-shrink: 0; margin-top: 2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-size: 11px; color: #767B8C;">{{p.doneCount}} of {{p.totalCount}} issues done</span>
+                <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: {{p.healthFg}};">
+                  <span style="width: 6px; height: 6px; border-radius: 999px; background: {{p.healthFg}};"></span>
+                  {{p.health}}
+                </span>
+              </div>
+              <div style="height: 6px; border-radius: 999px; background: #F0F1F7; display: flex; overflow: hidden;">
+                <div style="width: {{p.todoPct}}%; background: #DEE1EC;"></div>
+                <div style="width: {{p.progressPct}}%; background: #8B6FFF;"></div>
+                <div style="width: {{p.donePct}}%; background: #22B573;"></div>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center;">
+                <div style="width: 22px; height: 22px; border-radius: 999px; background: {{p.a1bg}}; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: {{p.a1fg}}; flex-shrink: 0;">{{p.a1}}</div>
+                <div style="width: 22px; height: 22px; border-radius: 999px; background: {{p.a2bg}}; border: 2px solid #fff; margin-left: -6px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: {{p.a2fg}}; flex-shrink: 0;">{{p.a2}}</div>
+                <div style="width: 22px; height: 22px; border-radius: 999px; background: {{p.a3bg}}; border: 2px solid #fff; margin-left: -6px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: {{p.a3fg}}; flex-shrink: 0;">{{p.a3}}</div>
+                <sc-if value="{{p.hasExtra}}" hint-placeholder-val="{{false}}">
+                  <div style="width: 22px; height: 22px; border-radius: 999px; background: #F0F1F7; border: 2px solid #fff; margin-left: -6px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #767B8C; flex-shrink: 0;">+{{p.extra}}</div>
+                </sc-if>
+              </div>
+              <span style="font-size: 11px; color: #A7ABBB; flex-grow: 1;">{{p.lastActivity}}</span>
+              <span style="font-size: 11px; font-weight: 700;">{{p.openIssues}} open</span>
+            </div>
+          </div>
+        </sc-for>
+
+        <div class="card" style="border-style: dashed; align-items: center; justify-content: center; color: #A7ABBB;">
+          <span style="font-size: 12px; font-weight: 700; color: #A7ABBB;">Archived — Kaiju Legacy</span>
+          <span style="font-size: 11px; color: #A7ABBB;">Read-only · 6 open issues frozen</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{createOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 480px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">New project</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeCreate}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Project name</label>
+          <input value="Payments Platform" style="height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; font-family: inherit; color: #1B1D27; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Key</label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input value="PAY" style="width: 120px; height: 36px; box-sizing: border-box; padding: 0 12px; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; color: #1B1D27; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px; text-transform: uppercase;">
+            <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: #1A8F5C;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1A8F5C" stroke-width="3"><path d="M20 6L9 17l-5-5"></path></svg>
+              Available in this workspace
+            </span>
+          </div>
+          <span style="font-size: 11px; color: #A7ABBB;">Issue codes look like PAY-142. Only unique within this workspace — other workspaces can reuse it.</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Project type</label>
+          <select style="height: 36px; box-sizing: border-box; padding: 0 10px; font-size: 13px; font-family: inherit; color: #1B1D27; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+            <option>Software</option>
+            <option>Business</option>
+          </select>
+          <span style="font-size: 11px; color: #A7ABBB;">Decides which features are turned on — changeable later.</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Who can see this project</label>
+          <div onClick="{{selectOpenVis}}" class="radio {{visOpenCls}}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2" style="margin-top:1px;flex-shrink:0;"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5" fill="{{visOpenDot}}" stroke="none"></circle></svg>
+            <div style="display: flex; flex-direction: column;">
+              <span style="font-size: 13px; font-weight: 700;">Open in workspace</span>
+              <span style="font-size: 11px; color: #767B8C;">Every member can view — guests still excluded until invited.</span>
+            </div>
+          </div>
+          <div onClick="{{selectRestrictedVis}}" class="radio {{visRestrictedCls}}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2" style="margin-top:1px;flex-shrink:0;"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5" fill="{{visRestrictedDot}}" stroke="none"></circle></svg>
+            <div style="display: flex; flex-direction: column;">
+              <span style="font-size: 13px; font-weight: 700;">Only invited people</span>
+              <span style="font-size: 11px; color: #767B8C;">Visible only to members and guests added by name.</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeCreate}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Create project</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const starFillOf = (starred) => (starred ? '#FF6A45' : 'none');
+    const starStrokeOf = (starred) => (starred ? '#FF6A45' : '#DEE1EC');
+    const healthColor = { 'On track': '#1A8F5C', 'At risk': '#B8790F', 'Off track': '#F0453F' };
+    const avatarPalette = {
+      AL: ['#EDF0FE', '#4C63F5'], JD: ['#FFEEE9', '#FF6A45'], PR: ['#F1EDFF', '#8B6FFF'],
+      SO: ['#E7F9F1', '#1A8F5C'], NP: ['#FDEBEA', '#F0453F'],
+    };
+    const rows = [
+      // key, name, type, visibility, bg, fg, lead, componentCount, todo, inProgress, done, avatars, extra, lastActivity, health, starred
+      ['KJ', 'Kaiju', 'Software', 'Open in workspace', '#EDF0FE', '#4C63F5', 'Alex Lam', 4, 15, 9, 18, ['AL', 'JD', 'PR'], 3, 'Updated 2h ago', 'On track', true],
+      ['PAY', 'Payments Platform', 'Software', 'Only invited people', '#FFEEE9', '#FF6A45', 'Jamie Diaz', 3, 8, 6, 4, ['JD', 'SO', 'NP'], 2, 'Updated 40m ago', 'At risk', true],
+      ['MKT', 'Marketing Site', 'Business', 'Open in workspace', '#F1EDFF', '#8B6FFF', 'Priya Rao', 2, 0, 1, 6, ['PR', 'AL', 'SO'], 0, 'Updated yesterday', 'On track', false],
+      ['SUP', 'Customer Support', 'Business', 'Open in workspace', '#E7F9F1', '#1A8F5C', 'Sam Osei', 5, 6, 5, 20, ['SO', 'NP', 'JD'], 4, 'Updated 5h ago', 'On track', false],
+      ['DATA', 'Data Platform', 'Software', 'Only invited people', '#EDF0FE', '#4C63F5', 'Nina Park', 3, 10, 3, 2, ['NP', 'AL', 'JD'], 1, 'Updated 3d ago', 'Off track', false],
+      ['GRW', 'Growth Experiments', 'Business', 'Open in workspace', '#FFEEE9', '#FF6A45', 'Alex Lam', 1, 2, 2, 5, ['AL', 'PR', 'NP'], 0, 'Updated 6d ago', 'On track', false],
+    ];
+    return {
+      projects: rows.map(([key, name, type, visibility, bg, fg, lead, componentCount, todo, inProgress, done, avatars, extra, lastActivity, health, starred]) => {
+        const total = todo + inProgress + done;
+        const todoPct = (todo / total) * 100;
+        const progressPct = (inProgress / total) * 100;
+        const donePct = 100 - todoPct - progressPct;
+        const [a1, a2, a3] = avatars;
+        return {
+          key, name, type, visibility, bg, fg, lead, componentCount,
+          totalCount: total, doneCount: done, openIssues: todo + inProgress,
+          todoPct, progressPct, donePct,
+          a1, a1bg: avatarPalette[a1][0], a1fg: avatarPalette[a1][1],
+          a2, a2bg: avatarPalette[a2][0], a2fg: avatarPalette[a2][1],
+          a3, a3bg: avatarPalette[a3][0], a3fg: avatarPalette[a3][1],
+          hasExtra: extra > 0, extra,
+          lastActivity, health, healthFg: healthColor[health],
+          starFill: starFillOf(starred), starStroke: starStrokeOf(starred),
+        };
+      }),
+      createOpen: !!this.state.createOpen,
+      openCreate: () => this.setState({ createOpen: true }),
+      closeCreate: () => this.setState({ createOpen: false }),
+      visOpenCls: (this.state.vis ?? 'open') === 'open' ? 'selected' : '',
+      visRestrictedCls: this.state.vis === 'restricted' ? 'selected' : '',
+      visOpenDot: (this.state.vis ?? 'open') === 'open' ? '#4C63F5' : 'transparent',
+      visRestrictedDot: this.state.vis === 'restricted' ? '#4C63F5' : 'transparent',
+      selectOpenVis: () => this.setState({ vis: 'open' }),
+      selectRestrictedVis: () => this.setState({ vis: 'restricted' }),
+    };
+  }
+}
+</script>
+</body>
+</html>

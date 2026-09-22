@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Foundations — Kaiju design system</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:20px;}
+  .label{font-size:11px;font-weight:700;color:#4C63F5;text-transform:uppercase;letter-spacing:.04em;}
+  .swatch{border-radius:10px;height:56px;border:1px solid rgba(27,29,39,0.06);}
+  .hex{font-family:'JetBrains Mono',monospace;font-size:11px;color:#767B8C;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1400px; box-sizing: border-box; background: #FAFBFE; padding: 40px; display: flex; flex-direction: column; gap: 28px;">
+
+  <div>
+    <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700;">Foundations</h1>
+    <p style="margin: 4px 0 0; font-size: 13px; color: #767B8C; max-width: 640px;">Color, type, spacing, radius and elevation — one theme (light), revision 3 of the Kaiju design system. Every screen in this file uses only these values.</p>
+  </div>
+
+  <div class="card" style="display: flex; flex-direction: column; gap: 16px;">
+    <span class="label">Color</span>
+
+    <div>
+      <span style="font-size: 12px; font-weight: 700; color: #1B1D27;">Neutrals</span>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin-top: 8px;">
+        <div><div class="swatch" style="background:#FAFBFE;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">surface-100</div><div class="hex">#FAFBFE · page background</div></div>
+        <div><div class="swatch" style="background:#FFFFFF;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">surface-200</div><div class="hex">#FFFFFF · card / panel</div></div>
+        <div><div class="swatch" style="background:#1B1D27;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">ink</div><div class="hex">#1B1D27 · primary text</div></div>
+        <div><div class="swatch" style="background:#767B8C;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">ink-muted</div><div class="hex">#767B8C · secondary text</div></div>
+      </div>
+    </div>
+
+    <div>
+      <span style="font-size: 12px; font-weight: 700; color: #1B1D27;">Brand &amp; accent</span>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin-top: 8px;">
+        <div><div class="swatch" style="background:#4C63F5;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">brand</div><div class="hex">#4C63F5 · primary actions, links, focus ring</div></div>
+        <div><div class="swatch" style="background:#EDF0FE;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">brand-soft</div><div class="hex">#EDF0FE · selected rows, badges</div></div>
+        <div><div class="swatch" style="background:#FF6A45;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">accent</div><div class="hex">#FF6A45 · high-priority flags, sparing use</div></div>
+        <div><div class="swatch" style="background:#FFEEE9;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">accent-soft</div><div class="hex">#FFEEE9 · accent badge background</div></div>
+      </div>
+    </div>
+
+    <div>
+      <span style="font-size: 12px; font-weight: 700; color: #1B1D27;">Status</span>
+      <div style="display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 12px; margin-top: 8px;">
+        <div><div class="swatch" style="background:#F0453F;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">danger</div><div class="hex">#F0453F</div></div>
+        <div><div class="swatch" style="background:#FDEBEA;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">danger-soft</div><div class="hex">#FDEBEA</div></div>
+        <div><div class="swatch" style="background:#8B6FFF;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">info</div><div class="hex">#8B6FFF</div></div>
+        <div><div class="swatch" style="background:#F1EDFF;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">info-soft</div><div class="hex">#F1EDFF</div></div>
+        <div><div class="swatch" style="background:#22B573;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">success</div><div class="hex">#22B573</div></div>
+        <div><div class="swatch" style="background:#E7F9F1;"></div><div style="margin-top:6px;font-size:12px;font-weight:700;">success-soft</div><div class="hex">#E7F9F1</div></div>
+      </div>
+      <p style="margin: 10px 0 0; font-size: 11px; color: #A7ABBB;">danger = blocked / destructive / overdue · info = in-review / informational · success = done / confirmations. Each pairs a solid tone with a soft background for badges.</p>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px;">
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Typography</span>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: baseline; gap: 16px;"><span style="width: 90px; font-size: 11px; color: #A7ABBB;">display</span><span style="font-family: 'Space Grotesk', sans-serif; font-size: 32px; line-height: 36px; font-weight: 700;">Sign in to Kaiju</span></div>
+        <div style="display: flex; align-items: baseline; gap: 16px;"><span style="width: 90px; font-size: 11px; color: #A7ABBB;">h1</span><span style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; line-height: 28px; font-weight: 700;">Members</span></div>
+        <div style="display: flex; align-items: baseline; gap: 16px;"><span style="width: 90px; font-size: 11px; color: #A7ABBB;">h2</span><span style="font-family: 'Manrope', sans-serif; font-size: 16px; line-height: 22px; font-weight: 600;">Invite people</span></div>
+        <div style="display: flex; align-items: baseline; gap: 16px;"><span style="width: 90px; font-size: 11px; color: #A7ABBB;">body</span><span style="font-family: 'Manrope', sans-serif; font-size: 14px; line-height: 20px; font-weight: 500;">No passwords, ever. We'll email you a one-time link.</span></div>
+        <div style="display: flex; align-items: baseline; gap: 16px;"><span style="width: 90px; font-size: 11px; color: #A7ABBB;">body-small</span><span style="font-family: 'Manrope', sans-serif; font-size: 12px; line-height: 16px; font-weight: 500; color: #767B8C;">12 active · 3 pending invites</span></div>
+        <div style="display: flex; align-items: baseline; gap: 16px;"><span style="width: 90px; font-size: 11px; color: #A7ABBB;">issue-key</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 16px; font-weight: 500; background: #F0F1F7; border-radius: 4px; padding: 2px 6px;">KAI-42</span></div>
+      </div>
+      <div style="height: 1px; background: #F0F1F7;"></div>
+      <div style="display: flex; gap: 24px; font-size: 11px; color: #A7ABBB;">
+        <span><strong style="color:#1B1D27;">Space Grotesk</strong> — display headings</span>
+        <span><strong style="color:#1B1D27;">Manrope</strong> — interface text</span>
+        <span><strong style="color:#1B1D27;">JetBrains Mono</strong> — issue keys, machine-readable data</span>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Spacing</span>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 12px;"><span style="width: 64px; font-size: 12px; font-weight: 700;">space-4</span><div style="width: 4px; height: 14px; background: #4C63F5; border-radius: 2px;"></div><span style="font-size: 11px; color: #A7ABBB;">icon-to-label, badge padding</span></div>
+        <div style="display: flex; align-items: center; gap: 12px;"><span style="width: 64px; font-size: 12px; font-weight: 700;">space-8</span><div style="width: 8px; height: 14px; background: #4C63F5; border-radius: 2px;"></div><span style="font-size: 11px; color: #A7ABBB;">gap between related controls</span></div>
+        <div style="display: flex; align-items: center; gap: 12px;"><span style="width: 64px; font-size: 12px; font-weight: 700;">space-16</span><div style="width: 16px; height: 14px; background: #4C63F5; border-radius: 2px;"></div><span style="font-size: 11px; color: #A7ABBB;">card padding</span></div>
+        <div style="display: flex; align-items: center; gap: 12px;"><span style="width: 64px; font-size: 12px; font-weight: 700;">space-24</span><div style="width: 24px; height: 14px; background: #4C63F5; border-radius: 2px;"></div><span style="font-size: 11px; color: #A7ABBB;">section spacing</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 20px;">
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Radius</span>
+      <div style="display: flex; gap: 20px; align-items: flex-end;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;"><div style="width: 64px; height: 64px; background: #EDF0FE; border-radius: 6px;"></div><span style="font-size: 11px; font-weight: 700;">radius-sm · 6px</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;"><div style="width: 64px; height: 64px; background: #EDF0FE; border-radius: 12px;"></div><span style="font-size: 11px; font-weight: 700;">radius-md · 12px</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;"><div style="width: 64px; height: 64px; background: #EDF0FE; border-radius: 999px;"></div><span style="font-size: 11px; font-weight: 700;">radius-pill</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Elevation (shadow)</span>
+      <div style="display: flex; gap: 24px; align-items: flex-end;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 90px; height: 56px; background: #fff; border-radius: 10px; box-shadow: 0 1px 2px rgba(27,29,39,0.04);"></div><span style="font-size: 11px; font-weight: 700;">shadow-sm</span><span style="font-size: 10px; color: #A7ABBB;">cards, inputs at rest</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 90px; height: 56px; background: #fff; border-radius: 10px; box-shadow: 0 8px 20px rgba(27,29,39,0.08);"></div><span style="font-size: 11px; font-weight: 700;">shadow-md</span><span style="font-size: 10px; color: #A7ABBB;">dropdowns, toasts</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 90px; height: 56px; background: #fff; border-radius: 10px; box-shadow: 0 24px 60px rgba(27,29,39,0.24);"></div><span style="font-size: 11px; font-weight: 700;">shadow-lg</span><span style="font-size: 10px; color: #A7ABBB;">modals over a scrim</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1400}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

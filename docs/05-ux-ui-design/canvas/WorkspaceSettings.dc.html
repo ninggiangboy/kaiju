@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Workspace settings — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .navitem{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13px;font-weight:600;color:#767B8C;cursor:pointer;}
+  .navitem.active{background:#EDF0FE;color:#4C63F5;}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px;}
+  label{font-size:12px;font-weight:600;}
+  input,select{height:36px;box-sizing:border-box;padding:0 12px;font-size:13px;font-family:inherit;color:#1B1D27;background:#FAFBFE;border:1px solid #DEE1EC;border-radius:8px;}
+  input:focus,select:focus{outline:none;border-color:#4C63F5!important;box-shadow:0 0 0 3px #EDF0FE}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="Sidebar" active="settings" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Workspace settings" search-placeholder="Search…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 32px 40px; box-sizing: border-box;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+        <div style="width: 40px; height: 40px; border-radius: 10px; background: #4C63F5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; color: #fff;">A</span>
+        </div>
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Workspace settings</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">Acme Inc · You're the owner</p>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 24px; align-items: flex-start;">
+        <div style="width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0;">
+          <div class="navitem active">General</div>
+          <a href="WorkflowEditor.dc.html" class="navitem">Workflows</a>
+          <a href="WorkflowSchemes.dc.html" class="navitem">Workflow schemes</a>
+          <a href="CustomFields.dc.html" class="navitem">Custom fields</a>
+          <a href="PermissionSchemes.dc.html" class="navitem">Permission schemes</a>
+          <a href="LinkTypes.dc.html" class="navitem">Issue link types</a>
+          <a href="Members.dc.html" class="navitem">Members</a>
+          <div style="height: 1px; background: #ECEEF6; margin: 6px 4px;"></div>
+          <a href="SsoSettings.dc.html" class="navitem">Single sign-on</a>
+        </div>
+
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 16px; max-width: 720px;">
+
+          <div class="card">
+            <h2 style="margin: 0; font-size: 14px; font-weight: 700;">General</h2>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label>Workspace name</label>
+              <input value="Acme Inc">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label>Slug</label>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 12px; color: #A7ABBB; font-family: 'JetBrains Mono', monospace;">app.kaiju.dev/</span>
+                <input value="acme-inc" style="flex-grow: 1; font-family: 'JetBrains Mono', monospace;">
+              </div>
+              <span style="font-size: 11px; color: #A7ABBB;">Changing the slug breaks any bookmarked link using the old one — it won't redirect.</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 style="margin: 0; font-size: 14px; font-weight: 700;">Defaults for new projects</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label>Visibility</label>
+                <select>
+                  <option>Open in workspace</option>
+                  <option>Only invited people</option>
+                </select>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label>Permission scheme</label>
+                <select>
+                  <option>Default project scheme</option>
+                  <option>Engineering — restricted</option>
+                  <option>Support desk scheme</option>
+                </select>
+              </div>
+            </div>
+            <span style="font-size: 11px; color: #A7ABBB;">Applied when a project is created and left unchanged — editing this doesn't touch existing projects.</span>
+          </div>
+
+          <div class="card">
+            <h2 style="margin: 0; font-size: 14px; font-weight: 700;">Time tracking</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label>Hours per working day</label>
+                <input value="8">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label>Days per working week</label>
+                <input value="5">
+              </div>
+            </div>
+            <span style="font-size: 11px; color: #A7ABBB;">Only changes how time values <b>display</b> (e.g. "1d 2h") — everything is stored in minutes underneath, so old logged time re-displays correctly under a new ratio without any migration.</span>
+          </div>
+
+          <div class="card" style="border-color: #FDEBEA;">
+            <h2 style="margin: 0; font-size: 14px; font-weight: 700; color: #A9302B;">Danger zone</h2>
+
+            <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #F5F6FA;">
+              <div>
+                <div style="font-size: 13px; font-weight: 700;">Transfer ownership</div>
+                <div style="font-size: 11px; color: #767B8C; margin-top: 2px;">Only an active member can become owner. You'll become an admin.</div>
+              </div>
+              <div style="flex-grow: 1;"></div>
+              <div onClick="{{openTransfer}}" style="height: 34px; padding: 0 14px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; cursor: pointer; white-space: nowrap;">Transfer…</div>
+            </div>
+
+            <div style="display: flex; align-items: center; padding: 12px 0 0;">
+              <div>
+                <div style="font-size: 13px; font-weight: 700; color: #A9302B;">Delete this workspace</div>
+                <div style="font-size: 11px; color: #767B8C; margin-top: 2px;">Every project and issue inside it is deleted. Soft-deleted with a grace period.</div>
+              </div>
+              <div style="flex-grow: 1;"></div>
+              <div onClick="{{openDelete}}" style="height: 34px; padding: 0 14px; border-radius: 8px; background: #F0453F; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; cursor: pointer; white-space: nowrap;">Delete workspace…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{transferOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 440px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Transfer ownership</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeTransfer}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">New owner</label>
+          <select>
+            <option>Jamie Diaz — Admin</option>
+            <option>Nina Park — Member</option>
+            <option>Sam Osei — Member</option>
+          </select>
+          <span style="font-size: 11px; color: #A7ABBB;">Only members who've accepted their invite show up here — pending invites can't be transferred to.</span>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">You'll become an admin. Both of you get notified.</p>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeTransfer}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Transfer</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{deleteOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 440px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: #A9302B;">Delete Acme Inc?</h2>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">This deletes all 6 projects and everything in them. Every member loses access immediately. It's gone for good after the grace period.</p>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Type <b>acme-inc</b> to confirm</label>
+          <input placeholder="acme-inc">
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeDelete}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #F0453F; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Delete workspace</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      transferOpen: !!this.state.transferOpen,
+      openTransfer: () => this.setState({ transferOpen: true }),
+      closeTransfer: () => this.setState({ transferOpen: false }),
+      deleteOpen: !!this.state.deleteOpen,
+      openDelete: () => this.setState({ deleteOpen: true }),
+      closeDelete: () => this.setState({ deleteOpen: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

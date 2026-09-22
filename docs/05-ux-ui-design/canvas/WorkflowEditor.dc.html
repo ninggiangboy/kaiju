@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Workflows — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .navitem{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13px;font-weight:600;color:#767B8C;cursor:pointer;}
+  .navitem.active{background:#EDF0FE;color:#4C63F5;}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;overflow:hidden;}
+  .wfrow{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid #F5F6FA;cursor:pointer;font-size:13px;font-weight:600;color:#767B8C;}
+  .wfrow:last-child{border-bottom:none;}
+  .wfrow.active{background:#EDF0FE;color:#4C63F5;}
+  .dot{width:8px;height:8px;border-radius:999px;flex-shrink:0;}
+  .schip{display:flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 10px;border-radius:999px;background:#F7F8FC;border:1px solid #ECEEF6;font-size:12px;font-weight:700;white-space:nowrap;}
+  table{border-collapse:collapse;width:100%;}
+  th,td{text-align:left;font-size:12px;padding:9px 10px;border-bottom:1px solid #F5F6FA;vertical-align:top;}
+  th{font-size:11px;font-weight:700;color:#A7ABBB;text-transform:uppercase;}
+  .tagchip{display:inline-flex;align-items:center;font-size:10.5px;font-weight:600;color:#767B8C;background:#F0F1F7;border-radius:6px;padding:2px 7px;margin:2px 4px 2px 0;}
+  input,select{height:34px;box-sizing:border-box;padding:0 10px;font-size:12.5px;font-family:inherit;color:#1B1D27;background:#FAFBFE;border:1px solid #DEE1EC;border-radius:7px;}
+  input:focus,select:focus{outline:none;border-color:#4C63F5!important;box-shadow:0 0 0 3px #EDF0FE}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="Sidebar" active="settings" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Workspace settings / Workflows" search-placeholder="Search…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 32px 40px; box-sizing: border-box;">
+      <div style="display: flex; align-items: center; margin-bottom: 20px;">
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Workflows</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C; max-width: 620px;">Statuses are shared workspace-wide. A workflow is the set of statuses and transitions between them for one kind of work — mapped to issue types in <a href="WorkflowSchemes.dc.html">workflow schemes</a>.</p>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{openNewWorkflow}}" style="height: 36px; padding: 0 16px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B1D27" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          New workflow
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 20px; align-items: flex-start;">
+        <div style="width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 12px;">
+          <div class="card">
+            <sc-for list="{{workflows}}" as="w" hint-placeholder-count="2">
+              <div onClick="{{selectWorkflow(w.name)}}" class="wfrow {{w.activeCls}}">
+                <span style="flex-grow: 1;">{{w.name}}</span>
+                <sc-if value="{{w.hasDraft}}" hint-placeholder-val="{{false}}">
+                  <span style="width: 6px; height: 6px; border-radius: 999px; background: #FF9A3D;" title="Unpublished draft changes"></span>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <div class="card" style="padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; align-items: center;">
+              <span style="font-size: 12px; font-weight: 700;">Statuses</span>
+              <div style="flex-grow: 1;"></div>
+              <svg onClick="{{openNewStatus}}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2.6" style="cursor:pointer;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </div>
+            <sc-for list="{{statuses}}" as="s" hint-placeholder-count="5">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="dot" style="background: {{s.color}};"></span>
+                <span style="font-size: 12px; font-weight: 600; flex-grow: 1;">{{s.name}}</span>
+                <span style="font-size: 10px; color: #A7ABBB;">{{s.group}}</span>
+              </div>
+            </sc-for>
+            <span style="font-size: 10.5px; color: #A7ABBB;">Shared by every workflow. Deleting one that's still referenced is blocked.</span>
+          </div>
+        </div>
+
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+
+          <sc-if value="{{isDraft}}" hint-placeholder-val="{{true}}">
+            <div style="display: flex; align-items: center; gap: 10px; background: #FFF8F0; border: 1px solid #F3DFB8; border-radius: 10px; padding: 10px 14px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A5A0F" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
+              <span style="font-size: 12px; color: #8A5A0F; flex-grow: 1;">Editing a <b>draft</b>. Issues running <b>{{wfName}}</b> keep using the published version until you publish.</span>
+              <div onClick="{{openPublish}}" style="height: 30px; padding: 0 14px; border-radius: 7px; background: #4C63F5; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; cursor: pointer; white-space: nowrap;">Publish…</div>
+            </div>
+          </sc-if>
+
+          <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-size: 13px; font-weight: 700;">{{wfName}} — states in this workflow</span>
+              <div onClick="{{openAddStateToWorkflow}}" style="font-size: 11.5px; font-weight: 700; color: #4C63F5; cursor: pointer;">+ Add existing status</div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <sc-for list="{{wfStates}}" as="s" hint-placeholder-count="4">
+                <div class="schip">
+                  <span class="dot" style="background: {{s.color}};"></span>
+                  {{s.name}}
+                  <sc-if value="{{s.isInitial}}" hint-placeholder-val="{{false}}">
+                    <span style="font-size: 9.5px; color: #4C63F5; font-weight: 800;">START</span>
+                  </sc-if>
+                  <sc-if value="{{s.noExit}}" hint-placeholder-val="{{false}}">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2.6" title="No outgoing transition — issues can get stuck here"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-size: 13px; font-weight: 700;">Diagram</span>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 11px; color: #A7ABBB;">{{diagramHint}}</span>
+                <div onClick="{{toggleConnectMode}}" style="height: 28px; padding: 0 12px; border-radius: 999px; background: {{connectBg}}; border: 1px solid #DEE1EC; color: {{connectFg}}; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 5px; cursor: pointer; white-space: nowrap;">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="{{connectFg}}" stroke-width="2.6"><circle cx="6" cy="6" r="2.5"></circle><circle cx="18" cy="18" r="2.5"></circle><line x1="8" y1="8" x2="16" y2="16"></line></svg>
+                  Connect
+                </div>
+              </div>
+            </div>
+            <div style="position: relative; width: 100%; height: 320px; background: #FAFBFE; border: 1px solid #ECEEF6; border-radius: 10px; overflow: hidden; background-image: radial-gradient(#ECEEF6 1px, transparent 1px); background-size: 20px 20px; box-sizing: border-box;">
+              <svg width="100%" height="100%" viewBox="0 0 680 320" style="position: absolute; inset: 0; pointer-events: none;">
+                <defs>
+                  <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#A7ABBB"></path></marker>
+                  <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#F0453F"></path></marker>
+                  <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#8B6FFF"></path></marker>
+                </defs>
+                <sc-for list="{{lines}}" as="l" hint-placeholder-count="6">
+                  <path d="{{l.d}}" fill="none" stroke="{{l.stroke}}" stroke-width="1.8" stroke-dasharray="{{l.dash}}" marker-end="url(#{{l.marker}})"></path>
+                </sc-for>
+              </svg>
+
+              <sc-if value="{{showAnyNode}}" hint-placeholder-val="{{false}}">
+                <div style="position: absolute; left: {{anyX}}px; top: {{anyY}}px; width: 110px; height: 40px; border-radius: 10px; border: 1.5px dashed #C3C6D4; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #A7ABBB; box-sizing: border-box;">Any status</div>
+              </sc-if>
+
+              <sc-for list="{{nodes}}" as="n" hint-placeholder-count="5">
+                <div onClick="{{clickNode(n.name)}}" style="position: absolute; left: {{n.x}}px; top: {{n.y}}px; width: 130px; height: 50px; border-radius: 10px; background: #fff; border: 2px solid {{n.borderColor}}; box-shadow: {{n.shadow}}; display: flex; align-items: center; gap: 8px; padding: 0 10px; cursor: pointer; box-sizing: border-box;">
+                  <span class="dot" style="background: {{n.color}}; flex-shrink: 0;"></span>
+                  <span style="font-size: 12px; font-weight: 700; flex-grow: 1;">{{n.name}}</span>
+                  <sc-if value="{{n.isInitial}}" hint-placeholder-val="{{false}}">
+                    <span style="font-size: 8.5px; color: #4C63F5; font-weight: 800;">START</span>
+                  </sc-if>
+                </div>
+              </sc-for>
+
+              <sc-for list="{{slots}}" as="sl" hint-placeholder-count="12">
+                <sc-if value="{{sl.empty}}" hint-placeholder-val="{{false}}">
+                  <div onClick="{{dropOnSlot(sl.i)}}" style="position: absolute; left: {{sl.x}}px; top: {{sl.y}}px; width: 130px; height: 50px; {{sl.style}}"></div>
+                </sc-if>
+              </sc-for>
+            </div>
+            <span style="font-size: 10.5px; color: #A7ABBB;">Pick up a status and drop it on an open grid spot to rearrange the diagram, or turn on Connect and click two statuses to draw a new transition between them.</span>
+          </div>
+
+          <div class="card">
+            <div style="display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid #F5F6FA;">
+              <span style="font-size: 13px; font-weight: 700;">Transitions</span>
+              <div style="flex-grow: 1;"></div>
+              <div onClick="{{openNewTransition}}" style="height: 30px; padding: 0 12px; border-radius: 7px; background: #EDF0FE; color: #4C63F5; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add transition
+              </div>
+            </div>
+            <table>
+              <tr><th style="width:34px;"></th><th>From</th><th>To</th><th>Condition</th><th>Required fields</th><th>After transition</th><th></th></tr>
+              <sc-for list="{{transitions}}" as="t" hint-placeholder-count="6">
+                <tr>
+                  <td>
+                    <sc-if value="{{t.isGlobal}}" hint-placeholder-val="{{false}}"><span class="tagchip" style="background:#F1EDFF;color:#8B6FFF;" title="Global — available from any status">GLOBAL</span></sc-if>
+                    <sc-if value="{{t.isSelf}}" hint-placeholder-val="{{false}}"><span class="tagchip" title="Self-transition — runs actions without changing status">SELF</span></sc-if>
+                  </td>
+                  <td style="font-weight:600;">{{t.from}}</td>
+                  <td style="font-weight:600;">{{t.to}}</td>
+                  <td>
+                    <sc-if value="{{t.hasCondition}}" hint-placeholder-val="{{false}}"><span class="tagchip">{{t.condition}}</span></sc-if>
+                    <sc-if value="{{t.conditionBroken}}" hint-placeholder-val="{{false}}"><span class="tagchip" style="background:#FDEBEA;color:#A9302B;">role deleted — nobody satisfies this</span></sc-if>
+                  </td>
+                  <td><sc-if value="{{t.hasRequired}}" hint-placeholder-val="{{false}}"><span class="tagchip">{{t.required}}</span></sc-if></td>
+                  <td><sc-if value="{{t.hasAction}}" hint-placeholder-val="{{false}}"><span class="tagchip">{{t.action}}</span></sc-if></td>
+                  <td>
+                    <svg onClick="{{deleteTransition(t.id)}}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.2" style="cursor:pointer;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"></path></svg>
+                  </td>
+                </tr>
+              </sc-for>
+            </table>
+          </div>
+
+          <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 10px; max-width: 480px;">
+            <div style="display: flex; align-items: center;">
+              <span style="font-size: 13px; font-weight: 700;">Resolutions</span>
+              <div style="flex-grow: 1;"></div>
+              <svg onClick="{{openNewResolution}}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2.6" style="cursor:pointer;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </div>
+            <span style="font-size: 11px; color: #A7ABBB;">Set by the "Set resolution" action on transitions into a Done-group status, like PAY-142's Done transition.</span>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <sc-for list="{{resolutions}}" as="r" hint-placeholder-count="4">
+                <span class="tagchip" style="background:#F0F1F7;color:#1B1D27;padding:4px 9px;">{{r}}</span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{publishOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 560px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Publish {{wfName}}</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closePublish}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 8px; background: #FDEBEA; border: 1px solid #F6C9C6; border-radius: 8px; padding: 10px 12px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A9302B" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+          <span style="font-size: 12px; color: #A9302B; line-height: 1.5;">Your draft removes <b>Blocked</b>, which <b>3 issues</b> currently stand at. Map where they go before publishing.</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Move the 3 issues at "Blocked" to</label>
+          <select>
+            <option>In progress</option>
+            <option>To do</option>
+            <option>Done</option>
+          </select>
+          <span style="font-size: 11px; color: #A7ABBB;">Runs in batches and can be undone right after — the mapping used is kept for the rollback.</span>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closePublish}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div onClick="{{confirmPublish}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Migrate &amp; publish</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{newStatusOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 400px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">New status</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeNewStatus}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Name</label>
+          <input placeholder="e.g. In review">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Status group</label>
+          <select>
+            <option>To do</option>
+            <option>In progress</option>
+            <option>Done</option>
+          </select>
+          <span style="font-size: 11px; color: #A7ABBB;">Group is what survives switching workflows later — pick it carefully.</span>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeNewStatus}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div onClick="{{closeNewStatus}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Create</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const statusRows = [
+      ['To do', '#A7ABBB', 'To do'],
+      ['In progress', '#8B6FFF', 'In progress'],
+      ['In review', '#FF9A3D', 'In progress'],
+      ['Blocked', '#F0453F', 'In progress'],
+      ['Done', '#1A8F5C', 'Done'],
+    ];
+    const wfNames = ['Software workflow', 'Bug triage workflow'];
+    const active = this.state.wf ?? wfNames[0];
+
+    const transRows = active === 'Software workflow' ? [
+      ['t1', 'Create', 'To do', false, false, '', '', false, '', false, ''],
+      ['t2', 'To do', 'In progress', false, false, '', '', true, 'Assignee', true, 'Auto-assign to me'],
+      ['t3', 'In progress', 'In review', false, false, '', '', false, '', false, ''],
+      ['t4', 'In review', 'In progress', false, false, '', '', false, '', false, ''],
+      ['t5', 'In review', 'Done', false, false, '', '', true, 'Resolution', true, 'Set resolution'],
+      ['t6', 'Any status', 'Blocked', true, false, 'Contributor or above', false, '', false, ''],
+      ['t7', 'Blocked', 'In progress', false, false, '', '', false, '', false, ''],
+    ] : [
+      ['t1', 'Create', 'To do', false, false, '', '', false, '', false, ''],
+      ['t2', 'To do', 'In progress', false, true, 'Role deleted', false, '', false, ''],
+      ['t3', 'In progress', 'Done', false, false, '', '', true, 'Resolution', true, 'Set resolution'],
+    ];
+
+    const wfStateNames = active === 'Software workflow'
+      ? ['To do', 'In progress', 'In review', 'Blocked', 'Done']
+      : ['To do', 'In progress', 'Done'];
+
+    const DEFAULT_SLOTS = {
+      'Software workflow': { 'To do': 0, 'In progress': 1, 'In review': 2, 'Done': 3, 'Blocked': 5 },
+      'Bug triage workflow': { 'To do': 0, 'In progress': 1, 'Done': 2 },
+    };
+    const ANY_SLOT = 9;
+    const slotToXY = (i) => ({ x: 20 + (i % 4) * 160, y: 20 + Math.floor(i / 4) * 100 });
+    const colorOf = (name) => {
+      const row = statusRows.find((r) => r[0] === name);
+      return row ? row[1] : '#A7ABBB';
+    };
+
+    const nodePosAll = this.state.nodePos ?? {};
+    const wfSlots = { ...DEFAULT_SLOTS[active], ...(nodePosAll[active] ?? {}) };
+
+    const selectedNode = this.state.selectedNode ?? null;
+    const connectMode = !!this.state.connectMode;
+    const pendingConnectFrom = this.state.pendingConnectFrom ?? null;
+    const pickupActive = !connectMode && !!selectedNode;
+
+    const deletedIdsAll = this.state.deletedTransitionIds ?? {};
+    const deletedIds = deletedIdsAll[active] ?? [];
+    const customAll = this.state.customTransitions ?? {};
+    const customForWf = customAll[active] ?? [];
+
+    const liveTransRows = transRows.filter(([id]) => !deletedIds.includes(id));
+
+    const centerOf = (name) => {
+      if (name === 'Any status') {
+        const p = slotToXY(ANY_SLOT);
+        return { x: p.x + 55, y: p.y + 20 };
+      }
+      const p = slotToXY(wfSlots[name]);
+      return { x: p.x + 65, y: p.y + 25 };
+    };
+
+    const rawEdges = [
+      ...liveTransRows
+        .filter(([, from, to]) => from !== 'Create' && from !== to)
+        .map(([id, from, to, isGlobal, conditionBroken]) => ({
+          id, from: isGlobal ? 'Any status' : from, to, broken: conditionBroken, dashed: isGlobal,
+        })),
+      ...customForWf.map((c) => ({ id: c.id, from: c.from, to: c.to, broken: false, dashed: false })),
+    ];
+
+    const lines = rawEdges.map((e) => {
+      const c1 = centerOf(e.from);
+      const c2 = centerOf(e.to);
+      const dx = c2.x - c1.x;
+      const dy = c2.y - c1.y;
+      const len = Math.max(1, Math.sqrt(dx * dx + dy * dy));
+      const ux = dx / len;
+      const uy = dy / len;
+      const trim = 42;
+      const x1 = c1.x + ux * trim;
+      const y1 = c1.y + uy * trim;
+      const x2 = c2.x - ux * trim;
+      const y2 = c2.y - uy * trim;
+      const hasReverse = rawEdges.some((o) => o.from === e.to && o.to === e.from);
+      const perp = hasReverse ? (e.from < e.to ? 14 : -14) : 0;
+      const mx = (x1 + x2) / 2 + -uy * perp;
+      const my = (y1 + y2) / 2 + ux * perp;
+      return {
+        d: `M ${x1.toFixed(1)} ${y1.toFixed(1)} Q ${mx.toFixed(1)} ${my.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`,
+        stroke: e.broken ? '#F0453F' : e.dashed ? '#8B6FFF' : '#A7ABBB',
+        marker: e.broken ? 'arrowRed' : e.dashed ? 'arrowBlue' : 'arrow',
+        dash: e.dashed ? '5,4' : e.broken ? '3,3' : 'none',
+      };
+    });
+
+    const anyXY = slotToXY(ANY_SLOT);
+    const occupiedSlots = new Set(Object.values(wfSlots));
+
+    const diagramHint = connectMode
+      ? (pendingConnectFrom ? `Click a status to connect from ${pendingConnectFrom}` : 'Click a status to start a connection')
+      : (selectedNode ? `Click an open spot to drop ${selectedNode}` : 'Click a status to pick it up, or turn on Connect');
+
+    return {
+      workflows: wfNames.map((name) => ({
+        name, activeCls: name === active ? 'active' : '',
+        hasDraft: name === 'Software workflow',
+      })),
+      selectWorkflow: (name) => () => this.setState({ wf: name, selectedNode: null, connectMode: false, pendingConnectFrom: null }),
+      wfName: active,
+      isDraft: active === 'Software workflow',
+
+      statuses: statusRows.map(([name, color, group]) => ({ name, color, group })),
+      wfStates: wfStateNames.map((name) => {
+        const row = statusRows.find((r) => r[0] === name);
+        return {
+          name, color: row[1],
+          isInitial: name === 'To do',
+          noExit: name === 'Blocked' && active === 'Bug triage workflow',
+        };
+      }),
+      openAddStateToWorkflow: () => {},
+
+      diagramHint,
+      connectBg: connectMode ? '#4C63F5' : '#fff',
+      connectFg: connectMode ? '#fff' : '#767B8C',
+      toggleConnectMode: () => this.setState({ connectMode: !connectMode, pendingConnectFrom: null, selectedNode: null }),
+      showAnyNode: rawEdges.some((e) => e.from === 'Any status'),
+      anyX: anyXY.x,
+      anyY: anyXY.y,
+      lines,
+      nodes: wfStateNames.map((name) => {
+        const p = slotToXY(wfSlots[name]);
+        const isSel = selectedNode === name || pendingConnectFrom === name;
+        return {
+          name, x: p.x, y: p.y,
+          color: colorOf(name),
+          borderColor: isSel ? '#4C63F5' : '#DEE1EC',
+          shadow: isSel ? '0 0 0 3px #EDF0FE' : '0 2px 6px rgba(27,29,39,0.08)',
+          isInitial: name === 'To do',
+        };
+      }),
+      clickNode: (name) => () => {
+        if (connectMode) {
+          if (!pendingConnectFrom) {
+            this.setState({ pendingConnectFrom: name });
+          } else if (pendingConnectFrom === name) {
+            this.setState({ pendingConnectFrom: null });
+          } else {
+            this.setState({
+              customTransitions: { ...customAll, [active]: [...customForWf, { id: 'c' + Date.now(), from: pendingConnectFrom, to: name }] },
+              pendingConnectFrom: null,
+            });
+          }
+        } else {
+          this.setState({ selectedNode: selectedNode === name ? null : name });
+        }
+      },
+      slots: Array.from({ length: 12 }, (_, i) => {
+        const p = slotToXY(i);
+        const isEmpty = pickupActive && !occupiedSlots.has(i);
+        return {
+          i, x: p.x, y: p.y, empty: isEmpty,
+          style: 'box-sizing:border-box;border-radius:10px;cursor:pointer;border:1.5px dashed #4C63F5;background:rgba(76,99,245,0.05);',
+        };
+      }),
+      dropOnSlot: (i) => () => {
+        if (!selectedNode) return;
+        this.setState({ nodePos: { ...nodePosAll, [active]: { ...wfSlots, [selectedNode]: i } }, selectedNode: null });
+      },
+
+      transitions: [
+        ...liveTransRows.map(([id, from, to, isGlobal, conditionBroken, condition, _u1, hasRequired, required, hasAction, action]) => ({
+          id, from, to, isGlobal, isSelf: from === to,
+          conditionBroken, hasCondition: !!condition, condition,
+          hasRequired, required, hasAction, action,
+        })),
+        ...customForWf.map((c) => ({
+          id: c.id, from: c.from, to: c.to, isGlobal: c.from === 'Any status', isSelf: c.from === c.to,
+          conditionBroken: false, hasCondition: false, condition: '',
+          hasRequired: false, required: '', hasAction: false, action: '',
+        })),
+      ],
+      deleteTransition: (id) => () => {
+        if (String(id).startsWith('c')) {
+          this.setState({ customTransitions: { ...customAll, [active]: customForWf.filter((c) => c.id !== id) } });
+        } else {
+          this.setState({ deletedTransitionIds: { ...deletedIdsAll, [active]: [...deletedIds, id] } });
+        }
+      },
+      openNewTransition: () => {},
+
+      resolutions: ['Fixed', "Won't fix", 'Duplicate', 'Cannot reproduce'],
+      openNewResolution: () => {},
+
+      publishOpen: !!this.state.publishOpen,
+      openPublish: () => this.setState({ publishOpen: true }),
+      closePublish: () => this.setState({ publishOpen: false }),
+      confirmPublish: () => this.setState({ publishOpen: false }),
+
+      newStatusOpen: !!this.state.newStatusOpen,
+      openNewStatus: () => this.setState({ newStatusOpen: true }),
+      closeNewStatus: () => this.setState({ newStatusOpen: false }),
+
+      openNewWorkflow: () => {},
+    };
+  }
+}
+</script>
+</body>
+</html>

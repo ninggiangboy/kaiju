@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Screens — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .navitem{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13px;font-weight:600;color:#767B8C;cursor:pointer;}
+  .navitem.active{background:#EDF0FE;color:#4C63F5;}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;overflow:hidden;}
+  .wfrow{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid #F5F6FA;cursor:pointer;font-size:13px;font-weight:600;color:#767B8C;}
+  .wfrow:last-child{border-bottom:none;}
+  .wfrow.active{background:#EDF0FE;color:#4C63F5;}
+  .frow{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #F5F6FA;}
+  .frow:last-child{border-bottom:none;}
+  .iconbtn{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+  .iconbtn:hover{background:#F0F1F7;}
+  select{height:30px;box-sizing:border-box;padding:0 8px;font-size:11.5px;font-family:inherit;color:#1B1D27;background:#FAFBFE;border:1px solid #DEE1EC;border-radius:6px;}
+  .row{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 44px;align-items:center;padding:12px 20px;border-bottom:1px solid #F5F6FA;}
+  .row:last-child{border-bottom:none;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="settings" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Settings / Screens" search-placeholder="Search…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 32px 40px; box-sizing: border-box;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+        <div style="width: 40px; height: 40px; border-radius: 10px; background: #FFEEE9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: #FF6A45;">PAY</span>
+        </div>
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Payments Platform settings</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">Software project · Open in workspace · Led by Jamie Diaz</p>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 24px; align-items: flex-start;">
+        <div style="width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0;">
+          <a href="ProjectSettings.dc.html" class="navitem">Details</a>
+          <a href="ProjectIssueTypes.dc.html" class="navitem">Issue types</a>
+          <a href="ProjectFields.dc.html" class="navitem">Fields</a>
+          <div class="navitem active">Screens</div>
+          <a href="ProjectMembers.dc.html" class="navitem">Members</a>
+          <a href="ProjectComponents.dc.html" class="navitem">Components</a>
+          <a href="PermissionSchemes.dc.html" class="navitem">Permission scheme</a>
+          <a href="ProjectChangeLog.dc.html" class="navitem">Change log</a>
+          <a href="ProjectNotifications.dc.html" class="navitem">Notifications</a>
+        </div>
+
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 20px; min-width: 0;">
+          <p style="margin: 0; font-size: 12px; color: #767B8C; max-width: 700px;">A screen is which fields show up. A screen scheme maps a screen to each of create/edit/view per issue type, so the same type can show fewer fields on the quick-create than on the full view.</p>
+
+          <div style="display: flex; gap: 20px; align-items: flex-start;">
+            <div style="width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 12px;">
+              <div class="card">
+                <sc-for list="{{screens}}" as="s" hint-placeholder-count="2">
+                  <div onClick="{{selectScreen(s.name)}}" class="wfrow {{s.activeCls}}">{{s.name}}</div>
+                </sc-for>
+              </div>
+              <div onClick="{{openNewScreen}}" style="font-size: 11.5px; font-weight: 700; color: #4C63F5; cursor: pointer; padding: 0 4px;">+ New screen</div>
+            </div>
+
+            <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 10px; max-width: 560px;">
+              <sc-if value="{{missingRequiredOnCreate}}" hint-placeholder-val="{{false}}">
+                <div style="display: flex; align-items: flex-start; gap: 8px; background: #FDEBEA; border: 1px solid #F6C9C6; border-radius: 8px; padding: 10px 12px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A9302B" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+                  <span style="font-size: 12px; color: #A9302B; line-height: 1.5;"><b>Customer tier</b> is required on Bug in this project, but <b>{{screenName}}</b> doesn't include it — Bug can't be created through a scheme using this screen until you add it.</span>
+                </div>
+              </sc-if>
+
+              <div class="card">
+                <sc-for list="{{screenFields}}" as="f" hint-placeholder-count="5">
+                  <div class="frow">
+                    <div onClick="{{moveUp(f.id)}}" class="iconbtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.6"><path d="M18 15l-6-6-6 6"></path></svg></div>
+                    <div onClick="{{moveDown(f.id)}}" class="iconbtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.6"><path d="M6 9l6 6 6-6"></path></svg></div>
+                    <span style="font-size: 12.5px; font-weight: 600; flex-grow: 1;">{{f.name}}</span>
+                    <select style="width: 120px;">
+                      <option>Details tab</option>
+                      <option>More fields tab</option>
+                    </select>
+                    <div onClick="{{removeField(f.id)}}" class="iconbtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="position: relative;">
+                <div onClick="{{toggleAddField}}" style="height: 32px; padding: 0 12px; border-radius: 7px; background: #EDF0FE; color: #4C63F5; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  Add field
+                </div>
+                <sc-if value="{{addFieldOpen}}" hint-placeholder-val="{{false}}">
+                  <div style="position: absolute; top: 36px; left: 0; width: 220px; background: #fff; border: 1px solid #ECEEF6; border-radius: 10px; box-shadow: 0 12px 28px rgba(27,29,39,0.14); padding: 6px; z-index: 10;">
+                    <sc-for list="{{availableFields}}" as="af" hint-placeholder-count="3">
+                      <div onClick="{{addField(af.name)}}" style="padding: 8px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">{{af.name}}</div>
+                    </sc-for>
+                    <sc-if value="{{noAvailableFields}}" hint-placeholder-val="{{false}}">
+                      <div style="padding: 8px 10px; font-size: 11.5px; color: #A7ABBB;">Every field on this project is already on the screen.</div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px; max-width: 900px;">
+            <h2 style="margin: 8px 0 0; font-size: 14px; font-weight: 700;">Screen schemes</h2>
+            <div class="card">
+              <div class="row" style="background: #FAFBFE; padding: 10px 20px;">
+                <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Scheme</span>
+                <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Create</span>
+                <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Edit</span>
+                <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">View</span>
+                <span></span>
+              </div>
+              <sc-for list="{{schemes}}" as="sc" hint-placeholder-count="2">
+                <div class="row" onClick="{{openScheme(sc.name)}}" style="cursor: pointer;">
+                  <span style="font-size: 13px; font-weight: 700;">{{sc.name}}</span>
+                  <span style="font-size: 12px; color: #767B8C;">{{sc.create}}</span>
+                  <span style="font-size: 12px; color: #767B8C;">{{sc.edit}}</span>
+                  <span style="font-size: 12px; color: #767B8C;">{{sc.view}}</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.4"><path d="M9 6l6 6-6 6"></path></svg>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{schemeOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 600px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">{{schemeTarget}}</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeScheme}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <sc-if value="{{schemeUsedByOthers}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; align-items: flex-start; gap: 8px; background: #FFF8F0; border: 1px solid #F3DFB8; border-radius: 8px; padding: 10px 12px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A5A0F" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+            <span style="font-size: 12px; color: #8A5A0F;">Used by <b>{{schemeProjectCount}} other projects</b>. Saving changes their create/edit/view screens right away.</span>
+          </div>
+        </sc-if>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: grid; grid-template-columns: 90px 1fr 1fr 1fr; gap: 8px; font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">
+            <span>Type</span><span>Create</span><span>Edit</span><span>View</span>
+          </div>
+          <sc-for list="{{typeRows}}" as="t" hint-placeholder-count="5">
+            <div style="display: grid; grid-template-columns: 90px 1fr 1fr 1fr; gap: 8px; align-items: center;">
+              <span style="font-size: 12.5px; font-weight: 600;">{{t.name}}</span>
+              <select><option>Default screen</option><option>Bug intake screen</option></select>
+              <select><option>Default screen</option><option>Bug intake screen</option></select>
+              <select><option>Default screen</option><option>Bug intake screen</option></select>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeScheme}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div onClick="{{closeScheme}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Save changes</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const screenNames = ['Default screen', 'Bug intake screen'];
+    const activeScreen = this.state.screen ?? screenNames[0];
+
+    const allFieldsByScreen = {
+      'Default screen': ['Summary', 'Description', 'Assignee', 'Priority', 'Story points'],
+      'Bug intake screen': ['Summary', 'Description', 'Assignee', 'Priority'],
+    };
+    const removedByScreen = this.state.removed ?? {};
+    const orderByScreen = this.state.order ?? {};
+    const baseFields = allFieldsByScreen[activeScreen];
+    const order = orderByScreen[activeScreen] ?? baseFields;
+    const removed = removedByScreen[activeScreen] ?? [];
+    const fieldList = order.filter((f) => !removed.includes(f) && baseFields.includes(f));
+
+    const allProjectFields = ['Summary', 'Description', 'Assignee', 'Priority', 'Story points', 'Customer tier', 'Due reason', 'External ticket URL'];
+    const available = allProjectFields.filter((f) => !fieldList.includes(f));
+
+    const schemeRows = [
+      ['Default scheme', 'Default screen', 'Default screen', 'Default screen', 6],
+      ['Bug intake scheme', 'Bug intake screen', 'Default screen', 'Default screen', 1],
+    ];
+    const types = ['Epic', 'Story', 'Task', 'Sub-task', 'Bug'];
+
+    return {
+      screens: screenNames.map((name) => ({ name, activeCls: name === activeScreen ? 'active' : '' })),
+      selectScreen: (name) => () => this.setState({ screen: name, addFieldOpen: false }),
+      openNewScreen: () => {},
+      screenName: activeScreen,
+
+      missingRequiredOnCreate: activeScreen === 'Default screen' && !fieldList.includes('Customer tier'),
+
+      screenFields: fieldList.map((name, i) => ({ id: activeScreen + '::' + name, name })),
+      moveUp: (id) => () => {
+        const name = id.split('::')[1];
+        const i = fieldList.indexOf(name);
+        if (i <= 0) return;
+        const next = [...fieldList];
+        [next[i - 1], next[i]] = [next[i], next[i - 1]];
+        this.setState({ order: { ...orderByScreen, [activeScreen]: next } });
+      },
+      moveDown: (id) => () => {
+        const name = id.split('::')[1];
+        const i = fieldList.indexOf(name);
+        if (i === -1 || i >= fieldList.length - 1) return;
+        const next = [...fieldList];
+        [next[i + 1], next[i]] = [next[i], next[i + 1]];
+        this.setState({ order: { ...orderByScreen, [activeScreen]: next } });
+      },
+      removeField: (id) => () => {
+        const name = id.split('::')[1];
+        this.setState({ removed: { ...removedByScreen, [activeScreen]: [...removed, name] } });
+      },
+      addFieldOpen: !!this.state.addFieldOpen,
+      toggleAddField: () => this.setState({ addFieldOpen: !this.state.addFieldOpen }),
+      availableFields: available.map((name) => ({ name })),
+      noAvailableFields: available.length === 0,
+      addField: (name) => () => {
+        this.setState({
+          order: { ...orderByScreen, [activeScreen]: [...fieldList, name] },
+          removed: { ...removedByScreen, [activeScreen]: removed.filter((r) => r !== name) },
+          addFieldOpen: false,
+        });
+      },
+
+      schemes: schemeRows.map(([name, create, edit, view]) => ({ name, create, edit, view })),
+      openScheme: (name) => () => {
+        const row = schemeRows.find((r) => r[0] === name);
+        this.setState({ schemeOpen: true, schemeTarget: name, schemeProjectCount: row ? row[4] : 0 });
+      },
+      schemeOpen: !!this.state.schemeOpen,
+      schemeTarget: this.state.schemeTarget ?? '',
+      schemeProjectCount: this.state.schemeProjectCount ?? 0,
+      schemeUsedByOthers: (this.state.schemeProjectCount ?? 0) > 1,
+      closeScheme: () => this.setState({ schemeOpen: false }),
+      typeRows: types.map((name) => ({ name })),
+    };
+  }
+}
+</script>
+</body>
+</html>

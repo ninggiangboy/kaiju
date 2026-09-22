@@ -17,7 +17,7 @@ với tên class, table và API trong code.
 | 02 | [Requirement](02-requirement/) | Yêu cầu chức năng, phi chức năng, ràng buộc | ✅ Hoàn thiện |
 | 03 | [Features & Use cases](03-features/) | Danh mục feature có trạng thái, roadmap theo phase, use case chi tiết | ✅ Hoàn thiện (use case: Phase 0–2) |
 | 04 | [System Design](04-system-design/) | Kiến trúc tổng thể, backend, frontend, realtime, vận hành | ✅ Hoàn thiện |
-| 05 | [UX/UI Design](05-ux-ui-design/) | Wireframe, design system, luồng màn hình | ⬜ Chưa bắt đầu |
+| 05 | [UX/UI Design](05-ux-ui-design/) | Wireframe, design system, luồng màn hình | 🟨 Đang làm |
 | 06 | [ERD](06-erd/) | Mô hình dữ liệu, entity, quan hệ, DDL | ⬜ Chưa bắt đầu |
 | 07 | [Detail Design](07-detail-design/) | Thiết kế mức code: package, class, API contract | ⬜ Chưa bắt đầu |
 

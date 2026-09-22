@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Issue link types — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .navitem{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13px;font-weight:600;color:#767B8C;cursor:pointer;}
+  .navitem.active{background:#EDF0FE;color:#4C63F5;}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;overflow:hidden;}
+  .row{display:grid;grid-template-columns:1fr 1fr 70px;align-items:center;padding:12px 20px;border-bottom:1px solid #F5F6FA;}
+  .row:last-child{border-bottom:none;}
+  input{height:36px;box-sizing:border-box;padding:0 12px;font-size:13px;font-family:inherit;color:#1B1D27;background:#FAFBFE;border:1px solid #DEE1EC;border-radius:8px;}
+  input:focus{outline:none;border-color:#4C63F5!important;box-shadow:0 0 0 3px #EDF0FE}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="Sidebar" active="settings" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Workspace settings / Issue link types" search-placeholder="Search…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 32px 40px; box-sizing: border-box;">
+      <div style="display: flex; align-items: center; margin-bottom: 20px;">
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Issue link types</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C; max-width: 560px;">Each type has a name for both directions — e.g. "blocks" on one issue shows as "is blocked by" on the other.</p>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{openCreate}}" style="height: 36px; padding: 0 16px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          New link type
+        </div>
+      </div>
+
+      <div class="card" style="max-width: 720px;">
+        <div class="row" style="background: #FAFBFE; padding: 10px 20px;">
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Forward name</span>
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Reverse name</span>
+          <span></span>
+        </div>
+        <sc-for list="{{types}}" as="t" hint-placeholder-count="6">
+          <div class="row">
+            <span style="font-size: 13px; font-weight: 700;">{{t.forward}}</span>
+            <span style="font-size: 13px; color: #767B8C;">{{t.reverse}}</span>
+            <sc-if value="{{t.builtin}}" hint-placeholder-val="{{false}}">
+              <span style="font-size: 11px; color: #C3C6D4;">Built-in</span>
+            </sc-if>
+            <sc-if value="{{t.editable}}" hint-placeholder-val="{{true}}">
+              <svg onClick="{{openDelete(t.forward, t.usage)}}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2" style="cursor:pointer;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"></path></svg>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{createOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 400px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">New link type</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeCreate}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Forward name</label>
+          <input placeholder="e.g. depends on">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Reverse name</label>
+          <input placeholder="e.g. is a dependency of">
+          <span style="font-size: 11px; color: #A7ABBB;">Shown on the other issue when this type is used to link them.</span>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeCreate}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Create</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{deleteOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 420px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700;">Delete "{{deleteTarget}}"?</h2>
+        <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">{{deleteUsage}} existing links use this type. Choose what happens to them.</p>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div onClick="{{selectMode('remove')}}" style="display: flex; gap: 10px; padding: 10px 12px; border: 1px solid {{removeBorder}}; background: {{removeBg}}; border-radius: 8px; cursor: pointer;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2" style="margin-top:1px;flex-shrink:0;"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5" fill="{{removeDot}}" stroke="none"></circle></svg>
+            <span style="font-size: 13px; font-weight: 600;">Remove those links entirely</span>
+          </div>
+          <div onClick="{{selectMode('convert')}}" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid {{convertBorder}}; background: {{convertBg}}; border-radius: 8px; cursor: pointer;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5" fill="{{convertDot}}" stroke="none"></circle></svg>
+            <span style="font-size: 13px; font-weight: 600;">Convert them to</span>
+            <select style="height: 28px; flex-grow: 1; font-size: 12px; border: 1px solid #DEE1EC; border-radius: 6px;">
+              <option>relates to / is related to</option>
+              <option>duplicates / is duplicated by</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeDelete}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #F0453F; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Delete type</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const rows = [
+      ['blocks', 'is blocked by', true, false, 0],
+      ['relates to', 'relates to', true, false, 0],
+      ['duplicates', 'is duplicated by', true, false, 0],
+      ['clones', 'is cloned by', true, false, 0],
+      ['depends on', 'is a dependency of', false, true, 6],
+      ['supersedes', 'is superseded by', false, true, 2],
+    ];
+    const mode = this.state.mode ?? 'remove';
+    return {
+      types: rows.map(([forward, reverse, builtin, editable, usage]) => ({ forward, reverse, builtin, editable, usage })),
+      createOpen: !!this.state.createOpen,
+      openCreate: () => this.setState({ createOpen: true }),
+      closeCreate: () => this.setState({ createOpen: false }),
+      deleteOpen: !!this.state.deleteOpen,
+      deleteTarget: this.state.deleteTarget ?? '',
+      deleteUsage: this.state.deleteUsage ?? 0,
+      openDelete: (forward, usage) => () => this.setState({ deleteOpen: true, deleteTarget: forward, deleteUsage: usage }),
+      closeDelete: () => this.setState({ deleteOpen: false }),
+      selectMode: (m) => () => this.setState({ mode: m }),
+      removeBorder: mode === 'remove' ? '#4C63F5' : '#DEE1EC',
+      removeBg: mode === 'remove' ? '#EDF0FE' : '#fff',
+      removeDot: mode === 'remove' ? '#4C63F5' : 'transparent',
+      convertBorder: mode === 'convert' ? '#4C63F5' : '#DEE1EC',
+      convertBg: mode === 'convert' ? '#EDF0FE' : '#fff',
+      convertDot: mode === 'convert' ? '#4C63F5' : 'transparent',
+    };
+  }
+}
+</script>
+</body>
+</html>

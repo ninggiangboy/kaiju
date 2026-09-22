@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Members — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .tab{font-size:13px;font-weight:600;color:#767B8C;padding:8px 4px;border-bottom:2px solid transparent;cursor:pointer;}
+  .tab.active{color:#1B1D27;border-bottom-color:#4C63F5;}
+  .row{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr 32px;align-items:center;padding:12px 16px;border-bottom:1px solid #F5F6FA;}
+  textarea::placeholder{color:#A7ABBB}
+  textarea:focus,select:focus{outline:none;border-color:#4C63F5!important;box-shadow:0 0 0 3px #EDF0FE}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="Sidebar" active="members" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Members" search-placeholder="Search members…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 32px 40px; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box;">
+
+      <div style="display: flex; align-items: center;">
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Members</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">5 active · 3 pending invites</p>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{openInvite}}" style="height: 36px; padding: 0 16px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Invite people
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 20px; border-bottom: 1px solid #ECEEF6;">
+        <span onClick="{{selectTab('active')}}" class="tab {{tabCls.active}}">Active (5)</span>
+        <span onClick="{{selectTab('pending')}}" class="tab {{tabCls.pending}}">Pending invites (3)</span>
+        <span onClick="{{selectTab('groups')}}" class="tab {{tabCls.groups}}">Groups (2)</span>
+      </div>
+
+      <sc-if value="{{showActive}}" hint-placeholder-val="{{true}}">
+        <div style="background: #FFFFFF; border: 1px solid #ECEEF6; border-radius: 12px; overflow: hidden;">
+          <div class="row" style="background: #FAFBFE; font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase; letter-spacing: 0.03em;">
+            <span>Member</span><span>Role</span><span>Status</span><span>Joined</span><span></span>
+          </div>
+
+          <sc-for list="{{members}}" as="m" hint-placeholder-count="5">
+            <div class="row" style="position: relative;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 30px; height: 30px; border-radius: 999px; background: {{m.bg}}; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: {{m.fg}}; flex-shrink: 0;">{{m.initials}}</div>
+                <div style="display: flex; flex-direction: column;">
+                  <span style="font-size: 13px; font-weight: 700;">{{m.name}}</span>
+                  <span style="font-size: 11px; color: #A7ABBB;">{{m.email}}</span>
+                </div>
+              </div>
+              <span style="font-size: 11px; font-weight: 700; color: {{m.roleFg}}; background: {{m.roleBg}}; border-radius: 999px; padding: 3px 10px; width: fit-content;">{{m.role}}</span>
+              <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: #1A8F5C; background: #E7F9F1; border-radius: 999px; padding: 3px 10px; width: fit-content;">Active</span>
+              <span style="font-size: 12px; color: #767B8C;">{{m.joined}}</span>
+              <svg onClick="{{m.toggleMenu}}" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2" style="cursor:pointer;"><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+              <sc-if value="{{m.menuOpen}}" hint-placeholder-val="{{false}}">
+                <div style="position: absolute; top: 40px; right: 16px; width: 200px; background: #fff; border: 1px solid #ECEEF6; border-radius: 10px; box-shadow: 0 12px 28px rgba(27,29,39,0.14); padding: 6px; z-index: 15; display: flex; flex-direction: column; gap: 1px;">
+                  <div onClick="{{m.openRole}}" style="padding: 8px 10px; border-radius: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer;">Change role</div>
+                  <sc-if value="{{m.isOwnerRow}}" hint-placeholder-val="{{false}}">
+                    <div style="padding: 8px 10px; font-size: 11px; color: #A7ABBB; line-height: 1.4;">The owner is removed by transferring ownership first, not from here.</div>
+                  </sc-if>
+                  <sc-if value="{{m.removable}}" hint-placeholder-val="{{true}}">
+                    <div onClick="{{m.openRemove}}" style="padding: 8px 10px; border-radius: 7px; font-size: 12.5px; font-weight: 600; color: #F0453F; cursor: pointer;">Remove from workspace</div>
+                  </sc-if>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{showPending}}" hint-placeholder-val="{{false}}">
+        <div style="background: #FFFFFF; border: 1px solid #ECEEF6; border-radius: 12px; overflow: hidden;">
+          <div class="row" style="background: #FAFBFE; font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase; letter-spacing: 0.03em;">
+            <span>Email</span><span>Role</span><span>Invited</span><span></span><span></span>
+          </div>
+          <sc-for list="{{pending}}" as="p" hint-placeholder-count="3">
+            <div class="row">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 30px; height: 30px; border-radius: 999px; background: #F0F1F7; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #A7ABBB; flex-shrink: 0;">{{p.initials}}</div>
+                <span style="font-size: 13px; font-weight: 700; color: #767B8C;">{{p.email}}</span>
+              </div>
+              <span style="font-size: 11px; font-weight: 700; color: #5B3FC9; background: #F1EDFF; border-radius: 999px; padding: 3px 10px; width: fit-content;">{{p.role}}</span>
+              <span style="font-size: 12px; color: #767B8C;">{{p.when}}</span>
+              <span onClick="{{p.resend}}" style="font-size: 12px; font-weight: 700; color: #4C63F5; cursor: pointer;">{{p.resendLabel}}</span>
+              <span onClick="{{p.revoke}}" style="font-size: 11px; font-weight: 700; color: #F0453F; cursor: pointer; text-align: right;">{{p.revokeLabel}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <span style="font-size: 11px; color: #A7ABBB;">An invite that's never accepted doesn't count toward seats and can be revoked any time before it is.</span>
+      </sc-if>
+
+      <sc-if value="{{showGroups}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; justify-content: flex-end;">
+            <div style="height: 32px; padding: 0 12px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Create group
+            </div>
+          </div>
+          <sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+            <div style="background: #FFFFFF; border: 1px solid #ECEEF6; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 12px;">
+              <div style="width: 32px; height: 32px; border-radius: 8px; background: {{g.bg}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{g.fg}}" stroke-width="2"><circle cx="9" cy="7" r="4"></circle><path d="M17 21v-2a4 4 0 00-3-3.87"></path><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"></path><path d="M14 3.13a4 4 0 010 7.75"></path></svg>
+              </div>
+              <div style="flex-grow: 1;">
+                <div style="font-size: 13.5px; font-weight: 700;">{{g.name}}</div>
+                <div style="font-size: 11px; color: #A7ABBB; margin-top: 1px;">{{g.count}} members · usable anywhere a permission scheme or comment visibility asks for a group</div>
+              </div>
+              <span style="font-size: 12px; font-weight: 700; color: #4C63F5; cursor: pointer;">Manage members</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{inviteOpen}}" hint-placeholder-val="{{true}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 460px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Invite people</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeInvite}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Email addresses</label>
+          <textarea placeholder="jordan@acme.dev, sam@acme.dev" style="height: 72px; box-sizing: border-box; padding: 10px 12px; font-size: 13px; font-family: inherit; color: #1B1D27; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px; resize: none;"></textarea>
+          <span style="font-size: 11px; color: #A7ABBB;">Separate with commas or new lines. Each email is checked and reported on its own line.</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Role for this batch</label>
+          <select style="height: 36px; box-sizing: border-box; padding: 0 10px; font-size: 13px; font-family: inherit; color: #1B1D27; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+            <option>Member</option>
+            <option>Admin</option>
+            <option>Guest</option>
+          </select>
+        </div>
+
+        <sc-if value="{{roleIsGuest}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 12px; font-weight: 600;">Projects they can access</label>
+            <div style="height: 36px; box-sizing: border-box; padding: 0 10px; display: flex; align-items: center; font-size: 13px; color: #A7ABBB; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">Select projects…</div>
+            <span style="font-size: 11px; color: #A7ABBB;">Guests only see the projects they're named on, and never the member directory.</span>
+          </div>
+        </sc-if>
+
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeInvite}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Send invites</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{roleOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 400px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Change role — {{roleTarget}}</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeRole}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Role</label>
+          <select style="height: 36px; box-sizing: border-box; padding: 0 10px; font-size: 13px; font-family: inherit; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+            <option>Admin</option>
+            <option>Member</option>
+            <option>Guest</option>
+          </select>
+          <span style="font-size: 11px; color: #A7ABBB;">Guest narrows access to named projects only and hides the member directory — switching to it doesn't remove access they already have elsewhere until you revisit it per project.</span>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeRole}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Save role</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{removeOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 420px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: #A9302B;">Remove {{roleTarget}}?</h2>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">They lose access to every project here right away. Issues they reported or were assigned keep their name — nothing about their work is deleted, they're deactivated, never erased.</p>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeRemove}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #F0453F; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Remove</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"roleIsGuest":{"editor":"boolean","default":false,"section":"Invite modal"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const roleColors = {
+      Owner: ['#4C63F5', '#EDF0FE'],
+      Admin: ['#FF6A45', '#FFEEE9'],
+      Member: ['#767B8C', '#F0F1F7'],
+      Guest: ['#5B3FC9', '#F1EDFF'],
+    };
+    const roster = [
+      ['Alex Lam','alex@acme.dev','Owner','Jan 2026','#EDF0FE','#4C63F5'],
+      ['Jamie Diaz','jamie@acme.dev','Admin','Jan 2026','#FFEEE9','#FF6A45'],
+      ['Priya Rao','priya@acme.dev','Member','Feb 2026','#E7F9F1','#1A8F5C'],
+      ['Sam Osei','sam@acme.dev','Member','Feb 2026','#F1EDFF','#8B6FFF'],
+      ['Nina Park','nina@acme.dev','Member','Mar 2026','#FDEBEA','#F0453F'],
+    ];
+
+    const tab = this.state.tab ?? 'active';
+    const menuOpenFor = this.state.menuOpenFor ?? null;
+    const resent = this.state.resent ?? {};
+    const revokedInvites = this.state.revokedInvites ?? {};
+
+    const pendingRows = [
+      ['jordan.w@partner.io', 'Guest', 'invited 2 days ago', 0],
+      ['sam.n@acme.dev', 'Member', 'invited 5 days ago', 1],
+      ['leo.f@acme.dev', 'Admin', 'invited 1 week ago', 2],
+    ];
+
+    return {
+      members: roster.map(([name, email, role, joined, bg, fg], idx) => {
+        const [roleFg, roleBg] = roleColors[role];
+        return {
+          name, email, role, joined, bg, fg, roleFg, roleBg,
+          initials: name.split(' ').map((p) => p[0]).join(''),
+          isOwnerRow: role === 'Owner',
+          removable: role !== 'Owner',
+          menuOpen: menuOpenFor === idx,
+          toggleMenu: () => this.setState({ menuOpenFor: menuOpenFor === idx ? null : idx }),
+          openRole: () => this.setState({ menuOpenFor: null, roleOpen: true, roleTarget: name }),
+          openRemove: () => this.setState({ menuOpenFor: null, removeOpen: true, roleTarget: name }),
+        };
+      }),
+      pending: pendingRows.map(([email, role, when, idx]) => ({
+        email, role,
+        when: revokedInvites[idx] ? 'revoked' : when,
+        initials: email.slice(0, 2).toUpperCase(),
+        resendLabel: resent[idx] ? 'Sent!' : 'Resend',
+        revokeLabel: revokedInvites[idx] ? 'Revoked' : 'Revoke',
+        resend: () => this.setState({ resent: { ...resent, [idx]: true } }),
+        revoke: () => this.setState({ revokedInvites: { ...revokedInvites, [idx]: true } }),
+      })),
+      groups: [
+        { name: 'Engineering', count: 8, bg: '#EDF0FE', fg: '#4C63F5' },
+        { name: 'Finance', count: 3, bg: '#FFF8F0', fg: '#B8790F' },
+      ],
+      tabCls: { active: tab === 'active' ? 'active' : '', pending: tab === 'pending' ? 'active' : '', groups: tab === 'groups' ? 'active' : '' },
+      showActive: tab === 'active',
+      showPending: tab === 'pending',
+      showGroups: tab === 'groups',
+      selectTab: (t) => () => this.setState({ tab: t, menuOpenFor: null }),
+      inviteOpen: this.state.inviteOpen ?? true,
+      openInvite: () => this.setState({ inviteOpen: true }),
+      closeInvite: () => this.setState({ inviteOpen: false }),
+      roleIsGuest: !!this.props.roleIsGuest,
+      roleOpen: !!this.state.roleOpen,
+      closeRole: () => this.setState({ roleOpen: false }),
+      removeOpen: !!this.state.removeOpen,
+      closeRemove: () => this.setState({ removeOpen: false }),
+      roleTarget: this.state.roleTarget ?? '',
+    };
+  }
+}
+</script>
+</body>
+</html>

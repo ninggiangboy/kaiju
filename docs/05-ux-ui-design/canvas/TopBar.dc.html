@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Top bar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .pulse{animation:pulse 1.4s ease-in-out infinite;}
+</style>
+</helmet>
+<div style="width: 100%; height: 56px; box-sizing: border-box; background: #FFFFFF; border-bottom: 1px solid #ECEEF6; display: flex; align-items: center; padding: 0 24px; gap: 16px; position: relative;">
+  <span style="font-size: 13px; font-weight: 700; color: #A7ABBB;">{{crumb}}</span>
+
+  <div style="position: relative;">
+    <div onClick="{{toggleSearch}}" style="width: 360px; height: 32px; background: #FAFBFE; border: 1px solid #F0F1F7; border-radius: 8px; display: flex; align-items: center; padding: 0 10px; gap: 8px; cursor: text; box-sizing: border-box;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <span style="font-size: 12px; color: {{searchTextColor}};">{{searchText}}</span>
+    </div>
+
+    <sc-if value="{{searchOpen}}" hint-placeholder-val="{{false}}">
+      <div style="position: absolute; top: 38px; left: 0; width: 420px; background: #fff; border: 1px solid #ECEEF6; border-radius: 12px; box-shadow: 0 16px 36px rgba(27,29,39,0.16); z-index: 30; overflow: hidden;">
+        <div style="max-height: 380px; overflow: auto; padding: 6px;">
+          <span style="font-size: 10px; font-weight: 700; color: #A7ABBB; text-transform: uppercase; letter-spacing: 0.03em; padding: 6px 8px; display: block;">Issues</span>
+          <sc-for list="{{issueResults}}" as="r" hint-placeholder-count="2">
+            <a href="IssueDetail.dc.html" style="display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 7px; cursor: pointer;">
+              <span style="width: 18px; height: 18px; border-radius: 5px; background: {{r.typeBg}}; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; color: #fff; flex-shrink: 0;">{{r.typeLetter}}</span>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 700; color: #767B8C; flex-shrink: 0;">{{r.key}}</span>
+              <span style="font-size: 12px; font-weight: 600; color: #1B1D27; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{r.title}}</span>
+            </a>
+          </sc-for>
+
+          <span style="font-size: 10px; font-weight: 700; color: #A7ABBB; text-transform: uppercase; letter-spacing: 0.03em; padding: 10px 8px 6px; display: block;">Projects</span>
+          <a href="ProjectHome.dc.html" style="display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 7px; cursor: pointer;">
+            <span style="width: 18px; height: 18px; border-radius: 5px; background: #FFEEE9; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: #FF6A45; flex-shrink: 0;">PAY</span>
+            <span style="font-size: 12px; font-weight: 600;">Payments Platform</span>
+          </a>
+
+          <span style="font-size: 10px; font-weight: 700; color: #A7ABBB; text-transform: uppercase; letter-spacing: 0.03em; padding: 10px 8px 6px; display: block;">Members</span>
+          <a href="MemberProfile.dc.html" style="display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 7px; cursor: pointer;">
+            <span style="width: 18px; height: 18px; border-radius: 999px; background: #FFEEE9; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: #FF6A45; flex-shrink: 0;">JD</span>
+            <span style="font-size: 12px; font-weight: 600;">Jamie Diaz</span>
+          </a>
+        </div>
+        <div style="padding: 8px 12px; border-top: 1px solid #F5F6FA; display: flex; align-items: center;">
+          <span style="font-size: 11px; color: #A7ABBB;">Only shows what you have access to.</span>
+          <div style="flex-grow: 1;"></div>
+          <a href="Search.dc.html" style="font-size: 11.5px; font-weight: 700;">Full search →</a>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="flex-grow: 1;"></div>
+
+  <sc-if value="{{showSyncing}}" hint-placeholder-val="{{false}}">
+    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #EDF0FE;">
+      <span class="pulse" style="width: 6px; height: 6px; border-radius: 999px; background: #4C63F5;"></span>
+      <span style="font-size: 11px; font-weight: 700; color: #4C63F5;">Syncing…</span>
+    </span>
+  </sc-if>
+  <sc-if value="{{showOffline}}" hint-placeholder-val="{{false}}">
+    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #FFF8F0;">
+      <span class="pulse" style="width: 6px; height: 6px; border-radius: 999px; background: #E39A2A;"></span>
+      <span style="font-size: 11px; font-weight: 700; color: #8A5A0F;">Offline · {{pendingCount}} changes queued</span>
+    </span>
+  </sc-if>
+  <sc-if value="{{showRejected}}" hint-placeholder-val="{{false}}">
+    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #FDEBEA;">
+      <span style="width: 6px; height: 6px; border-radius: 999px; background: #F0453F;"></span>
+      <span style="font-size: 11px; font-weight: 700; color: #A9302B;">1 change couldn't save · Details</span>
+    </span>
+  </sc-if>
+
+  <div style="position: relative;">
+    <div onClick="{{toggleBell}}" style="cursor: pointer; position: relative;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="1.8"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 01-3.46 0"></path></svg>
+      <sc-if value="{{hasUnread}}" hint-placeholder-val="{{true}}">
+        <span style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; border-radius: 999px; background: #F0453F; border: 1.5px solid #fff;"></span>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{bellOpen}}" hint-placeholder-val="{{false}}">
+      <div style="position: absolute; top: 30px; right: -10px; width: 340px; background: #fff; border: 1px solid #ECEEF6; border-radius: 12px; box-shadow: 0 16px 36px rgba(27,29,39,0.16); z-index: 30; display: flex; flex-direction: column;">
+        <div style="display: flex; align-items: center; padding: 12px 14px; border-bottom: 1px solid #F5F6FA;">
+          <span style="font-size: 13px; font-weight: 700;">Notifications</span>
+          <div style="flex-grow: 1;"></div>
+          <span onClick="{{markAllRead}}" style="font-size: 11.5px; font-weight: 700; color: #4C63F5; cursor: pointer;">Mark all read</span>
+        </div>
+        <div style="max-height: 340px; overflow: auto;">
+          <sc-for list="{{notifications}}" as="n" hint-placeholder-count="5">
+            <div style="display: flex; align-items: flex-start; gap: 10px; padding: 11px 14px; border-bottom: 1px solid #F5F6FA; background: {{n.bg}};">
+              <div style="width: 24px; height: 24px; border-radius: 999px; background: {{n.avatarBg}}; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: {{n.avatarFg}}; flex-shrink: 0; margin-top: 1px;">{{n.initials}}</div>
+              <div style="flex-grow: 1; min-width: 0;">
+                <span style="font-size: 12px; line-height: 1.5;">{{n.text}}</span>
+                <div style="font-size: 10.5px; color: #A7ABBB; margin-top: 2px;">{{n.when}}</div>
+              </div>
+              <sc-if value="{{n.unread}}" hint-placeholder-val="{{false}}">
+                <span style="width: 6px; height: 6px; border-radius: 999px; background: #4C63F5; flex-shrink: 0; margin-top: 5px;"></span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <div style="padding: 8px 14px; text-align: center; border-top: 1px solid #F5F6FA;">
+          <span style="font-size: 11.5px; color: #A7ABBB;">Notifications only cover this workspace — switch workspace to see another's.</span>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="width: 30px; height: 30px; border-radius: 999px; background: #EDF0FE; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #4C63F5;">AL</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"crumb":{"editor":"text","default":"Acme Inc"},"searchPlaceholder":{"editor":"text","default":"Quick search…"},"syncState":{"editor":"enum","default":"synced","options":["synced","syncing","offline","rejected"]},"pendingCount":{"editor":"int","default":3,"min":1,"max":99},"$preview":{"width":1440,"height":56}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.props.syncState ?? 'synced';
+    const bellOpen = !!this.state.bellOpen;
+    const allRead = !!this.state.allRead;
+
+    const rows = [
+      ['Jamie Diaz', 'JD', '#FFEEE9', '#FF6A45', 'mentioned you on PAY-142', '10m ago'],
+      ['Nina Park', 'NP', '#FDEBEA', '#F0453F', 'assigned you PAY-141', '1h ago'],
+      ['Sam Osei', 'SO', '#F1EDFF', '#8B6FFF', 'commented on PAY-98', 'Yesterday'],
+      ['Alex Lam', 'AL', '#EDF0FE', '#4C63F5', 'moved PAY-135 to Done', '2 days ago'],
+      ['System', '··', '#F0F1F7', '#A7ABBB', 'PAY-139 you’re watching changed status', '3 days ago'],
+    ];
+
+    const searchOpen = !!this.state.searchOpen;
+    const issueResultRows = [
+      ['PAY-142', 'Story', '22B573', 'S', 'Reversal entry missing for failed payout retries'],
+      ['PAY-98', 'Epic', 'B8790F', 'E', 'Payout reversal & reconciliation'],
+    ];
+
+    return {
+      crumb: this.props.crumb ?? 'Acme Inc',
+      searchPlaceholder: this.props.searchPlaceholder ?? 'Quick search…',
+      searchOpen,
+      toggleSearch: () => this.setState({ searchOpen: !searchOpen }),
+      searchText: searchOpen ? 'reversal' : (this.props.searchPlaceholder ?? 'Quick search…'),
+      searchTextColor: searchOpen ? '#1B1D27' : '#A7ABBB',
+      issueResults: issueResultRows.map(([key, type, colorHex, letter, title]) => ({
+        key, title, typeBg: '#' + colorHex, typeLetter: letter,
+      })),
+      showSyncing: s === 'syncing',
+      showOffline: s === 'offline',
+      showRejected: s === 'rejected',
+      pendingCount: this.props.pendingCount ?? 3,
+      bellOpen,
+      toggleBell: () => this.setState({ bellOpen: !bellOpen }),
+      hasUnread: !allRead,
+      markAllRead: () => this.setState({ allRead: true }),
+      notifications: rows.map(([who, initials, bg, fg, text, when], idx) => ({
+        text: `${who} ${text}`, initials, avatarBg: bg, avatarFg: fg, when,
+        unread: !allRead && idx < 2,
+        bg: !allRead && idx < 2 ? '#FAFBFE' : '#fff',
+      })),
+    };
+  }
+}
+</script>
+</body>
+</html>

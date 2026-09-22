@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dashboard — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .chip{font-size:12px;font-weight:600;color:#767B8C;background:#FFFFFF;border:1px solid #ECEEF6;border-radius:999px;padding:6px 12px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+  .gadget{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;position:relative;}
+  .row{display:flex;align-items:center;gap:8px;height:32px;border-top:1px solid #F5F6FA;}
+  .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;flex-grow:1;padding:20px;text-align:center;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="Sidebar" active="dashboards" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Dashboards / Sprint health" search-placeholder="Search…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 24px 40px; display: flex; flex-direction: column; gap: 16px; box-sizing: border-box;">
+
+      <div style="display: flex; align-items: center;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Sprint health</h1>
+            <span style="font-size: 10.5px; font-weight: 700; background: #FFF3E8; color: #FF9A3D; border-radius: 999px; padding: 3px 9px;">Shared — workspace · default</span>
+          </div>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">Every gadget below re-runs its own query at your permission level — nothing here is a saved snapshot.</p>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{selectRole('owner')}}" class="chip" style="background: {{roleBg.owner}}; color: {{roleFg.owner}};">Viewing as: Owner</div>
+        <div onClick="{{selectRole('limited')}}" class="chip" style="background: {{roleBg.limited}}; color: {{roleFg.limited}};">Viewing as: No project access</div>
+        <div onClick="{{toggleEdit}}" class="chip" style="background: {{editBg}}; color: {{editFg}}; margin-left: 8px;">{{editLabel}}</div>
+      </div>
+
+      <sc-if value="{{editMode}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; align-items: center; gap: 10px; position: relative;">
+          <div onClick="{{toggleAddMenu}}" style="height: 34px; padding: 0 14px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Add gadget
+          </div>
+          <span style="font-size: 11px; color: #A7ABBB;">New gadgets are placed after the last one — if you drop one where another already sits, it's pushed to the nearest open spot instead of overlapping.</span>
+          <sc-if value="{{addMenuOpen}}" hint-placeholder-val="{{false}}">
+            <div style="position: absolute; top: 38px; left: 0; width: 240px; background: #fff; border: 1px solid #ECEEF6; border-radius: 10px; box-shadow: 0 12px 32px rgba(27,29,39,0.16); padding: 6px; display: flex; flex-direction: column; gap: 2px; z-index: 15;">
+              <sc-for list="{{addOptions}}" as="o" hint-placeholder-count="4">
+                <div onClick="{{addGadget(o.kind)}}" style="padding: 8px 10px; border-radius: 6px; font-size: 12.5px; font-weight: 600; cursor: pointer;">{{o.label}}</div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start;">
+        <sc-for list="{{gadgets}}" as="g" hint-placeholder-count="7">
+          <div class="gadget" style="width: {{g.width}}; min-height: {{g.minHeight}};">
+            <div style="display: flex; align-items: center;">
+              <span style="font-size: 13px; font-weight: 700;">{{g.title}}</span>
+              <sc-if value="{{g.isPinned}}" hint-placeholder-val="{{false}}">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="#767B8C" stroke="none" style="margin-left:6px;"><path d="M12 2l2.5 6.5L21 10l-5 4.5L17.5 22 12 18l-5.5 4L8 14.5 3 10l6.5-1.5z"></path></svg>
+              </sc-if>
+              <div style="flex-grow: 1;"></div>
+              <sc-if value="{{editMode}}" hint-placeholder-val="{{false}}">
+                <div onClick="{{toggleWidth(g.id)}}" style="font-size: 10.5px; font-weight: 700; color: #4C63F5; cursor: pointer; margin-right: 10px;">{{g.widthToggleLabel}}</div>
+                <svg onClick="{{removeGadget(g.id)}}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2.2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </sc-if>
+            </div>
+
+            <sc-if value="{{g.noPermission}}" hint-placeholder-val="{{false}}">
+              <div class="empty">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="1.8"><rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg>
+                <span style="font-size: 12px; color: #A7ABBB;">You don't have permission to view this</span>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{g.brokenFilter}}" hint-placeholder-val="{{false}}">
+              <div class="empty">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><line x1="12" y1="8" x2="12" y2="13"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <span style="font-size: 12px; color: #767B8C;">Source filter no longer exists</span>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{g.noFilterPermission}}" hint-placeholder-val="{{false}}">
+              <div class="empty">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="1.8"><rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg>
+                <span style="font-size: 12px; color: #A7ABBB;">You don't have permission to view this filter</span>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{g.isList}}" hint-placeholder-val="{{false}}">
+              <sc-for list="{{g.rows}}" as="i" hint-placeholder-count="3">
+                <div class="row">
+                  <span class="ty" style="width: 15px; height: 15px; border-radius: 4px; font-size: 8px; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: center; background: {{i.tyBg}};">{{i.tyLetter}}</span>
+                  <a href="IssueDetail.dc.html" style="width: 62px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 700;">{{i.key}}</a>
+                  <span style="flex-grow: 1; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{i.title}}</span>
+                </div>
+              </sc-for>
+            </sc-if>
+
+            <sc-if value="{{g.isChart}}" hint-placeholder-val="{{false}}">
+              <svg width="100%" height="140" viewBox="0 0 300 140">
+                <sc-for list="{{g.gridlines}}" as="gl" hint-placeholder-count="4">
+                  <line x1="22" y1="{{gl.y}}" x2="300" y2="{{gl.y}}" stroke="#F0F1F7"></line>
+                  <text x="0" y="{{gl.labelY}}" font-size="9" font-family="Manrope, sans-serif" fill="#A7ABBB">{{gl.value}}</text>
+                </sc-for>
+                <line x1="22" y1="120" x2="300" y2="120" stroke="#DEE1EC"></line>
+                <sc-for list="{{g.bars}}" as="b" hint-placeholder-count="4">
+                  <rect x="{{b.x}}" y="{{b.y}}" width="46" height="{{b.h}}" rx="4" fill="{{b.color}}"></rect>
+                  <text x="{{b.labelX}}" y="{{b.countY}}" font-size="10" font-weight="700" font-family="Manrope, sans-serif" text-anchor="middle" fill="#1B1D27">{{b.count}}</text>
+                </sc-for>
+              </svg>
+              <div style="display: flex; gap: 14px; padding-left: 22px;">
+                <sc-for list="{{g.bars}}" as="b" hint-placeholder-count="4">
+                  <span style="font-size: 10px; color: #A7ABBB; width: 46px; text-align: center;">{{b.label}}</span>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{g.isStat}}" hint-placeholder-val="{{false}}">
+              <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;">
+                <span style="font-family: 'Space Grotesk', sans-serif; font-size: 40px; font-weight: 700; color: #4C63F5;">{{g.statValue}}</span>
+                <span style="font-size: 11px; color: #A7ABBB;">{{g.statLabel}}</span>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{g.isActivity}}" hint-placeholder-val="{{false}}">
+              <sc-for list="{{g.activity}}" as="a" hint-placeholder-count="3">
+                <div class="row" style="height: auto; padding: 6px 0; align-items: flex-start;">
+                  <div style="width: 20px; height: 20px; border-radius: 999px; background: {{a.bg}}; display: flex; align-items: center; justify-content: center; font-size: 8.5px; font-weight: 700; color: {{a.fg}}; flex-shrink: 0;">{{a.initials}}</div>
+                  <span style="font-size: 11.5px; color: #767B8C; line-height: 1.4;">{{a.text}}</span>
+                </div>
+              </sc-for>
+            </sc-if>
+
+            <sc-if value="{{g.isNote}}" hint-placeholder-val="{{false}}">
+              <span style="font-size: 8.5px; font-weight: 800; color: #4C63F5; background: #EDF0FE; border-radius: 4px; padding: 1px 5px; width: fit-content;">Note · stored as content</span>
+              <textarea style="flex-grow: 1; border: none; background: transparent; font-family: inherit; font-size: 12.5px; padding: 0; resize: none;">{{g.noteText}}</textarea>
+            </sc-if>
+
+            <sc-if value="{{g.isPinnedReport}}" hint-placeholder-val="{{false}}">
+              <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">{{g.reportSummary}}</p>
+              <a href="{{g.reportHref}}" style="font-size: 11.5px; font-weight: 700; align-self: flex-start;">Open full report →</a>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const role = this.state.role ?? 'owner';
+    const limited = role === 'limited';
+
+    const gadgetDefs = [
+      { id: 'g1', kind: 'list', title: 'Open bugs — Payments Platform', wide: false, restricted: true, restrictKind: 'filter' },
+      { id: 'g2', kind: 'chart', title: 'Issues by status', wide: false },
+      { id: 'g3', kind: 'stat', title: null, wide: false },
+      { id: 'g4', kind: 'activity', title: 'Recent activity — Payments Platform', wide: false, restricted: true, restrictKind: 'project' },
+      { id: 'g5', kind: 'note', title: 'Sprint goal', wide: false },
+      { id: 'g6', kind: 'brokenFilter', title: 'Escalated payouts', wide: false },
+      { id: 'g7', kind: 'pinnedReport', title: 'Release 2.5.0 progress', wide: true },
+    ];
+    const order = this.state.order ?? gadgetDefs.map((g) => g.id);
+    const widths = this.state.widths ?? {};
+    const removed = this.state.removed ?? [];
+    const byId = Object.fromEntries(gadgetDefs.map((g) => [g.id, g]));
+
+    const listRows = [
+      { key: 'PAY-204', title: 'Dashboard loads slowly with 500+ payouts', tyLetter: 'B', tyBg: '#F0453F' },
+      { key: 'PAY-139', title: 'Idempotency key missing lets retries double-write', tyLetter: 'B', tyBg: '#F0453F' },
+      { key: 'PAY-141', title: 'Webhook replay drops the signature header', tyLetter: 'B', tyBg: '#F0453F' },
+    ];
+    const chartDefs = [
+      { label: 'To do', count: 4, color: '#767B8C' },
+      { label: 'In prog.', count: 7, color: '#8B6FFF' },
+      { label: 'In review', count: 3, color: '#FF9A3D' },
+      { label: 'Done', count: 9, color: '#22B573' },
+    ];
+    const chartMax = 10;
+    const chartGridlines = [0, 5, 10].map((v) => ({ value: v, y: 120 - (v / chartMax) * 100, labelY: 120 - (v / chartMax) * 100 + 3 }));
+    const activityDefs = [
+      { initials: 'JD', bg: '#FFEEE9', fg: '#FF6A45', text: 'Jamie Diaz moved PAY-142 to In progress' },
+      { initials: 'NP', bg: '#FDEBEA', fg: '#F0453F', text: 'Nina Park commented on PAY-141' },
+      { initials: 'AL', bg: '#EDF0FE', fg: '#4C63F5', text: 'Alex Lam released version 2.4.0' },
+    ];
+
+    const widthLabel = (w) => (w === 'wide' ? '700px' : '336px');
+
+    const gadgets = order
+      .filter((id) => !removed.includes(id))
+      .map((id) => {
+        const def = byId[id];
+        const w = widths[id] ?? (def.wide ? 'wide' : 'narrow');
+        const restrictedNow = limited && def.restricted;
+        const noFilterPermission = restrictedNow && def.restrictKind === 'filter';
+        const noProjectPermission = restrictedNow && def.restrictKind === 'project';
+        const base = {
+          id,
+          title: def.title,
+          width: widthLabel(w),
+          widthToggleLabel: w === 'wide' ? 'Narrow' : 'Wide',
+          isPinned: def.kind === 'pinnedReport',
+          isList: def.kind === 'list' && !restrictedNow,
+          isChart: def.kind === 'chart',
+          isStat: def.kind === 'stat',
+          isActivity: def.kind === 'activity' && !restrictedNow,
+          isNote: def.kind === 'note',
+          isPinnedReport: def.kind === 'pinnedReport',
+          brokenFilter: def.kind === 'brokenFilter',
+          noFilterPermission,
+          noPermission: noProjectPermission,
+          minHeight: def.kind === 'stat' ? '132px' : '210px',
+        };
+        if (def.kind === 'list') return { ...base, rows: listRows };
+        if (def.kind === 'chart') {
+          return {
+            ...base,
+            gridlines: chartGridlines,
+            bars: chartDefs.map((b, idx) => {
+              const h = (b.count / chartMax) * 100;
+              const x = 30 + idx * 66;
+              return { ...b, x, y: 120 - h, h, labelX: x + 23, countY: 120 - h - 6 };
+            }),
+          };
+        }
+        if (def.kind === 'stat') return { ...base, title: 'Story points remaining', statValue: '38', statLabel: 'across 3 open sprints' };
+        if (def.kind === 'activity') return { ...base, activity: restrictedNow ? [] : activityDefs };
+        if (def.kind === 'note') return { ...base, noteText: 'Freeze scope after Sep 24 — only bug fixes land after that for 2.5.0.' };
+        if (def.kind === 'pinnedReport') return { ...base, reportSummary: '82% done · 2 issues unfinished · planned Sep 30, 2026', reportHref: 'Release.dc.html' };
+        return base;
+      });
+
+    const addMenuOpen = !!this.state.addMenuOpen;
+    const nextId = () => 'g' + (Date.now() % 100000);
+
+    return {
+      roleBg: { owner: role === 'owner' ? '#4C63F5' : '#FFFFFF', limited: role === 'limited' ? '#4C63F5' : '#FFFFFF' },
+      roleFg: { owner: role === 'owner' ? '#fff' : '#767B8C', limited: role === 'limited' ? '#fff' : '#767B8C' },
+      selectRole: (r) => () => this.setState({ role: r }),
+
+      editMode: !!this.state.editMode,
+      editLabel: this.state.editMode ? 'Done editing' : 'Edit layout',
+      editBg: this.state.editMode ? '#4C63F5' : '#FFFFFF',
+      editFg: this.state.editMode ? '#fff' : '#767B8C',
+      toggleEdit: () => this.setState({ editMode: !this.state.editMode, addMenuOpen: false }),
+
+      addMenuOpen,
+      toggleAddMenu: () => this.setState({ addMenuOpen: !addMenuOpen }),
+      addOptions: [
+        { kind: 'list', label: 'Filter results (list)' },
+        { kind: 'chart', label: 'Chart / stat' },
+        { kind: 'activity', label: 'Activity feed' },
+        { kind: 'note', label: 'Note' },
+      ],
+      addGadget: (kind) => () => {
+        const id = nextId();
+        gadgetDefs.push({ id, kind, title: kind === 'note' ? 'New note' : 'New gadget', wide: false });
+        this.setState({ order: [...order, id], addMenuOpen: false });
+      },
+      removeGadget: (id) => () => this.setState({ removed: [...removed, id] }),
+      toggleWidth: (id) => () => {
+        const cur = widths[id] ?? (byId[id].wide ? 'wide' : 'narrow');
+        this.setState({ widths: { ...widths, [id]: cur === 'wide' ? 'narrow' : 'wide' } });
+      },
+
+      gadgets,
+    };
+  }
+}
+</script>
+</body>
+</html>
