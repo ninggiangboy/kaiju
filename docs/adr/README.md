@@ -30,6 +30,7 @@ hiểu vì sao hệ thống trông như hiện tại thay vì trông như cách 
 | [0014](0014-declarative-infra-gitops.md) | Hạ tầng khai báo bằng OpenTofu, Ansible và Argo CD; bậc 4 triển khai theo GitOps | Accepted — cơ chế thăng cấp thay bởi [0015](0015-branch-per-environment.md) |
 | [0015](0015-branch-per-environment.md) | Mỗi môi trường là một nhánh, thăng cấp bằng pull request giữa các nhánh | Accepted |
 | [0016](0016-git-branching-workflow.md) | Nhánh làm việc ngắn hạn, merge commit ở mọi cấp, và một ngoại lệ cho quay lui | Accepted |
+| [0017](0017-shadcn-and-tanstack-frontend-stack.md) | shadcn/ui làm nền giao diện, TanStack cho phần headless, TanStack Query chỉ cho dữ liệu ngoài đồng bộ | Accepted |
 
 ---
 

@@ -221,6 +221,14 @@ khi có sự cố sẽ phải sửa dữ liệu bằng tay.
 Đây cũng là minh hoạ rõ nhất cho giá trị của kiến trúc hướng sự kiện: thêm bất kỳ
 dòng nào trong bảng trên **không phải sửa module `issue`**.
 
+> **Changed (2026-09-23):** dòng "Phát tán đồng bộ" ghi là nghe *mọi sự kiện có
+> ảnh hưởng tới dữ liệu client*. Khi viết [sync-engine.md](sync-engine.md#phát-tán-ở-vai-trò-worker),
+> cơ chế được chốt cụ thể hơn: mỗi giao dịch có ghi nhật ký thay đổi thì ghi kèm
+> **một** bản ghi kỹ thuật `sync.committed` (danh sách scope và seq vừa cấp), và
+> bên tiêu thụ này chỉ nghe bản ghi đó. Lý do: không phải thay đổi nào cũng đi
+> kèm một domain event, và bên phát tán không nên phải hiểu ý nghĩa nghiệp vụ của
+> từng sự kiện để biết có delta cần phát hay không.
+
 ---
 
 ## Giữ dữ liệu

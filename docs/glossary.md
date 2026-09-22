@@ -155,10 +155,23 @@ Việc áp lại các mutation chưa được server xác nhận lên trên tr�
 từ server, để giao diện luôn phản ánh cả sự thật của server lẫn ý định chưa gửi
 xong của người dùng.
 
+### Tầng đã xác nhận và tầng hiển thị
+Hai tầng dữ liệu ở client. **Tầng đã xác nhận** chỉ chứa những gì server đã gửi
+xuống qua delta hoặc bootstrap, và được lưu trong IndexedDB. **Tầng hiển thị** là
+tầng đã xác nhận cộng các mutation đang chờ, được tính trong bộ nhớ và là thứ
+giao diện đọc. Xem [sync-engine.md](04-system-design/sync-engine.md#lưu-trữ-trong-indexeddb).
+
+### Mutator
+Khai báo phía client của một loại mutation: tên (khớp với danh mục ở server),
+cách xác định scope, và hàm `apply` **dự đoán** kết quả trên tầng hiển thị. Hàm
+`apply` phải tất định vì nó bị chạy lại mỗi lần rebase. Xem
+[sync-engine.md](04-system-design/sync-engine.md#mutator).
+
 ### Sync engine
 Toàn bộ cơ chế đồng bộ hai đầu: phía server (change log, cấp seq, SSE stream,
 phân quyền scope) và phía client (store trên IndexedDB, hàng đợi mutation,
-catch-up, rebase). Xem [ADR-0007](adr/0007-build-own-sync-engine.md).
+catch-up, rebase). Xem [ADR-0007](adr/0007-build-own-sync-engine.md) và
+[sync-engine.md](04-system-design/sync-engine.md).
 
 ---
 

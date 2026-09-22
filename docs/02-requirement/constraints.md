@@ -110,6 +110,8 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-36 | **Cấm** lấy dữ liệu nghiệp vụ trong server component | [ADR-0008](../adr/0008-nextjs-as-spa-shell.md) |
 | CON-37 | Nhiều tab chỉ dùng một kết nối đồng bộ và một nơi ghi dữ liệu cục bộ | [ADR-0007](../adr/0007-build-own-sync-engine.md) |
 | CON-38 | Middleware của Next chỉ kiểm tra sự tồn tại của cookie để điều hướng, không tự xác thực token | [ADR-0008](../adr/0008-nextjs-as-spa-shell.md) |
+| CON-86 | Component giao diện dùng shadcn/ui trên Tailwind CSS, mã component nằm trong `src/ui/`; token thiết kế là biến CSS theo quy ước theme của shadcn | [ADR-0017](../adr/0017-shadcn-and-tanstack-frontend-stack.md) |
+| CON-87 | TanStack Query **chỉ** dùng cho dữ liệu không có sync scope, và chỉ được import trong thư mục `remote/`. **Cấm** dùng nó để đọc hay thay đổi thực thể có sync scope | [ADR-0017](../adr/0017-shadcn-and-tanstack-frontend-stack.md) |
 
 ## Danh tính và phân quyền
 

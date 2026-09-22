@@ -4,7 +4,7 @@ Next.js được dùng như một SPA framework có routing và build tool tốt
 như một framework full-stack. Khu vực ứng dụng render hoàn toàn ở phía client và
 đọc dữ liệu từ bản sao cục bộ.
 
-**Liên quan:** [ADR-0007](../adr/0007-build-own-sync-engine.md) · [ADR-0008](../adr/0008-nextjs-as-spa-shell.md) · [realtime-and-sync.md](realtime-and-sync.md) · [identity-and-permission.md](identity-and-permission.md)
+**Liên quan:** [ADR-0007](../adr/0007-build-own-sync-engine.md) · [ADR-0008](../adr/0008-nextjs-as-spa-shell.md) · [ADR-0017](../adr/0017-shadcn-and-tanstack-frontend-stack.md) · [realtime-and-sync.md](realtime-and-sync.md) · [sync-engine.md](sync-engine.md) · [identity-and-permission.md](identity-and-permission.md)
 
 ---
 
@@ -51,12 +51,14 @@ frontend/
 │   │   │   ├── mutation/      # hàng đợi bền, hoàn tác, rebase
 │   │   │   └── bootstrap/     # tải trạng thái đầy đủ
 │   │   └── client/            # API dùng từ React
-│   │       ├── useEntity.ts
-│   │       ├── useQuery.ts
-│   │       └── useMutation.ts
+│   │       ├── useLocalEntity.ts
+│   │       ├── useLocalQuery.ts
+│   │       └── useMutator.ts
 │   ├── features/              # theo bounded context, ánh xạ với module backend
 │   │   ├── issue/  board/  sprint/  workspace/  ...
-│   ├── ui/                    # component dùng chung, không biết nghiệp vụ
+│   │   └── <feature>/remote/  # lời gọi server không qua đồng bộ (TanStack Query)
+│   ├── remote/                # thiết lập TanStack Query dùng chung
+│   ├── ui/                    # component shadcn/ui, không biết nghiệp vụ
 │   └── lib/                   # tiện ích
 └── tests/
 ```
@@ -64,6 +66,16 @@ frontend/
 `src/features/*` ánh xạ một-một với module backend. Một feature ở frontend chỉ
 đọc thực thể thuộc phạm vi của nó; cần dữ liệu của feature khác thì đi qua API
 công khai của feature đó, giống luật biên giới ở backend.
+
+`@tanstack/react-query` chỉ được import trong thư mục `remote/`. Luật kiểm tra mã
+nguồn chặn mọi chỗ khác — xem [ADR-0017](../adr/0017-shadcn-and-tanstack-frontend-stack.md).
+
+> **Changed (2026-09-23):** ba hook của sync engine trước đây tên là `useEntity`,
+> `useQuery` và `useMutation`. Đổi thành `useLocalEntity`, `useLocalQuery` và
+> `useMutator` vì TanStack Query được đưa vào stack
+> ([ADR-0017](../adr/0017-shadcn-and-tanstack-frontend-stack.md)) và có hook
+> trùng tên — giữ tên cũ thì đọc code không phân biệt được dữ liệu đến từ bản sao
+> cục bộ hay từ server. Thư mục `remote/` cũng được thêm vào cùng lúc.
 
 ---
 
@@ -100,7 +112,12 @@ backlog, thẻ trên board, ô chi tiết đang mở — bằng một lần ghi 
 
 Đây là lý do **không dùng thư viện cache theo khoá truy vấn** cho dữ liệu nghiệp
 vụ: cache của chúng tổ chức theo khoá truy vấn, nên cùng một issue nằm rải rác ở
-nhiều mục và phải vô hiệu hoá bằng tay từng chỗ.
+nhiều mục và phải vô hiệu hoá bằng tay từng chỗ. TanStack Query có trong stack,
+nhưng chỉ cho dữ liệu **không có sync scope** — ranh giới ở
+[ADR-0017](../adr/0017-shadcn-and-tanstack-frontend-stack.md#phạm-vi-của-tanstack-query).
+
+Cách engine lưu trữ, rebase và chạy truy vấn bên trong:
+[sync-engine.md](sync-engine.md#phía-client).
 
 Hai tầng, theo mô tả ở [realtime-and-sync.md](realtime-and-sync.md#hoà-giải-rebase):
 tầng **đã xác nhận** do server quyết định, và tầng **hiển thị** là tầng đã xác
@@ -125,15 +142,24 @@ Cần chính sách dọn dẹp: các scope lâu không truy cập bị xoá đ�
 
 | Việc | Chọn | Lý do |
 |---|---|---|
+| Component giao diện | shadcn/ui | Mã component nằm trong `src/ui/`, dựng trên primitive trợ năng của Radix; xem [ADR-0017](../adr/0017-shadcn-and-tanstack-frontend-stack.md) |
+| Tạo kiểu | Tailwind CSS | Không có runtime; token thiết kế là biến CSS theo quy ước theme của shadcn, gồm cả chế độ tối |
 | Lưu trữ cục bộ | Dexie | API dễ chịu trên IndexedDB, có giao dịch và truy vấn phản ứng |
 | Trạng thái giao diện | Zustand | Nhẹ, không nghi thức; chỉ dùng cho trạng thái giao diện, **không** cho dữ liệu nghiệp vụ |
 | Kéo thả | dnd-kit | Hỗ trợ bàn phím và trợ năng, phù hợp cho board và backlog |
 | Soạn thảo văn bản | Tiptap | Có đường nâng cấp lên soạn thảo cộng tác ở phase sau |
 | Danh sách dài | TanStack Virtual | Backlog hàng nghìn dòng phải ảo hoá |
+| Bảng | TanStack Table | Headless; chạy ở chế độ sắp xếp và lọc **thủ công** — việc sắp xếp và lọc thuộc về truy vấn cục bộ trong engine |
+| Form | TanStack Form | Kiểu dữ liệu chặt; nộp form là gọi một mutator, không phải một request riêng |
+| Lời gọi server không qua đồng bộ | TanStack Query | **Chỉ** cho dữ liệu không có sync scope, chỉ import trong `remote/` |
 | Biểu đồ | *chưa chọn* | Quyết định ở Phase 9 khi làm báo cáo agile |
 
-> **Chưa chốt:** thư viện component giao diện. Quyết định cùng với
-> [05-ux-ui-design](../05-ux-ui-design/).
+> **Changed (2026-09-23):** bản trước ghi *"Chưa chốt: thư viện component giao
+> diện. Quyết định cùng với 05-ux-ui-design."* Đã chốt shadcn/ui trên Tailwind,
+> cùng TanStack Table, Form và Query, trước khi bắt đầu 05-ux-ui-design — để
+> design system được viết thẳng dưới dạng token theme của shadcn thay vì phải
+> chuyển đổi về sau. Lý do và phạm vi của TanStack Query:
+> [ADR-0017](../adr/0017-shadcn-and-tanstack-frontend-stack.md).
 
 ---
 

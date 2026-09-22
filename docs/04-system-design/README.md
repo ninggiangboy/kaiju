@@ -19,7 +19,8 @@ và chỉ ra cách áp dụng, không lặp lại phần biện luận.
 | [data-access-and-tenancy.md](data-access-and-tenancy.md) | Spring Data JDBC, jOOQ, cách ly tenant, chuẩn bị cho phân mảnh |
 | [events-and-outbox.md](events-and-outbox.md) | Domain event, bảng chuyển tiếp, tiến trình chuyển tiếp, chống trùng, thử lại |
 | [realtime-and-sync.md](realtime-and-sync.md) | Sync engine hai đầu: nhật ký thay đổi, giao thức SSE, mutation, hoà giải xung đột |
-| [frontend.md](frontend.md) | Kiến trúc bên trong `frontend/`: local-first, sync engine phía client |
+| [sync-engine.md](sync-engine.md) | Mục đích, cách hoạt động và cách hiện thực sync engine: bảng, thuật toán, vòng đời mutation, lưu trữ ở client, thứ tự xây dựng |
+| [frontend.md](frontend.md) | Kiến trúc bên trong `frontend/`: local-first, sync engine phía client, thư viện giao diện |
 | [identity-and-permission.md](identity-and-permission.md) | Cơ chế magic link, phiên, mô hình danh tính hai tầng, mặt nạ quyền |
 | [infrastructure.md](infrastructure.md) | Thành phần hạ tầng cần thiết, khi nào cần, mất thì sao, và các nhóm thư viện phụ thuộc |
 | [environments.md](environments.md) | Bốn bậc môi trường, mỗi bậc bắt được loại lỗi gì |
@@ -31,8 +32,8 @@ và chỉ ra cách áp dụng, không lặp lại phần biện luận.
 ### Thứ tự đọc
 
 `architecture.md` → `backend-modules.md` → `data-access-and-tenancy.md` →
-`events-and-outbox.md` → `realtime-and-sync.md` → `frontend.md`. Ba tài liệu còn
-lại đọc khi cần.
+`events-and-outbox.md` → `realtime-and-sync.md` → `sync-engine.md` →
+`frontend.md`. Các tài liệu còn lại đọc khi cần.
 
 ---
 

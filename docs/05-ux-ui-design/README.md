@@ -44,3 +44,4 @@ tính năng một.
 | App phải dùng được khi offline, kể cả tạo và sửa | Local-first, xem [ADR-0008](../adr/0008-nextjs-as-spa-shell.md) |
 | Chỉ landing và trang nhận magic link được render phía server | Xem [ADR-0008](../adr/0008-nextjs-as-spa-shell.md) |
 | Đăng nhập chỉ có một ô email, không có ô mật khẩu ở bất kỳ đâu | Xem [ADR-0009](../adr/0009-magic-link-only.md) |
+| Design system viết dưới dạng **token theme của shadcn/ui** (biến CSS cho màu, bo góc, font; Tailwind cho spacing), có chế độ tối; component xuất phát từ bộ của shadcn | Thư viện component đã chốt trước phần này, xem [ADR-0017](../adr/0017-shadcn-and-tanstack-frontend-stack.md) |
