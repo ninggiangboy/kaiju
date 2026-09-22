@@ -169,9 +169,16 @@ Cần chính sách dọn dẹp: các scope lâu không truy cập bị xoá đ�
 |---|---|---|
 | Token truy cập (ngắn hạn) | Trong bộ nhớ của SharedWorker | Không lưu vào lưu trữ trình duyệt để giảm rủi ro khi có lỗ hổng chèn mã |
 | Token làm mới | Cookie chỉ đọc được bởi server | Mã JavaScript không chạm tới được |
+| Token luồng đồng bộ (loại `stream`, ngắn hạn) | Cookie chỉ đọc được bởi server, giới hạn đường dẫn ở endpoint luồng đồng bộ | `EventSource` không gửi được header; xem [ADR-0018](../adr/0018-sse-stream-cookie-auth.md) |
 
-SharedWorker tự làm mới token và đính kèm vào cả luồng đồng bộ lẫn các request
-mutation. Các tab không tự quản token.
+SharedWorker tự làm mới token và đính kèm token truy cập vào các request mutation
+và mọi request khác. Luồng đồng bộ xác thực bằng cookie `stream`, được đặt lại
+mỗi lần làm mới. Các tab không tự quản token.
+
+> **Changed (2026-09-23):** bản trước ghi SharedWorker *"đính kèm vào cả luồng
+> đồng bộ lẫn các request mutation"*. Không làm được với luồng đồng bộ: `EventSource`
+> không cho đặt header. Luồng đồng bộ nay dùng một cookie riêng, xem
+> [ADR-0018](../adr/0018-sse-stream-cookie-auth.md).
 
 **Middleware của Next chỉ kiểm tra sự tồn tại của cookie** để quyết định điều
 hướng. Nó **không** xác thực token — việc đó thuộc về backend. Middleware chỉ

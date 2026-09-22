@@ -125,9 +125,15 @@ nhập dùng được trong thực tế.**
 | Token truy cập | Thời hạn ngắn, **chỉ mang claims cơ bản** |
 | Token làm mới | Lưu dạng băm, xoay vòng mỗi lần dùng, gắn với một phiên cụ thể |
 | Phiên | Ghi thiết bị, địa chỉ IP, lần truy cập gần nhất; người dùng xem và thu hồi được |
+| Token luồng đồng bộ | Loại `stream`, cùng claims và thời hạn với token truy cập; nằm trong cookie `HttpOnly` giới hạn đường dẫn ở endpoint luồng đồng bộ; **chỉ** endpoint đó chấp nhận |
 
 Phát hiện dùng lại token làm mới đã bị xoay vòng thì thu hồi toàn bộ phiên của
 tài khoản đó — dấu hiệu token đã bị đánh cắp.
+
+Endpoint làm mới trả token truy cập mới **và** đặt lại cookie `stream`; đăng xuất
+xoá cả hai. Vì luồng đồng bộ chỉ được xác thực lúc mở kết nối, **thu hồi hay đăng
+xuất một phiên phải chủ động đóng mọi kết nối đồng bộ của phiên đó**. Lý do có
+token loại riêng: [ADR-0018](../adr/0018-sse-stream-cookie-auth.md).
 
 ### Token truy cập chứa gì
 

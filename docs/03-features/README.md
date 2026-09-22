@@ -152,7 +152,7 @@ thông tin và sẽ lệch pha theo thời gian.
 | KJ-SYN-03 | Endpoint bắt kịp theo cursor | KJ-SYN-01 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-06--nối-lại-sau-khi-mất-kết-nối-bắt-kịp-theo-cursor-không-sót) | |
 | KJ-SYN-04 | Bootstrap với ảnh chụp nhất quán | KJ-SYN-03 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-02--bootstrap-lần-đầu-và-khi-vắng-mặt-quá-lâu) | Ảnh chụp và số thứ tự cùng thời điểm |
 | KJ-SYN-05 | Mã hoá và giải mã cursor đa scope | KJ-SYN-03 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-06--nối-lại-sau-khi-mất-kết-nối-bắt-kịp-theo-cursor-không-sót) | Chuỗi mờ, client không diễn giải |
-| KJ-SYN-06 | Luồng SSE với xác thực và nhịp tim | KJ-SYN-05 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-05--nhận-thay-đổi-của-người-khác-không-cần-tải-lại) | |
+| KJ-SYN-06 | Luồng SSE với xác thực và nhịp tim | KJ-SYN-05 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-05--nhận-thay-đổi-của-người-khác-không-cần-tải-lại) | Xác thực bằng cookie loại `stream`, [ADR-0018](../adr/0018-sse-stream-cookie-auth.md) |
 | KJ-SYN-07 | Phân quyền scope khi mở kết nối | KJ-SYN-06 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-09--thu-hồi-quyền-xoá-dữ-liệu-scope-đó-khỏi-máy) | Client không tự khai scope |
 | KJ-SYN-08 | Phát tán giữa các instance qua Redis | KJ-SYN-06, KJ-EVT-03 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-05--nhận-thay-đổi-của-người-khác-không-cần-tải-lại) | Gửi rồi quên, chấp nhận mất |
 | KJ-SYN-09 | Sự kiện thu hồi scope | KJ-SYN-07 | TODO | [uc-19-sync.md](usecases/uc-19-sync.md#uc-syn-09--thu-hồi-quyền-xoá-dữ-liệu-scope-đó-khỏi-máy) | |

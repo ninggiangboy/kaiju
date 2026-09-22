@@ -12,7 +12,7 @@ Nó không lặp lại hai thứ đã có chỗ riêng:
 | Hành vi người dùng nhìn thấy và các nhánh ngoại lệ | [uc-19-sync.md](../03-features/usecases/uc-19-sync.md) |
 | Vì sao tự xây thay vì dùng thư viện | [ADR-0007](../adr/0007-build-own-sync-engine.md) |
 
-**Liên quan:** [realtime-and-sync.md](realtime-and-sync.md) · [frontend.md](frontend.md) · [events-and-outbox.md](events-and-outbox.md) · [identity-and-permission.md](identity-and-permission.md) · [ADR-0006](../adr/0006-sse-over-websocket.md) · [ADR-0007](../adr/0007-build-own-sync-engine.md) · [ADR-0017](../adr/0017-shadcn-and-tanstack-frontend-stack.md)
+**Liên quan:** [realtime-and-sync.md](realtime-and-sync.md) · [frontend.md](frontend.md) · [events-and-outbox.md](events-and-outbox.md) · [identity-and-permission.md](identity-and-permission.md) · [ADR-0006](../adr/0006-sse-over-websocket.md) · [ADR-0007](../adr/0007-build-own-sync-engine.md) · [ADR-0017](../adr/0017-shadcn-and-tanstack-frontend-stack.md) · [ADR-0018](../adr/0018-sse-stream-cookie-auth.md)
 
 > Đường dẫn endpoint, tên bảng và tên hàm trong tài liệu này là **minh hoạ** để
 > mô tả cơ chế. Tên chính thức chốt ở [07-detail-design](../07-detail-design/)
@@ -352,31 +352,33 @@ lúc nào dòng đã xoá mà mốc chưa nâng.
 
 ### Xác thực luồng SSE
 
-> **Chưa chốt — cần quyết định trước KJ-SYN-06.**
->
-> [ADR-0006](../adr/0006-sse-over-websocket.md) ghi rằng xác thực SSE "đi tự nhiên
-> qua cookie hoặc header". Điều đó chỉ đúng một nửa: `EventSource` của trình
-> duyệt **không cho đặt header**, và token truy cập theo
-> [frontend.md](frontend.md#xác-thực-phía-client) chỉ nằm trong bộ nhớ của
-> SharedWorker. Vậy luồng SSE chỉ còn đường cookie.
->
-> Hướng đề xuất:
->
-> - Một cookie `HttpOnly`, `Secure`, `SameSite=Strict`, **giới hạn đường dẫn**
->   ở endpoint luồng đồng bộ, sống ngang token truy cập, được đặt lại mỗi lần
->   làm mới token
-> - Server chỉ xác thực **lúc mở kết nối**. Kết nối đang mở không bị cắt khi
->   cookie hết hạn; việc cắt khi phiên bị thu hồi đi qua kênh Redis của account
-> - Nối lại bị từ chối vì cookie hết hạn → `EventSource` dừng hẳn → engine làm
->   mới token rồi mở `EventSource` mới, truyền cursor qua tham số (vì không đặt
->   được `Last-Event-ID` cho kết nối mới)
->
-> Phương án bị cân nhắc và bất lợi: đọc SSE bằng `fetch` để gắn được header —
-> nhưng như vậy mất đúng thứ ADR-0006 chọn SSE để có (trình duyệt tự nối lại và
-> tự gửi `Last-Event-ID`). Token ngắn hạn trên query string — lộ trong nhật ký
-> của máy chủ trung gian.
->
-> Chốt phương án nào thì viết ADR mới bổ sung cho ADR-0006.
+`EventSource` của trình duyệt **không cho đặt header**, còn token truy cập chỉ
+nằm trong bộ nhớ của engine. Luồng SSE vì vậy xác thực bằng **một cookie riêng**
+([ADR-0018](../adr/0018-sse-stream-cookie-auth.md)):
+
+| | |
+|---|---|
+| Cookie | `HttpOnly`, `Secure`, `SameSite=Strict`, `Path` giới hạn ở endpoint luồng đồng bộ |
+| Nội dung | Token loại `stream`, cùng claims và thời hạn với token truy cập; endpoint khác từ chối nó |
+| Phát ra | Endpoint làm mới token đặt lại cookie này mỗi lần làm mới |
+| Kiểm tra | Chỉ lúc mở kết nối. Thu hồi hoặc đăng xuất phiên thì `realtime` chủ động đóng kết nối qua kênh Redis của account |
+
+Hai kiểu nối lại:
+
+```
+Mất kết nối, cookie còn hạn       → trình duyệt tự nối lại, tự gửi Last-Event-ID
+Nối lại bị 401 (cookie hết hạn)   → EventSource dừng hẳn
+                                  → engine làm mới token (nhận cookie mới)
+                                  → mở EventSource mới với ?cursor=<cursor trong IndexedDB>
+```
+
+Server đọc vị trí từ `Last-Event-ID` nếu có, không có thì từ tham số `cursor`.
+
+> **Changed (2026-09-23):** bản đầu của mục này là một mục *Chưa chốt*, nêu vấn
+> đề và đề xuất đúng hướng cookie ở trên, cùng hai phương án bất lợi (đọc SSE
+> bằng `fetch` để gắn header; vé ngắn hạn trên query string). Đã chốt hướng
+> cookie bằng [ADR-0018](../adr/0018-sse-stream-cookie-auth.md), kèm lý do loại
+> hai phương án kia.
 
 ---
 

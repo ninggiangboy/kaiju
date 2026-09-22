@@ -19,7 +19,7 @@ hiểu vì sao hệ thống trông như hiện tại thay vì trông như cách 
 | [0003](0003-redis-scope.md) | Redis chỉ làm cache, pub/sub, lock, rate limit — không phải source of truth | Accepted |
 | [0004](0004-spring-data-jdbc.md) | Spring Data JDBC + jOOQ thay cho JPA/Hibernate | Accepted |
 | [0005](0005-outbox-db-job.md) | Transactional outbox bằng database và job nền, không dùng Kafka/CDC | Accepted |
-| [0006](0006-sse-over-websocket.md) | SSE cho luồng đồng bộ, mutation qua HTTP POST | Accepted |
+| [0006](0006-sse-over-websocket.md) | SSE cho luồng đồng bộ, mutation qua HTTP POST | Accepted — cách xác thực luồng chốt bởi [0018](0018-sse-stream-cookie-auth.md) |
 | [0007](0007-build-own-sync-engine.md) | Tự xây sync engine thay vì dùng thư viện sync có sẵn | Accepted |
 | [0008](0008-nextjs-as-spa-shell.md) | Next.js dùng như SPA shell, không SSR dữ liệu nghiệp vụ | Accepted |
 | [0009](0009-magic-link-only.md) | Magic link là phương thức xác thực duy nhất | Accepted |
@@ -31,6 +31,7 @@ hiểu vì sao hệ thống trông như hiện tại thay vì trông như cách 
 | [0015](0015-branch-per-environment.md) | Mỗi môi trường là một nhánh, thăng cấp bằng pull request giữa các nhánh | Accepted |
 | [0016](0016-git-branching-workflow.md) | Nhánh làm việc ngắn hạn, merge commit ở mọi cấp, và một ngoại lệ cho quay lui | Accepted |
 | [0017](0017-shadcn-and-tanstack-frontend-stack.md) | shadcn/ui làm nền giao diện, TanStack cho phần headless, TanStack Query chỉ cho dữ liệu ngoài đồng bộ | Accepted |
+| [0018](0018-sse-stream-cookie-auth.md) | Luồng SSE xác thực bằng một cookie riêng, giới hạn ở endpoint luồng đồng bộ | Accepted |
 
 ---
 

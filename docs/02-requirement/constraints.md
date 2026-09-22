@@ -100,6 +100,7 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-31 | Xung đột dữ liệu có cấu trúc giải quyết theo nguyên tắc ghi sau thắng, ở mức từng trường | [ADR-0007](../adr/0007-build-own-sync-engine.md) |
 | CON-32 | Mọi thay đổi dữ liệu phải sinh bản ghi nhật ký thay đổi, và phần dữ liệu gửi đi chỉ chứa trường đã đổi | [ADR-0007](../adr/0007-build-own-sync-engine.md) |
 | CON-33 | Tầng truyền tải ở client phải nằm sau một interface để đổi được về sau | [ADR-0006](../adr/0006-sse-over-websocket.md) |
+| CON-88 | Luồng SSE xác thực bằng cookie `HttpOnly` giới hạn đường dẫn, mang token loại `stream` mà chỉ endpoint luồng đồng bộ chấp nhận. Thu hồi hay đăng xuất một phiên phải chủ động đóng kết nối đồng bộ của phiên đó | [ADR-0018](../adr/0018-sse-stream-cookie-auth.md) |
 
 ## Frontend
 

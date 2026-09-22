@@ -1,6 +1,7 @@
 # ADR-0006: SSE cho luồng đồng bộ, mutation qua HTTP POST
 
-- **Trạng thái:** Accepted
+- **Trạng thái:** Accepted — cách xác thực luồng đồng bộ được chốt bởi [ADR-0018](0018-sse-stream-cookie-auth.md)
+- **Đã thay đổi (2026-09-23):** quyết định dùng SSE giữ nguyên. Câu "xác thực đi tự nhiên qua cookie hoặc header" ở phần Lý do chỉ đúng với cookie: `EventSource` không cho đặt header, và token truy cập không nằm trong cookie. Luồng đồng bộ nay xác thực bằng một cookie riêng loại `stream`, xem [ADR-0018](0018-sse-stream-cookie-auth.md)
 - **Ngày:** 2026-09-17
 - **Liên quan:** [ADR-0003](0003-redis-scope.md), [ADR-0007](0007-build-own-sync-engine.md), [realtime-and-sync.md](../04-system-design/realtime-and-sync.md)
 
