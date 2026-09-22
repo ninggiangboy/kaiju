@@ -78,8 +78,10 @@ Vietnamese; this table is the index into it.
 | Background jobs, the relay worker, retries | [events-and-outbox.md](docs/04-system-design/events-and-outbox.md) |
 | Anything that changes data the client holds | [realtime-and-sync.md](docs/04-system-design/realtime-and-sync.md) |
 | The SSE protocol, cursors, catch-up, bootstrap | [realtime-and-sync.md](docs/04-system-design/realtime-and-sync.md) |
-| Client-side store, optimistic updates, offline queue | [frontend.md](docs/04-system-design/frontend.md) + [realtime-and-sync.md](docs/04-system-design/realtime-and-sync.md) |
+| Implementing any part of the sync engine — tables, the change recorder, the mutation endpoint, the SSE stream, the client store, mutators, rebase | [sync-engine.md](docs/04-system-design/sync-engine.md) |
+| Client-side store, optimistic updates, offline queue | [frontend.md](docs/04-system-design/frontend.md) + [sync-engine.md](docs/04-system-design/sync-engine.md#phía-client) |
 | Next.js routing, deciding where something renders | [frontend.md](docs/04-system-design/frontend.md) + [ADR-0008](docs/adr/0008-nextjs-as-spa-shell.md) |
+| UI components, styling, tables, forms, server calls outside sync | [frontend.md — libraries](docs/04-system-design/frontend.md#thư-viện) + [ADR-0017](docs/adr/0017-shadcn-and-tanstack-frontend-stack.md) |
 | Auth, sessions, magic link | [identity-and-permission.md](docs/04-system-design/identity-and-permission.md) + [uc-01-auth.md](docs/03-features/usecases/uc-01-auth.md) |
 | Permission checks, roles, bitmasks | [identity-and-permission.md](docs/04-system-design/identity-and-permission.md) + [ADR-0010](docs/adr/0010-bitmask-permission.md) |
 | Anything that grants or removes access | [uc-03-member-invite.md](docs/03-features/usecases/uc-03-member-invite.md) + [realtime-and-sync.md — revocation](docs/04-system-design/realtime-and-sync.md#khi-quyền-bị-thu-hồi) |
@@ -100,6 +102,7 @@ Vietnamese; this table is the index into it.
 | Add a foreign key to a global table | [ADR-0011](docs/adr/0011-account-vs-member.md). This is unfixable once data exists |
 | Reference a person from business data | [ADR-0011](docs/adr/0011-account-vs-member.md). It must point at `member`, never `account` |
 | Write a Server Action or fetch business data in a server component | [ADR-0008](docs/adr/0008-nextjs-as-spa-shell.md). Both are forbidden |
+| Use TanStack Query (`useQuery`, `useMutation`) for an entity that has a sync scope | [ADR-0017](docs/adr/0017-shadcn-and-tanstack-frontend-stack.md). Forbidden — it creates a second copy of synced data. Use `useLocalQuery` / `useMutator` |
 | Add a datastore, a broker, or a sync library | [ADR-0002](docs/adr/0002-postgres-only.md), [ADR-0005](docs/adr/0005-outbox-db-job.md), [ADR-0007](docs/adr/0007-build-own-sync-engine.md) |
 | Add any event-store library of the base framework, or use its transactional event listener annotations | [events-and-outbox.md](docs/04-system-design/events-and-outbox.md#ba-điều-cấm). It silently creates a second, competing outbox |
 | Create a package, move one, or add a module | [backend-modules.md](docs/04-system-design/backend-modules.md#quy-ước-package-bắt-buộc). Get this wrong and the boundary check silently verifies nothing |
@@ -171,6 +174,9 @@ These may not be violated. Full reasoning lives in the linked ADRs and in
 23. The app area renders entirely on the client; only marketing pages and the
     magic-link landing page render on the server
 24. Multiple tabs share **one** sync connection and **one** local writer
+40. **TanStack Query is only for data with no sync scope**, and is imported only
+    under a `remote/` directory. Synced entities are read and changed through the
+    sync engine alone
 
 ### Identity and permissions
 

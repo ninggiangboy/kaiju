@@ -100,6 +100,7 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-31 | Xung đột dữ liệu có cấu trúc giải quyết theo nguyên tắc ghi sau thắng, ở mức từng trường | [ADR-0007](../adr/0007-build-own-sync-engine.md) |
 | CON-32 | Mọi thay đổi dữ liệu phải sinh bản ghi nhật ký thay đổi, và phần dữ liệu gửi đi chỉ chứa trường đã đổi | [ADR-0007](../adr/0007-build-own-sync-engine.md) |
 | CON-33 | Tầng truyền tải ở client phải nằm sau một interface để đổi được về sau | [ADR-0006](../adr/0006-sse-over-websocket.md) |
+| CON-88 | Luồng SSE xác thực bằng cookie `HttpOnly` giới hạn đường dẫn, mang token loại `stream` mà chỉ endpoint luồng đồng bộ chấp nhận. Thu hồi hay đăng xuất một phiên phải chủ động đóng kết nối đồng bộ của phiên đó | [ADR-0018](../adr/0018-sse-stream-cookie-auth.md) |
 
 ## Frontend
 
@@ -110,6 +111,8 @@ viết ADR mới thay thế ADR cũ, không sửa tại chỗ.
 | CON-36 | **Cấm** lấy dữ liệu nghiệp vụ trong server component | [ADR-0008](../adr/0008-nextjs-as-spa-shell.md) |
 | CON-37 | Nhiều tab chỉ dùng một kết nối đồng bộ và một nơi ghi dữ liệu cục bộ | [ADR-0007](../adr/0007-build-own-sync-engine.md) |
 | CON-38 | Middleware của Next chỉ kiểm tra sự tồn tại của cookie để điều hướng, không tự xác thực token | [ADR-0008](../adr/0008-nextjs-as-spa-shell.md) |
+| CON-86 | Component giao diện dùng shadcn/ui trên Tailwind CSS, mã component nằm trong `src/ui/`; token thiết kế là biến CSS theo quy ước theme của shadcn | [ADR-0017](../adr/0017-shadcn-and-tanstack-frontend-stack.md) |
+| CON-87 | TanStack Query **chỉ** dùng cho dữ liệu không có sync scope, và chỉ được import trong thư mục `remote/`. **Cấm** dùng nó để đọc hay thay đổi thực thể có sync scope | [ADR-0017](../adr/0017-shadcn-and-tanstack-frontend-stack.md) |
 
 ## Danh tính và phân quyền
 

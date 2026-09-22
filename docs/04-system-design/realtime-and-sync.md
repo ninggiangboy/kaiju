@@ -7,7 +7,11 @@ hướng server → client, và qua HTTP POST cho hướng ngược lại.
 Đây là tài liệu cốt lõi của dự án. Kiến trúc mô tả ở đây thuộc Phase 0 và **không
 thể bổ sung sau**.
 
-**Liên quan:** [ADR-0006](../adr/0006-sse-over-websocket.md) · [ADR-0007](../adr/0007-build-own-sync-engine.md) · [events-and-outbox.md](events-and-outbox.md) · [frontend.md](frontend.md) · [identity-and-permission.md](identity-and-permission.md)
+**Liên quan:** [ADR-0006](../adr/0006-sse-over-websocket.md) · [ADR-0007](../adr/0007-build-own-sync-engine.md) · [sync-engine.md](sync-engine.md) · [events-and-outbox.md](events-and-outbox.md) · [frontend.md](frontend.md) · [identity-and-permission.md](identity-and-permission.md)
+
+Tài liệu này là **giao thức và quy tắc**. Cách hiện thực từng phần — bảng, thuật
+toán nối bắt kịp với trực tiếp, vòng đời mutation, lưu trữ ở client, thứ tự xây
+dựng — nằm ở [sync-engine.md](sync-engine.md).
 
 ---
 
