@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Board — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .chip{font-size:12px;font-weight:600;color:#767B8C;background:#FFFFFF;border:1px solid #ECEEF6;border-radius:999px;padding:6px 12px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+  .ty{width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;}
+  .col{width:246px;flex-shrink:0;display:flex;flex-direction:column;background:#F3F4F9;border-radius:12px;max-height:100%;}
+  .card{background:#FFFFFF;border-radius:9px;box-shadow:0 1px 2px rgba(27,29,39,0.06);padding:10px 11px;display:flex;flex-direction:column;gap:7px;cursor:pointer;border-left:3px solid transparent;}
+  .card:hover{box-shadow:0 2px 8px rgba(27,29,39,0.12);}
+  .slot{height:52px;border:1.5px dashed #4C63F5;border-radius:9px;background:#EDF0FE;}
+  select,input{height:32px;box-sizing:border-box;padding:0 10px;font-size:12.5px;font-family:inherit;color:#1B1D27;background:#FAFBFE;border:1px solid #DEE1EC;border-radius:7px;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="board" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Board" search-placeholder="Search this project…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: hidden; padding: 20px 32px 0; display: flex; flex-direction: column; gap: 12px; box-sizing: border-box; min-height: 0;">
+
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Software board</h1>
+          <sc-if value="{{sourceIsFilter}}" hint-placeholder-val="{{true}}">
+            <div style="display: flex; align-items: center; gap: 5px; margin-top: 2px;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.4"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+              <span style="font-size: 11.5px; color: #A7ABBB;">Source filter:</span>
+              <a href="Search.dc.html" style="font-size: 11.5px; font-weight: 700;">Team backlog</a>
+            </div>
+          </sc-if>
+          <sc-if value="{{sourceIsSprint}}" hint-placeholder-val="{{false}}">
+            <div style="display: flex; align-items: center; gap: 5px; margin-top: 2px;">
+              <span style="width: 6px; height: 6px; border-radius: 999px; background: #1A8F5C;"></span>
+              <span style="font-size: 11.5px; color: #A7ABBB;">Sprint:</span>
+              <a href="SprintBacklog.dc.html" style="font-size: 11.5px; font-weight: 700;">Sprint 14</a>
+              <span style="font-size: 11px; color: #A7ABBB;">· Sep 8 – Sep 22 · Running</span>
+            </div>
+          </sc-if>
+        </div>
+        <div class="chip" onClick="{{selectSource('filter')}}" style="background: {{sourceBg.filter}}; color: {{sourceFg.filter}};">Filter board</div>
+        <div class="chip" onClick="{{selectSource('sprint')}}" style="background: {{sourceBg.sprint}}; color: {{sourceFg.sprint}};">Sprint board</div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{selectGroup('none')}}" class="chip" style="background: {{groupBg.none}}; color: {{groupFg.none}}; border-color: {{groupBg.none}};">No grouping</div>
+        <div onClick="{{selectGroup('epic')}}" class="chip" style="background: {{groupBg.epic}}; color: {{groupFg.epic}}; border-color: {{groupBg.epic}};">Group by epic</div>
+        <div onClick="{{openChart}}" class="chip">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
+          Reports
+        </div>
+        <div onClick="{{openSettings}}" class="chip">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09A1.65 1.65 0 0015.4 4.6a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
+          Board settings
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="chip">Quick filter: Assignee — {{quickAssignee}} <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg></div>
+        <div class="chip">Quick filter: Label — Any <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg></div>
+        <sc-if value="{{quickActive}}" hint-placeholder-val="{{false}}">
+          <div onClick="{{clearQuick}}" style="font-size: 11.5px; font-weight: 700; color: #4C63F5; cursor: pointer;">Clear</div>
+        </sc-if>
+        <div style="flex-grow: 1;"></div>
+        <span style="font-size: 11px; color: #A7ABBB;">Quick filters only change what you see — they don't touch the saved filter.</span>
+      </div>
+
+      <sc-if value="{{bounceMsg}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; align-items: center; gap: 8px; background: #FEF0EF; border: 1px solid #F6C8C5; border-radius: 8px; padding: 8px 12px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2.4" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <span style="font-size: 12px; color: #F0453F; flex-grow: 1;">{{bounceMsg}}</span>
+          <svg onClick="{{dismissBounce}}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2.4" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+      </sc-if>
+
+      <div style="flex-grow: 1; display: flex; gap: 14px; overflow-x: auto; overflow-y: hidden; padding-bottom: 8px; min-height: 0;">
+        <sc-for list="{{lanes}}" as="lane" hint-placeholder-count="2">
+          <div style="display: flex; flex-direction: column; gap: 6px; min-height: 0;">
+            <sc-if value="{{lane.showLabel}}" hint-placeholder-val="{{false}}">
+              <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase; letter-spacing: 0.03em;">{{lane.label}}</span>
+            </sc-if>
+            <div style="display: flex; gap: 14px; flex-grow: 1; min-height: 0;">
+              <sc-for list="{{lane.cols}}" as="col" hint-placeholder-count="4">
+                <div onClick="{{dropOnColumn(lane.key, col.key)}}" class="col" style="border: {{col.outline}};">
+                  <div style="display: flex; align-items: center; padding: 10px 12px 6px; gap: 6px;">
+                    <span style="font-size: 11.5px; font-weight: 700; color: #55596B; text-transform: uppercase; letter-spacing: 0.03em;">{{col.title}}</span>
+                    <span style="font-size: 11px; font-weight: 700; color: {{col.countFg}};">{{col.count}}</span>
+                    <sc-if value="{{col.overWip}}" hint-placeholder-val="{{false}}">
+                      <span style="margin-left: auto; font-size: 10.5px; font-weight: 700; color: #F0453F; background: #FEF0EF; border-radius: 999px; padding: 2px 7px;">over WIP {{col.wip}}</span>
+                    </sc-if>
+                    <sc-if value="{{col.showWip}}" hint-placeholder-val="{{false}}">
+                      <span style="margin-left: auto; font-size: 10.5px; font-weight: 600; color: #A7ABBB;">limit {{col.wip}}</span>
+                    </sc-if>
+                  </div>
+                  <div style="flex-grow: 1; overflow-y: auto; padding: 0 8px 8px; display: flex; flex-direction: column; gap: 8px; min-height: 60px;">
+                    <sc-for list="{{col.cards}}" as="c" hint-placeholder-count="2">
+                      <div onClick="{{pickCard(c.laneKey, c.id)}}" class="card" style="border-left-color: {{c.ruleColor}}; outline: {{c.outline}};">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                          <span class="ty" style="background: {{c.typeBg}};">{{c.typeLetter}}</span>
+                          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 700; color: #A7ABBB;">{{c.key}}</span>
+                        </div>
+                        <span style="font-size: 12.5px; font-weight: 600; line-height: 1.35;">{{c.title}}</span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="{{c.prioFg}}" stroke-width="3"><path d="{{c.prioPath}}"></path></svg>
+                          <span style="font-size: 10.5px; font-weight: 700; color: #A7ABBB;">{{c.points}} pts</span>
+                          <div style="flex-grow: 1;"></div>
+                          <div style="width: 20px; height: 20px; border-radius: 999px; background: {{c.assigneeBg}}; display: flex; align-items: center; justify-content: center; font-size: 8.5px; font-weight: 700; color: {{c.assigneeFg}};">{{c.assignee}}</div>
+                        </div>
+                      </div>
+                    </sc-for>
+                    <sc-if value="{{col.showSlot}}" hint-placeholder-val="{{false}}">
+                      <div class="slot"></div>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="border-top: 1px solid #ECEEF6; background: #FFFFFF; margin: 0 -32px; padding: 0 32px;">
+        <div onClick="{{toggleBacklog}}" style="display: flex; align-items: center; gap: 8px; padding: 10px 0; cursor: pointer;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="3" style="transform: {{backlogRotate}};"><path d="M9 18l6-6-6-6"></path></svg>
+          <span style="font-size: 12.5px; font-weight: 700;">Backlog</span>
+          <span style="font-size: 11px; color: #A7ABBB;">{{backlogCount}} issues not yet on the board</span>
+        </div>
+        <sc-if value="{{backlogOpen}}" hint-placeholder-val="{{false}}">
+          <div style="max-height: 150px; overflow-y: auto; padding-bottom: 10px;">
+            <sc-for list="{{backlog}}" as="b" hint-placeholder-count="3">
+              <div style="display: flex; align-items: center; gap: 10px; height: 34px; border-top: 1px solid #F5F6FA;">
+                <span class="ty" style="background: {{b.typeBg}};">{{b.typeLetter}}</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 700; color: #A7ABBB; width: 64px;">{{b.key}}</span>
+                <span style="font-size: 12.5px; font-weight: 600; flex-grow: 1;">{{b.title}}</span>
+                <div onClick="{{pullToBoard(b.id)}}" style="font-size: 11px; font-weight: 700; color: #4C63F5; cursor: pointer;">Move to board →</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{settingsOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 560px; max-height: 720px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Board settings</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeSettings}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 700;">Columns → workflow states</label>
+          <div style="border: 1px solid #ECEEF6; border-radius: 10px; overflow: hidden;">
+            <sc-for list="{{settingsCols}}" as="sc" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-bottom: 1px solid #F5F6FA;">
+                <span style="font-size: 12.5px; font-weight: 700; width: 96px;">{{sc.title}}</span>
+                <span style="font-size: 11.5px; color: #767B8C; flex-grow: 1;">{{sc.states}}</span>
+                <input value="{{sc.wip}}" style="width: 56px; text-align: center;">
+                <span style="font-size: 10.5px; color: #A7ABBB;">WIP</span>
+              </div>
+            </sc-for>
+          </div>
+          <span style="font-size: 11px; color: #A7ABBB;">Each state belongs to exactly one column. A state added to the workflow later shows up unmapped until you place it here.</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 700;">Swimlanes</label>
+          <select style="width: 220px;"><option>No grouping</option><option>Group by epic</option><option>Group by assignee</option></select>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 700;">Card fields</label>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <span class="chip" style="cursor: default; color: #4C63F5; border-color: #4C63F5; background: #EDF0FE;">Priority</span>
+            <span class="chip" style="cursor: default; color: #4C63F5; border-color: #4C63F5; background: #EDF0FE;">Story points</span>
+            <span class="chip" style="cursor: default; color: #4C63F5; border-color: #4C63F5; background: #EDF0FE;">Assignee</span>
+            <span class="chip">+ Labels</span>
+            <span class="chip">+ Due date</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 700;">Card color rules</label>
+          <span style="font-size: 11px; color: #A7ABBB;">First matching rule wins — order matters.</span>
+          <div style="border: 1px solid #ECEEF6; border-radius: 10px; overflow: hidden;">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-bottom: 1px solid #F5F6FA;">
+              <span style="width: 14px; height: 14px; border-radius: 3px; background: #F0453F; flex-shrink: 0;"></span>
+              <span style="font-size: 12px; flex-grow: 1;">Priority is High</span>
+              <span style="font-size: 10.5px; color: #A7ABBB;">1st</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 9px 12px;">
+              <span style="width: 14px; height: 14px; border-radius: 3px; background: #B8790F; flex-shrink: 0;"></span>
+              <span style="font-size: 12px; flex-grow: 1;">Due date is before today</span>
+              <span style="font-size: 10.5px; color: #A7ABBB;">2nd</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeSettings}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Done</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{chartOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 620px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Reports</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeChart}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <div onClick="{{selectReport('cfd')}}" class="chip" style="background: {{reportBg.cfd}}; color: {{reportFg.cfd}};">Cumulative flow</div>
+          <div onClick="{{selectReport('control')}}" class="chip" style="background: {{reportBg.control}}; color: {{reportFg.control}};">Control chart</div>
+        </div>
+        <sc-if value="{{showCfd}}" hint-placeholder-val="{{true}}">
+          <svg width="572" height="220" viewBox="0 0 572 220">
+            <path d="M0 200 L0 150 C 100 140, 150 120, 220 110 C 320 96, 420 80, 572 60 L 572 200 Z" fill="#22B573" opacity="0.35"></path>
+            <path d="M0 200 L0 180 C 100 170, 150 160, 220 150 C 320 138, 420 120, 572 100 L 572 200 Z" fill="#8B6FFF" opacity="0.4"></path>
+            <path d="M0 200 L0 195 C 100 193, 150 190, 220 185 C 320 178, 420 165, 572 150 L 572 200 Z" fill="#767B8C" opacity="0.35"></path>
+            <line x1="0" y1="200" x2="572" y2="200" stroke="#DEE1EC" stroke-width="1"></line>
+          </svg>
+          <span style="font-size: 11px; color: #A7ABBB;">Built from the status change log of every issue in the source filter — no separate stats table to keep in sync.</span>
+        </sc-if>
+        <sc-if value="{{showControl}}" hint-placeholder-val="{{false}}">
+          <svg width="572" height="220" viewBox="0 0 572 220">
+            <line x1="30" y1="10" x2="30" y2="200" stroke="#DEE1EC" stroke-width="1"></line>
+            <line x1="30" y1="200" x2="572" y2="200" stroke="#DEE1EC" stroke-width="1"></line>
+            <line x1="30" y1="120" x2="572" y2="120" stroke="#F3DFB8" stroke-width="1" stroke-dasharray="4 3"></line>
+            <circle cx="70" cy="170" r="4" fill="#4C63F5"></circle>
+            <circle cx="120" cy="150" r="4" fill="#4C63F5"></circle>
+            <circle cx="170" cy="60" r="4" fill="#F0453F"></circle>
+            <circle cx="230" cy="140" r="4" fill="#4C63F5"></circle>
+            <circle cx="290" cy="100" r="4" fill="#4C63F5"></circle>
+            <circle cx="340" cy="180" r="4" fill="#4C63F5"></circle>
+            <circle cx="400" cy="40" r="4" fill="#F0453F"></circle>
+            <circle cx="460" cy="130" r="4" fill="#4C63F5"></circle>
+            <circle cx="520" cy="90" r="4" fill="#4C63F5"></circle>
+          </svg>
+          <span style="font-size: 11px; color: #A7ABBB;">Each dot is one issue's time-in-column, from the same change log — outliers above the dashed line stand out.</span>
+        </sc-if>
+        <a href="SprintReports.dc.html" style="font-size: 11.5px; font-weight: 700; align-self: flex-end;">Burndown, velocity &amp; epic reports →</a>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const COLS = [
+      { key: 'todo', title: 'To do', states: ['To do'], wip: null },
+      { key: 'inprogress', title: 'In progress', states: ['In progress'], wip: 3 },
+      { key: 'inreview', title: 'In review', states: ['In review'], wip: 2 },
+      { key: 'done', title: 'Done', states: ['Done'], wip: null },
+    ];
+    const NEXT = {
+      'To do': ['In progress'],
+      'In progress': ['In review', 'To do'],
+      'In review': ['Done', 'In progress'],
+      'Done': ['In progress'],
+    };
+    const typeSwatch = { story: ['S', '#22B573'], task: ['✓', '#4C63F5'], bug: ['B', '#F0453F'] };
+    const prioColor = {
+      High: ['#F0453F', 'M12 19V5', 'M5 12l7-7 7 7'],
+      Medium: ['#B8790F', 'M5 12h14'],
+      Low: ['#1A8F5C', 'M12 5v14', 'M5 12l7 7 7-7'],
+    };
+    const avatarPalette = {
+      JD: ['#FFEEE9', '#FF6A45'], NP: ['#FDEBEA', '#F0453F'], SO: ['#F1EDFF', '#8B6FFF'], AL: ['#EDF0FE', '#4C63F5'],
+    };
+
+    const laneRows = [
+      { key: 'epic-142', epic: 'Payout reversal & reconciliation', cards: [
+        ['c1', 'PAY-142', 'story', 'Reversal entry missing for failed payout retries', 'In progress', 'High', 'JD', 5],
+        ['c2', 'PAY-141', 'bug', 'Duplicate webhook delivery double-charges card', 'In review', 'High', 'NP', 3],
+        ['c3', 'PAY-139', 'task', 'Payout status polling drifts under load', 'To do', 'Medium', 'JD', 2],
+        ['c4', 'PAY-135', 'task', 'Migrate ledger writes to the outbox pattern', 'Done', 'Low', 'SO', 3],
+      ]},
+      { key: 'epic-other', epic: 'Card issuing', cards: [
+        ['c5', 'PAY-126', 'story', 'Card issuing: spending limit rules', 'In progress', 'High', 'SO', 8],
+        ['c6', 'PAY-131', 'story', 'Payout status page for merchants', 'To do', 'Low', 'AL', 5],
+      ]},
+    ];
+    const allCards = laneRows.flatMap((l) => l.cards.map((c) => ({ laneKey: l.key, row: c })));
+
+    const custom = this.state.customStatus ?? {};
+    const groupBy = this.state.groupBy ?? 'none';
+    const selected = this.state.selected;
+    const bounceMsg = this.state.bounceMsg;
+
+    const statusOf = (laneKey, id) => custom[laneKey + ':' + id] ?? allCards.find((c) => c.laneKey === laneKey && c.row[0] === id).row[4];
+
+    const laneGroups = groupBy === 'epic'
+      ? laneRows.map((l) => ({ key: l.key, label: l.epic, showLabel: true, cardsSrc: l.cards }))
+      : [{ key: 'all', label: '', showLabel: false, cardsSrc: laneRows.flatMap((l) => l.cards.map((c) => [l.key, ...c])) }];
+
+    const buildCard = ([origLaneKey, id, key, type, title, , priority, assignee, points], laneKey) => {
+      const [typeLetter, typeBg] = typeSwatch[type];
+      const [prioFg, ...prioSegs] = prioColor[priority];
+      const [ab, af] = avatarPalette[assignee];
+      const ruleColor = priority === 'High' ? '#F0453F' : (id === 'c3' ? '#B8790F' : 'transparent');
+      return {
+        id, key, title, typeLetter, typeBg,
+        prioFg, prioPath: prioSegs.join(' '),
+        points, assignee, assigneeBg: ab, assigneeFg: af,
+        ruleColor,
+        laneKey,
+        outline: selected && selected.laneKey === laneKey && selected.id === id ? '2px solid #4C63F5' : 'none',
+      };
+    };
+
+    const lanes = laneGroups.map((g) => {
+      const rows = groupBy === 'epic'
+        ? g.cardsSrc.map((c) => [g.key, ...c])
+        : g.cardsSrc;
+      const cols = COLS.map((colDef) => {
+        const cardsInCol = rows
+          .filter((r) => statusOf(r[0], r[1]) === colDef.states[0])
+          .map((r) => buildCard(r, r[0]));
+        const count = cardsInCol.length;
+        const overWip = colDef.wip != null && count > colDef.wip;
+        const isDropTarget = selected && selected.laneKey === g.key;
+        return {
+          key: colDef.key,
+          title: colDef.title,
+          cards: cardsInCol,
+          count,
+          countFg: overWip ? '#F0453F' : '#A7ABBB',
+          showWip: colDef.wip != null && !overWip,
+          overWip,
+          wip: colDef.wip,
+          showSlot: !!isDropTarget,
+          outline: isDropTarget ? '1.5px dashed #4C63F5' : 'none',
+        };
+      });
+      return { key: g.key, label: g.label, showLabel: g.showLabel, cols };
+    });
+
+    const backlogRows = [
+      ['b1', 'PAY-98', 'story', 'Reconciliation report export'],
+      ['b2', 'PAY-96', 'task', 'Add payout webhook replay tool'],
+      ['b3', 'PAY-90', 'bug', 'Stale exchange rate cached past TTL'],
+    ];
+
+    const sourceMode = this.state.sourceMode ?? 'filter';
+
+    return {
+      sourceIsFilter: sourceMode === 'filter',
+      sourceIsSprint: sourceMode === 'sprint',
+      sourceBg: { filter: sourceMode === 'filter' ? '#4C63F5' : '#FFFFFF', sprint: sourceMode === 'sprint' ? '#4C63F5' : '#FFFFFF' },
+      sourceFg: { filter: sourceMode === 'filter' ? '#fff' : '#767B8C', sprint: sourceMode === 'sprint' ? '#fff' : '#767B8C' },
+      selectSource: (m) => () => this.setState({ sourceMode: m }),
+      quickAssignee: 'Anyone',
+      quickActive: false,
+      clearQuick: () => {},
+
+      groupBg: { none: groupBy === 'none' ? '#4C63F5' : '#FFFFFF', epic: groupBy === 'epic' ? '#4C63F5' : '#FFFFFF' },
+      groupFg: { none: groupBy === 'none' ? '#fff' : '#767B8C', epic: groupBy === 'epic' ? '#fff' : '#767B8C' },
+      selectGroup: (g) => () => this.setState({ groupBy: g }),
+
+      lanes,
+
+      pickCard: (laneKey, id) => () => this.setState({ selected: { laneKey, id }, bounceMsg: null }),
+      dropOnColumn: (laneKey, colKey) => () => {
+        if (!selected || selected.laneKey !== laneKey) return;
+        const from = statusOf(selected.laneKey, selected.id);
+        const target = COLS.find((c) => c.key === colKey);
+        const to = target.states[0];
+        if (from === to) { this.setState({ selected: null }); return; }
+        const allowed = (NEXT[from] || []).includes(to);
+        if (!allowed) {
+          this.setState({ selected: null, bounceMsg: `No transition from "${from}" to "${to}" in this workflow — card snapped back.` });
+          return;
+        }
+        this.setState({
+          customStatus: { ...custom, [selected.laneKey + ':' + selected.id]: to },
+          selected: null,
+          bounceMsg: null,
+        });
+      },
+      bounceMsg,
+      dismissBounce: () => this.setState({ bounceMsg: null }),
+
+      backlogOpen: this.state.backlogOpen ?? false,
+      backlogRotate: (this.state.backlogOpen ?? false) ? 'rotate(90deg)' : 'rotate(0deg)',
+      toggleBacklog: () => this.setState({ backlogOpen: !(this.state.backlogOpen ?? false) }),
+      backlogCount: backlogRows.length,
+      backlog: backlogRows.map(([id, key, type, title]) => {
+        const [typeLetter, typeBg] = typeSwatch[type];
+        return { id, key, title, typeLetter, typeBg };
+      }),
+      pullToBoard: () => () => {},
+
+      settingsOpen: !!this.state.settingsOpen,
+      openSettings: () => this.setState({ settingsOpen: true }),
+      closeSettings: () => this.setState({ settingsOpen: false }),
+      settingsCols: COLS.map((c) => ({ title: c.title, states: c.states.join(', '), wip: c.wip ?? '—' })),
+
+      chartOpen: !!this.state.chartOpen,
+      openChart: () => this.setState({ chartOpen: true, report: 'cfd' }),
+      closeChart: () => this.setState({ chartOpen: false }),
+      selectReport: (r) => () => this.setState({ report: r }),
+      showCfd: (this.state.report ?? 'cfd') === 'cfd',
+      showControl: this.state.report === 'control',
+      reportBg: { cfd: (this.state.report ?? 'cfd') === 'cfd' ? '#4C63F5' : '#FFFFFF', control: this.state.report === 'control' ? '#4C63F5' : '#FFFFFF' },
+      reportFg: { cfd: (this.state.report ?? 'cfd') === 'cfd' ? '#fff' : '#767B8C', control: this.state.report === 'control' ? '#fff' : '#767B8C' },
+    };
+  }
+}
+</script>
+</body>
+</html>

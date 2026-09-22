@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sidebar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&amp;family=Manrope:wght@600;700&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  .navitem{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:600;color:#767B8C;}
+  .navitem.active{background:#EDF0FE;color:#4C63F5;}
+</style>
+</helmet>
+<div style="width: 232px; height: 900px; box-sizing: border-box; background: #FFFFFF; border-right: 1px solid #ECEEF6; display: flex; flex-direction: column; padding: 16px 12px; gap: 16px; position: relative;">
+
+  <div onClick="{{toggleSwitcher}}" style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; cursor: pointer;">
+    <div style="width: 26px; height: 26px; border-radius: 7px; background: #4C63F5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+      <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12px; color: #fff;">A</span>
+    </div>
+    <span style="font-weight: 700; font-size: 13px; flex-grow: 1;">Acme Inc</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2"><path d="M8 9l4 4 4-4"></path><path d="M8 15l4-4 4 4"></path></svg>
+  </div>
+
+  <div style="background: #FAFBFE; border: 1px solid #F0F1F7; border-radius: 8px; padding: 7px 10px; display: flex; align-items: center; gap: 8px;">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <span style="font-size: 12px; color: #A7ABBB; flex-grow: 1;">Quick switch</span>
+    <span style="font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #A7ABBB; background: #F0F1F7; border-radius: 4px; padding: 1px 5px;">⌘K</span>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 2px;">
+    <a href="Projects.dc.html" class="navitem {{cls.projects}}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"></rect><rect x="14" y="3" width="7" height="5" rx="1.5"></rect><rect x="14" y="12" width="7" height="9" rx="1.5"></rect><rect x="3" y="16" width="7" height="5" rx="1.5"></rect></svg>
+      Projects
+    </a>
+    <a href="Dashboards.dc.html" class="navitem {{cls.dashboards}}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
+      Dashboards
+    </a>
+    <a href="Members.dc.html" class="navitem {{cls.members}}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"></circle><path d="M17 21v-2a4 4 0 00-3-3.87"></path><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"></path><path d="M14 3.13a4 4 0 010 7.75"></path></svg>
+      Members
+    </a>
+    <a href="WorkspaceSettings.dc.html" class="navitem {{cls.settings}}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09A1.65 1.65 0 0015.4 4.6a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
+      Workspace settings
+    </a>
+    <a href="AuditLog.dc.html" class="navitem {{cls.auditlog}}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      Audit log
+    </a>
+  </div>
+
+  <a href="MemberProfile.dc.html" style="margin-top: auto; display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 8px;">
+    <div style="width: 26px; height: 26px; border-radius: 999px; background: #EDF0FE; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #4C63F5;">AL</div>
+    <div style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0;">
+      <span style="font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Alex Lam</span>
+      <span style="font-size: 10px; color: #A7ABBB;">Owner</span>
+    </div>
+  </a>
+
+  <sc-if value="{{switcherOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; top: 52px; left: 12px; width: 280px; background: #fff; border: 1px solid #ECEEF6; border-radius: 12px; box-shadow: 0 12px 32px rgba(27,29,39,0.14); padding: 8px; z-index: 10; display: flex; flex-direction: column; gap: 2px;">
+      <div style="display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; background: #FAFBFE;">
+        <div style="width: 26px; height: 26px; border-radius: 7px; background: #4C63F5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;color:#fff;">A</span></div>
+        <div style="display: flex; flex-direction: column; flex-grow: 1;"><span style="font-size:13px;font-weight:700;">Acme Inc</span><span style="font-size:11px;color:#767B8C;">Owner</span></div>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px;">
+        <div style="width: 26px; height: 26px; border-radius: 7px; background: #FFEEE9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;color:#FF6A45;">P</span></div>
+        <div style="display: flex; flex-direction: column; flex-grow: 1;"><span style="font-size:13px;font-weight:600;">Personal</span><span style="font-size:11px;color:#767B8C;">Member</span></div>
+      </div>
+      <div style="height: 1px; background: #F0F1F7; margin: 4px 0;"></div>
+      <div onClick="{{openCreate}}" style="display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; color: #4C63F5; font-weight: 700; font-size: 13px; cursor: pointer;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Create workspace
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{createOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: fixed; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 30;">
+      <div style="width: 420px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px; font-family: 'Manrope', sans-serif;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Create workspace</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeCreate}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Workspace name</label>
+          <input placeholder="e.g. Umbrella Corp" style="height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; font-family: inherit; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Slug</label>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 12px; color: #A7ABBB; font-family: 'JetBrains Mono', monospace;">app.kaiju.dev/</span>
+            <input placeholder="umbrella-corp" style="flex-grow: 1; font-family: 'JetBrains Mono', monospace; height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+          </div>
+        </div>
+        <span style="font-size: 11px; color: #A7ABBB; line-height: 1.5;">You become the owner. A brand-new workspace starts empty — nothing carries over from Acme Inc.</span>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeCreate}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Create workspace</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","default":"projects","options":["projects","dashboards","members","settings","auditlog"]},"$preview":{"width":232,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const active = this.props.active ?? 'projects';
+    const cls = { projects: '', dashboards: '', members: '', settings: '', auditlog: '' };
+    cls[active] = 'active';
+    return {
+      cls,
+      switcherOpen: !!this.state.switcherOpen,
+      toggleSwitcher: () => this.setState({ switcherOpen: !this.state.switcherOpen }),
+      createOpen: !!this.state.createOpen,
+      openCreate: () => this.setState({ switcherOpen: false, createOpen: true }),
+      closeCreate: () => this.setState({ createOpen: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

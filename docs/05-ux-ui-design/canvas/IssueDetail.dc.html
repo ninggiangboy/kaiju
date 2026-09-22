@@ -1,0 +1,923 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Issue detail — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;}
+  .field-label{font-size:11px;font-weight:700;color:#A7ABBB;text-transform:uppercase;letter-spacing:0.03em;}
+  .field-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F5F6FA;}
+  .field-row:last-child{border-bottom:none;}
+  .ty{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="issues" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Issues / PAY-142" search-placeholder="Search this project…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 24px 40px; box-sizing: border-box;">
+      <div style="display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start;">
+
+        <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #767B8C;">
+            <a href="Issues.dc.html">Issues</a>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.4"><path d="M9 6l6 6-6 6"></path></svg>
+            <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700;">PAY-142</span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px; position: relative;">
+            <span class="ty" style="background: #22B573;">S</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: #767B8C;">PAY-142</span>
+            <div style="flex-grow: 1;"></div>
+            <svg onClick="{{toggleMenu}}" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2.2" style="cursor:pointer;"><circle cx="12" cy="5" r="1.6"></circle><circle cx="12" cy="12" r="1.6"></circle><circle cx="12" cy="19" r="1.6"></circle></svg>
+            <sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+              <div style="position: absolute; top: 24px; right: 0; width: 200px; background: #fff; border: 1px solid #ECEEF6; border-radius: 10px; box-shadow: 0 12px 28px rgba(27,29,39,0.14); padding: 6px; z-index: 15; display: flex; flex-direction: column; gap: 1px;">
+                <div onClick="{{openDuplicate}}" style="padding: 8px 10px; border-radius: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer;">Duplicate issue</div>
+                <div onClick="{{openMove}}" style="padding: 8px 10px; border-radius: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer;">Move to another project</div>
+                <sc-if value="{{isTask}}" hint-placeholder-val="{{false}}">
+                  <div onClick="{{openConvert}}" style="padding: 8px 10px; border-radius: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer;">Convert to Sub-task</div>
+                </sc-if>
+                <sc-if value="{{isSubtask}}" hint-placeholder-val="{{false}}">
+                  <div onClick="{{convertToTask}}" style="padding: 8px 10px; border-radius: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer;">Convert to Task</div>
+                </sc-if>
+                <div style="height: 1px; background: #F0F1F7; margin: 4px 0;"></div>
+                <div onClick="{{openDelete}}" style="padding: 8px 10px; border-radius: 7px; font-size: 12.5px; font-weight: 600; color: #F0453F; cursor: pointer;">Delete issue</div>
+              </div>
+            </sc-if>
+          </div>
+
+          <input value="Ledger entry reversal on failed payout" style="border: none; outline: none; background: transparent; font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: #1B1D27; padding: 0; width: 100%; box-sizing: border-box;">
+
+          <div class="card" style="position: relative;">
+            <div style="display: flex; align-items: center; gap: 4px; border-bottom: 1px solid #F5F6FA; padding-bottom: 10px;">
+              <div onClick="{{toggleBold}}" style="width: 26px; height: 26px; border-radius: 6px; background: {{descFmt.boldBg}}; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                <span style="font-size: 13px; font-weight: 800; color: {{descFmt.boldFg}};">B</span>
+              </div>
+              <div onClick="{{toggleItalic}}" style="width: 26px; height: 26px; border-radius: 6px; background: {{descFmt.italicBg}}; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                <span style="font-size: 13px; font-weight: 700; font-style: italic; color: {{descFmt.italicFg}};">I</span>
+              </div>
+              <div onClick="{{toggleList}}" style="width: 26px; height: 26px; border-radius: 6px; background: {{descFmt.listBg}}; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{descFmt.listFg}}" stroke-width="2.4"><line x1="9" y1="6" x2="20" y2="6"></line><line x1="9" y1="12" x2="20" y2="12"></line><line x1="9" y1="18" x2="20" y2="18"></line><circle cx="4" cy="6" r="1.3" fill="{{descFmt.listFg}}"></circle><circle cx="4" cy="12" r="1.3" fill="{{descFmt.listFg}}"></circle><circle cx="4" cy="18" r="1.3" fill="{{descFmt.listFg}}"></circle></svg>
+              </div>
+              <span style="width: 1px; height: 16px; background: #ECEEF6; margin: 0 4px;"></span>
+              <div onClick="{{toggleImgPicker}}" style="width: 26px; height: 26px; border-radius: 6px; background: {{imgToggleBg}}; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{imgToggleFg}}" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+              </div>
+              <span style="font-size: 10.5px; color: #A7ABBB; margin-left: 4px;">Paste or drop an image anywhere in the description too.</span>
+            </div>
+
+            <sc-if value="{{imgPickerOpen}}" hint-placeholder-val="{{false}}">
+              <div style="display: flex; flex-direction: column; gap: 8px; padding: 10px 0; border-bottom: 1px solid #F5F6FA;">
+                <div style="border: 1.5px dashed #DEE1EC; border-radius: 8px; padding: 14px; display: flex; align-items: center; gap: 10px; background: #FAFBFE;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path><polyline points="7 10 12 5 17 10"></polyline><line x1="12" y1="5" x2="12" y2="15"></line></svg>
+                  <span style="font-size: 12px; color: #767B8C;">Drop an image, or</span>
+                  <span onClick="{{insertImageOk}}" style="font-size: 12px; font-weight: 700; color: #4C63F5; cursor: pointer;">choose a file…</span>
+                  <div style="flex-grow: 1;"></div>
+                  <span onClick="{{insertImageTooBig}}" style="font-size: 11px; color: #A7ABBB; cursor: pointer; text-decoration: underline;">try an oversized one</span>
+                </div>
+                <sc-if value="{{imgError}}" hint-placeholder-val="{{false}}">
+                  <div style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #A9302B;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A9302B" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    quarterly-chart.png is 14.8 MB — over the 10 MB limit. Not uploaded.
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+
+            <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #1B1D27;">
+              When a payout fails after the ledger entry has already been written, the reversal job does not currently create a compensating entry — it only marks the payout as <code style="background:#F0F1F7;border-radius:4px;padding:1px 5px;font-family:'JetBrains Mono',monospace;font-size:12px;">failed</code>. This leaves the ledger balance overstated until someone notices manually.
+            </p>
+            <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #1B1D27;">
+              Add a compensating reversal entry in the same transaction as the failure status update, tagged with a reference back to the original entry for audit purposes.
+            </p>
+
+            <sc-if value="{{imgEmbedded}}" hint-placeholder-val="{{false}}">
+              <div style="width: 260px; border: 1px solid #ECEEF6; border-radius: 10px; overflow: hidden;">
+                <div style="height: 120px; background: #EDF0FE; display: flex; align-items: center; justify-content: center; position: relative;">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+                  <svg onClick="{{removeImage}}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2.5" style="position:absolute;top:6px;right:6px;background:#fff;border-radius:999px;padding:3px;cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </div>
+                <div style="padding: 6px 9px; font-size: 10.5px; color: #A7ABBB;">reconciliation-diagram.png · embedded in description</div>
+              </div>
+              <span style="font-size: 10.5px; color: #A7ABBB;">Stored in object storage and stays there until PAY-142 is permanently deleted — removing it here only removes the reference.</span>
+            </sc-if>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h2 style="margin: 0; font-size: 13px; font-weight: 700;">Attachments</h2>
+              <span style="font-size: 11px; color: #A7ABBB;">{{attachmentCount}} files</span>
+              <div style="flex-grow: 1;"></div>
+              <span style="font-size: 12px; font-weight: 700; color: #4C63F5; cursor: pointer;">+ Attach files</span>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <sc-for list="{{attachments}}" as="f" hint-placeholder-count="3">
+                <div style="width: 132px; border: 1px solid #ECEEF6; border-radius: 10px; overflow: hidden; background: #fff;">
+                  <div style="height: 72px; background: {{f.bg}}; display: flex; align-items: center; justify-content: center;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{f.fg}}" stroke-width="1.8"><path d="{{f.iconPath}}"></path></svg>
+                  </div>
+                  <div style="padding: 7px 9px; display: flex; flex-direction: column; gap: 1px;">
+                    <span style="font-size: 11px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{f.name}}</span>
+                    <span style="font-size: 10px; color: #A7ABBB;">{{f.size}} · {{f.uploader}}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h2 style="margin: 0; font-size: 13px; font-weight: 700;">Sub-tasks</h2>
+              <span style="font-size: 11px; color: #A7ABBB;">2 of 3 done</span>
+              <div style="flex-grow: 1;"></div>
+              <span style="font-size: 12px; font-weight: 700; color: #4C63F5; cursor: pointer;">+ Add sub-task</span>
+            </div>
+            <div class="card" style="padding: 6px 12px; gap: 0;">
+              <sc-for list="{{subtasks}}" as="s" hint-placeholder-count="3">
+                <div style="display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #F5F6FA;">
+                  <span style="width: 15px; height: 15px; border-radius: 4px; border: 1.5px solid {{s.doneBorder}}; background: {{s.doneBg}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <sc-if value="{{s.done}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="M20 6L9 17l-5-5"></path></svg></sc-if>
+                  </span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: #A7ABBB;">{{s.key}}</span>
+                  <span style="font-size: 12px; font-weight: 600; flex-grow: 1; color: {{s.textColor}}; text-decoration: {{s.strike}};">{{s.title}}</span>
+                  <div style="width: 18px; height: 18px; border-radius: 999px; background: {{s.assigneeBg}}; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: {{s.assigneeFg}};">{{s.assignee}}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h2 style="margin: 0; font-size: 13px; font-weight: 700;">Linked issues</h2>
+              <div style="flex-grow: 1;"></div>
+              <span onClick="{{openLink}}" style="font-size: 12px; font-weight: 700; color: #4C63F5; cursor: pointer;">+ Add link</span>
+            </div>
+            <div class="card" style="padding: 6px 12px; gap: 0;">
+              <sc-for list="{{links}}" as="l" hint-placeholder-count="2">
+                <div style="display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #F5F6FA;">
+                  <span style="font-size: 11px; color: #A7ABBB; width: 108px; flex-shrink: 0;">{{l.verb}}</span>
+                  <span class="ty" style="width: 16px; height: 16px; font-size: 9px; background: {{l.typeBg}};">{{l.typeLetter}}</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: #A7ABBB;">{{l.key}}</span>
+                  <span style="font-size: 12px; font-weight: 600; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{l.title}}</span>
+                  <span class="pill" style="font-size: 10px; font-weight: 700; border-radius: 999px; padding: 3px 9px; color: {{l.statusFg}}; background: {{l.statusBg}};">{{l.status}}</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.4" style="cursor:pointer;flex-shrink:0;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div onClick="{{selectTab('all')}}" style="font-size: 13px; font-weight: 700; color: {{tabColor.all}}; cursor: pointer;">All activity</div>
+              <div onClick="{{selectTab('comments')}}" style="font-size: 13px; font-weight: 700; color: {{tabColor.comments}}; cursor: pointer;">Comments</div>
+              <div onClick="{{selectTab('history')}}" style="font-size: 13px; font-weight: 700; color: {{tabColor.history}}; cursor: pointer;">History</div>
+            </div>
+
+            <div class="card" style="padding: 6px 18px; gap: 0;">
+              <sc-for list="{{activity}}" as="e" hint-placeholder-count="6">
+                <div style="display: flex; align-items: flex-start; gap: 10px; padding: 12px 0; border-bottom: 1px solid #F5F6FA;">
+                  <div style="width: 24px; height: 24px; border-radius: 999px; background: {{e.bg}}; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: {{e.fg}}; flex-shrink: 0; margin-top: 1px;">{{e.initials}}</div>
+                  <div style="flex-grow: 1; min-width: 0;">
+                    <div style="display: flex; align-items: baseline; gap: 6px;">
+                      <span style="font-size: 12.5px; font-weight: 700;">{{e.who}}</span>
+                      <span style="font-size: 11px; color: #A7ABBB;">{{e.when}}</span>
+                      <sc-if value="{{e.edited}}" hint-placeholder-val="{{false}}">
+                        <span style="font-size: 10px; color: #C3C6D4;">· edited</span>
+                      </sc-if>
+                    </div>
+                    <sc-if value="{{e.isComment}}" hint-placeholder-val="{{true}}">
+                      <p style="margin: 4px 0 0; font-size: 12.5px; line-height: 1.55; color: #1B1D27;">{{e.text}}</p>
+                      <sc-if value="{{e.hasReactions}}" hint-placeholder-val="{{false}}">
+                        <div style="display: flex; gap: 4px; margin-top: 6px; align-items: center;">
+                          <span style="font-size: 11px; background: #EDF0FE; border-radius: 999px; padding: 2px 8px; display: flex; align-items: center; gap: 3px;">👍 <span style="font-weight:700;color:#4C63F5;">2</span></span>
+                          <span style="font-size: 11px; background: #F0F1F7; border-radius: 999px; padding: 2px 8px; display: flex; align-items: center; gap: 3px;">🎉 <span style="font-weight:700;color:#767B8C;">1</span></span>
+                          <sc-if value="{{e.myReaction}}" hint-placeholder-val="{{false}}">
+                            <span style="font-size: 11px; background: #EDF0FE; border-radius: 999px; padding: 2px 8px; display: flex; align-items: center; gap: 3px;">{{e.myReaction}} <span style="font-weight:700;color:#4C63F5;">1</span></span>
+                          </sc-if>
+                          <span onClick="{{e.toggleAddReaction}}" style="width: 18px; height: 18px; border-radius: 999px; border: 1px dashed #DEE1EC; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative;">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <sc-if value="{{e.pickerOpen}}" hint-placeholder-val="{{false}}">
+                              <div style="position: absolute; top: 22px; left: 0; background: #fff; border: 1px solid #ECEEF6; border-radius: 8px; box-shadow: 0 8px 20px rgba(27,29,39,0.14); padding: 4px 6px; display: flex; gap: 4px; z-index: 12;">
+                                <span onClick="{{e.pickReaction('❤️')}}" style="cursor:pointer;">❤️</span>
+                                <span onClick="{{e.pickReaction('👀')}}" style="cursor:pointer;">👀</span>
+                                <span onClick="{{e.pickReaction('🚀')}}" style="cursor:pointer;">🚀</span>
+                              </div>
+                            </sc-if>
+                          </span>
+                        </div>
+                      </sc-if>
+                    </sc-if>
+                    <sc-if value="{{e.isField}}" hint-placeholder-val="{{false}}">
+                      <span style="font-size: 12.5px; color: #767B8C;">changed <b style="color:#1B1D27;">{{e.field}}</b> from <code style="background:#F0F1F7;border-radius:4px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:11px;">{{e.from}}</code> to <code style="background:#F0F1F7;border-radius:4px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:11px;">{{e.to}}</code></span>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div class="card" style="gap: 8px; position: relative;">
+              <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #F5F6FA; padding-bottom: 8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2.2"><path d="M4 7V4h16v3"></path><path d="M9 20h6"></path><path d="M12 4v16"></path></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2.2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"></path></svg>
+                <svg onClick="{{toggleAttachPreview}}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2.2" style="cursor:pointer;"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"></path></svg>
+                <span style="width: 1px; height: 14px; background: #ECEEF6;"></span>
+                <div onClick="{{toggleVisPicker}}" style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  <span style="font-size: 11px; color: #767B8C; font-weight: 600;">{{visLabel}}</span>
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg>
+                </div>
+                <sc-if value="{{visPickerOpen}}" hint-placeholder-val="{{false}}">
+                  <div style="position: absolute; top: 34px; left: 60px; width: 220px; background: #fff; border: 1px solid #ECEEF6; border-radius: 10px; box-shadow: 0 12px 28px rgba(27,29,39,0.14); padding: 6px; z-index: 10; display: flex; flex-direction: column; gap: 1px;">
+                    <div onClick="{{selectVis('Everyone')}}" style="padding: 7px 9px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer;">Everyone who can view</div>
+                    <div onClick="{{selectVis('Admins only')}}" style="padding: 7px 9px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer;">Admins only</div>
+                    <div onClick="{{selectVis('Engineering group')}}" style="padding: 7px 9px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer;">Engineering group</div>
+                  </div>
+                </sc-if>
+              </div>
+              <sc-if value="{{attachPreviewOn}}" hint-placeholder-val="{{false}}">
+                <div style="display: flex; align-items: center; gap: 6px; background: #FAFBFE; border: 1px solid #ECEEF6; border-radius: 8px; padding: 6px 10px; width: fit-content;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+                  <span style="font-size: 11px; font-weight: 600;">reversal-job-logs.txt</span>
+                  <svg onClick="{{toggleAttachPreview}}" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.5" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </div>
+              </sc-if>
+              <textarea placeholder="Add a comment…" style="border: none; outline: none; background: transparent; font-family: inherit; font-size: 13px; resize: none; height: 44px; padding: 0;"></textarea>
+              <div style="display: flex; align-items: center;">
+                <sc-if value="{{visLimited}}" hint-placeholder-val="{{false}}">
+                  <span style="font-size: 10.5px; color: #A7ABBB;">Only visible to: {{visLabel}}</span>
+                </sc-if>
+                <div style="flex-grow: 1;"></div>
+                <div style="height: 32px; padding: 0 14px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; cursor: pointer;">Comment</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <sc-if value="{{resolutionOpen}}" hint-placeholder-val="{{false}}">
+            <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 25;">
+              <div style="width: 380px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 22px; display: flex; flex-direction: column; gap: 12px;">
+                <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700;">Set resolution</h2>
+                <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">The transition to <b>Done</b> requires a resolution before it can run.</p>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label style="font-size: 12px; font-weight: 600;">Resolution</label>
+                  <select style="height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; font-family: inherit; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+                    <option>Fixed</option>
+                    <option>Won't fix</option>
+                    <option>Duplicate</option>
+                    <option>Cannot reproduce</option>
+                  </select>
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                  <div onClick="{{cancelResolution}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+                  <div onClick="{{confirmResolution}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Transition to Done</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{logWorkOpen}}" hint-placeholder-val="{{false}}">
+            <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 25;">
+              <div style="width: 400px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 22px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: center;">
+                  <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700;">Log work</h2>
+                  <div style="flex-grow: 1;"></div>
+                  <svg onClick="{{closeLogWork}}" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                  <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <label style="font-size: 12px; font-weight: 600;">Time spent</label>
+                    <input onClick="{{toggleHoursError}}" value="{{hoursVal}}" style="height: 34px; box-sizing: border-box; padding: 0 10px; font-size: 12.5px; font-family: inherit; background: #FAFBFE; border: 1px solid {{hoursBorder}}; border-radius: 7px;">
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <label style="font-size: 12px; font-weight: 600;">Date</label>
+                    <input value="2026-09-21" style="height: 34px; box-sizing: border-box; padding: 0 10px; font-size: 12.5px; font-family: inherit; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 7px;">
+                  </div>
+                </div>
+                <sc-if value="{{hoursError}}" hint-placeholder-val="{{false}}">
+                  <span style="font-size: 11px; color: #A9302B;">Time spent must be greater than zero — try "2h" or "1d 3h".</span>
+                </sc-if>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label style="font-size: 12px; font-weight: 600;">Description (optional)</label>
+                  <input placeholder="What did you work on?" style="height: 34px; box-sizing: border-box; padding: 0 10px; font-size: 12.5px; font-family: inherit; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 7px;">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label style="font-size: 12px; font-weight: 600;">Remaining estimate</label>
+                  <div onClick="{{selectRemainMode('auto')}}" style="display: flex; align-items: center; gap: 8px; padding: 7px 9px; border-radius: 7px; border: 1px solid {{remainBorder.auto}}; background: {{remainBg.auto}}; cursor: pointer;">
+                    <span style="font-size: 12px; font-weight: 600; flex-grow: 1;">Subtract from remaining automatically</span>
+                  </div>
+                  <div onClick="{{selectRemainMode('manual')}}" style="display: flex; align-items: center; gap: 8px; padding: 7px 9px; border-radius: 7px; border: 1px solid {{remainBorder.manual}}; background: {{remainBg.manual}}; cursor: pointer;">
+                    <span style="font-size: 12px; font-weight: 600;">Set remaining to</span>
+                    <input value="3h" style="width: 70px; height: 26px; box-sizing: border-box; padding: 0 8px; font-size: 11.5px; font-family: inherit; background: #fff; border: 1px solid #DEE1EC; border-radius: 6px; margin-left: auto;">
+                  </div>
+                  <div onClick="{{selectRemainMode('keep')}}" style="display: flex; align-items: center; gap: 8px; padding: 7px 9px; border-radius: 7px; border: 1px solid {{remainBorder.keep}}; background: {{remainBg.keep}}; cursor: pointer;">
+                    <span style="font-size: 12px; font-weight: 600; flex-grow: 1;">Leave remaining unchanged</span>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                  <div onClick="{{closeLogWork}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+                  <div onClick="{{confirmLogWork}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Log work</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <div class="card" style="gap: 0; position: relative;">
+            <div class="field-row" style="align-items: flex-start; flex-direction: column; gap: 8px;">
+              <span class="field-label">Status</span>
+              <div onClick="{{toggleStatusMenu}}" style="height: 34px; border-radius: 8px; background: {{statusBg}}; display: flex; align-items: center; padding: 0 12px; gap: 8px; cursor: pointer; width: 100%; box-sizing: border-box;">
+                <span style="width: 7px; height: 7px; border-radius: 999px; background: {{statusFg}};"></span>
+                <span style="font-size: 12px; font-weight: 700; color: {{statusFg}}; flex-grow: 1;">{{status}}</span>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="{{statusFg}}" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg>
+              </div>
+              <span style="font-size: 10.5px; color: #A7ABBB;">Software workflow</span>
+
+              <sc-if value="{{statusMenuOpen}}" hint-placeholder-val="{{false}}">
+                <div style="position: absolute; top: 78px; left: 18px; right: 18px; background: #fff; border: 1px solid #ECEEF6; border-radius: 10px; box-shadow: 0 12px 28px rgba(27,29,39,0.14); z-index: 15; overflow: hidden;">
+                  <sc-for list="{{transitions}}" as="tr" hint-placeholder-count="3">
+                    <div onClick="{{selectStatus(tr.to)}}" style="padding: 9px 12px; font-size: 12px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #F5F6FA; display: flex; align-items: center; gap: 8px;">
+                      <span style="width: 7px; height: 7px; border-radius: 999px; background: {{tr.color}};"></span>
+                      {{tr.to}}
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Assignee</span>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div style="width: 20px; height: 20px; border-radius: 999px; background: #FFEEE9; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #FF6A45;">JD</div>
+                <span style="font-size: 12px; font-weight: 600;">Jamie Diaz</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Reporter</span>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div style="width: 20px; height: 20px; border-radius: 999px; background: #EDF0FE; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #4C63F5;">AL</div>
+                <span style="font-size: 12px; font-weight: 600;">Alex Lam</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Priority</span>
+              <span style="font-size: 12px; font-weight: 700; color: #F0453F; display: flex; align-items: center; gap: 4px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="3"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg>
+                High
+              </span>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Labels</span>
+              <div style="display: flex; gap: 4px;">
+                <span style="font-size: 10px; font-weight: 700; background: #FDEBEA; color: #F0453F; border-radius: 999px; padding: 3px 8px;">ledger</span>
+                <span style="font-size: 10px; font-weight: 700; background: #F0F1F7; color: #767B8C; border-radius: 999px; padding: 3px 8px;">payouts</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Component</span>
+              <span style="font-size: 12px; font-weight: 600;">Ledger</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label" style="display: flex; align-items: center; gap: 5px;">
+                Story points
+                <span style="font-size: 8.5px; font-weight: 800; color: #4C63F5; background: #EDF0FE; border-radius: 4px; padding: 1px 5px; text-transform: none; letter-spacing: 0;">Custom</span>
+              </span>
+              <span style="font-size: 12px; font-weight: 600;">5</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Due date</span>
+              <span style="font-size: 12px; font-weight: 600;">Oct 3, 2026</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Parent</span>
+              <a href="EpicDetail.dc.html" style="font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px;">
+                <span class="ty" style="width: 15px; height: 15px; font-size: 8px; background: #B8790F;">E</span>
+                PAY-98
+              </a>
+            </div>
+            <div class="field-row" style="position: relative;">
+              <span class="field-label">Fix version(s)</span>
+              <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end;">
+                <sc-for list="{{fixVersionChips}}" as="v" hint-placeholder-count="1">
+                  <span style="font-size: 10px; font-weight: 700; background: {{v.bg}}; color: {{v.fg}}; border-radius: 999px; padding: 3px 8px; display: flex; align-items: center; gap: 4px;">
+                    {{v.name}}
+                    <sc-if value="{{v.archived}}" hint-placeholder-val="{{false}}">
+                      <span style="font-size: 8.5px; font-weight: 800; opacity: 0.7;">(archived)</span>
+                    </sc-if>
+                  </span>
+                </sc-for>
+                <sc-if value="{{canEditVersions}}" hint-placeholder-val="{{true}}">
+                  <svg onClick="{{openVersionPicker('fix')}}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.4" style="cursor:pointer;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </sc-if>
+              </div>
+              <sc-if value="{{fixPickerOpen}}" hint-placeholder-val="{{false}}">
+                <div style="position: absolute; top: 30px; right: 0; width: 220px; background: #fff; border: 1px solid #ECEEF6; border-radius: 10px; box-shadow: 0 12px 32px rgba(27,29,39,0.16); padding: 8px; display: flex; flex-direction: column; gap: 2px; z-index: 15;">
+                  <sc-for list="{{fixVersionOptions}}" as="o" hint-placeholder-count="3">
+                    <div onClick="{{toggleFixVersion(o.name)}}" style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer; background: {{o.rowBg}};">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{o.checkColor}}" stroke-width="2.6"><rect x="3" y="3" width="18" height="18" rx="4"></rect><sc-if value="{{o.checked}}" hint-placeholder-val="{{false}}"><polyline points="6 12 10 16 18 8"></polyline></sc-if></svg>
+                      <span style="font-size: 12px; font-weight: 600;">{{o.name}}</span>
+                    </div>
+                  </sc-for>
+                  <span style="font-size: 10px; color: #A7ABBB; padding: 6px 8px 2px;">Archived versions aren't offered here.</span>
+                </div>
+              </sc-if>
+            </div>
+            <div class="field-row" style="position: relative;">
+              <span class="field-label">Affects version(s)</span>
+              <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end;">
+                <sc-for list="{{affectsVersionChips}}" as="v" hint-placeholder-count="1">
+                  <span style="font-size: 10px; font-weight: 700; background: {{v.bg}}; color: {{v.fg}}; border-radius: 999px; padding: 3px 8px; display: flex; align-items: center; gap: 4px;">
+                    {{v.name}}
+                    <sc-if value="{{v.archived}}" hint-placeholder-val="{{false}}">
+                      <span style="font-size: 8.5px; font-weight: 800; opacity: 0.7;">(archived)</span>
+                    </sc-if>
+                  </span>
+                </sc-for>
+                <sc-if value="{{canEditVersions}}" hint-placeholder-val="{{true}}">
+                  <svg onClick="{{openVersionPicker('affects')}}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.4" style="cursor:pointer;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </sc-if>
+              </div>
+              <sc-if value="{{affectsPickerOpen}}" hint-placeholder-val="{{false}}">
+                <div style="position: absolute; top: 30px; right: 0; width: 220px; background: #fff; border: 1px solid #ECEEF6; border-radius: 10px; box-shadow: 0 12px 32px rgba(27,29,39,0.16); padding: 8px; display: flex; flex-direction: column; gap: 2px; z-index: 15;">
+                  <sc-for list="{{affectsVersionOptions}}" as="o" hint-placeholder-count="3">
+                    <div onClick="{{toggleAffectsVersion(o.name)}}" style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer; background: {{o.rowBg}};">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{o.checkColor}}" stroke-width="2.6"><rect x="3" y="3" width="18" height="18" rx="4"></rect><sc-if value="{{o.checked}}" hint-placeholder-val="{{false}}"><polyline points="6 12 10 16 18 8"></polyline></sc-if></svg>
+                      <span style="font-size: 12px; font-weight: 600;">{{o.name}}</span>
+                    </div>
+                  </sc-for>
+                  <span style="font-size: 10px; color: #A7ABBB; padding: 6px 8px 2px;">Archived versions aren't offered here.</span>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+
+          <div class="card" style="gap: 8px;">
+            <div style="display: flex; align-items: center;">
+              <span class="field-label">Time tracking</span>
+              <div style="flex-grow: 1;"></div>
+              <div onClick="{{openLogWork}}" style="font-size: 11px; font-weight: 700; color: #4C63F5; cursor: pointer;">Log work</div>
+            </div>
+            <div style="height: 6px; background: #F0F1F7; border-radius: 999px; overflow: hidden; display: flex;">
+              <div style="width: {{timePct}}; background: {{timeBarColor}};"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <div style="display: flex; flex-direction: column; gap: 1px;"><span style="font-size: 10px; color: #A7ABBB;">Logged</span><span style="font-size: 12px; font-weight: 700;">{{loggedLabel}}</span></div>
+              <div style="display: flex; flex-direction: column; gap: 1px;"><span style="font-size: 10px; color: #A7ABBB;">Remaining</span><span style="font-size: 12px; font-weight: 700; color: {{remainingColor}};">{{remainingLabel}}</span></div>
+              <div style="display: flex; flex-direction: column; gap: 1px;"><span style="font-size: 10px; color: #A7ABBB;">Original est.</span><span style="font-size: 12px; font-weight: 700;">{{estimateLabel}}</span></div>
+            </div>
+            <sc-if value="{{overEstimate}}" hint-placeholder-val="{{false}}">
+              <span style="font-size: 10.5px; color: #A9302B; font-weight: 600;">Over the original estimate.</span>
+            </sc-if>
+            <div style="display: flex; flex-direction: column; gap: 0;">
+              <sc-for list="{{worklogs}}" as="w" hint-placeholder-count="2">
+                <div style="display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px solid #F5F6FA;">
+                  <div style="width: 18px; height: 18px; border-radius: 999px; background: {{w.bg}}; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: {{w.fg}}; flex-shrink: 0;">{{w.initials}}</div>
+                  <div style="display: flex; flex-direction: column; min-width: 0; flex-grow: 1;">
+                    <span style="font-size: 11.5px; font-weight: 600;">{{w.hoursLabel}} <span style="color: #A7ABBB; font-weight: 500;">· {{w.date}}</span></span>
+                    <sc-if value="{{w.desc}}" hint-placeholder-val="{{true}}"><span style="font-size: 10.5px; color: #767B8C; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{w.desc}}</span></sc-if>
+                  </div>
+                  <sc-if value="{{w.canEdit}}" hint-placeholder-val="{{false}}">
+                    <svg onClick="{{deleteWorklog(w.id)}}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.2" style="cursor:pointer; flex-shrink:0;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"></path></svg>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <a href="TimeReports.dc.html" style="font-size: 10.5px; font-weight: 700; align-self: flex-end;">Time reports →</a>
+          </div>
+
+          <div class="card" style="gap: 0;">
+            <div class="field-row">
+              <span class="field-label">Watchers</span>
+              <div onClick="{{toggleWatch}}" style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="{{watchFill}}" stroke="#4C63F5" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <span style="font-size: 12px; font-weight: 700; color: #4C63F5;">{{watchCount}}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Votes</span>
+              <div onClick="{{toggleVote}}" style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="{{voteFill}}" stroke="#767B8C" stroke-width="2"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg>
+                <span style="font-size: 12px; font-weight: 700;">{{voteCount}}</span>
+              </div>
+            </div>
+            <div class="field-row"><span class="field-label">Created</span><span style="font-size: 11px; color: #767B8C;">Sep 12, 2026</span></div>
+            <div class="field-row"><span class="field-label">Updated</span><span style="font-size: 11px; color: #767B8C;">2h ago</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{linkOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 440px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Add link</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeLink}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">This issue…</label>
+          <select style="height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; font-family: inherit; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+            <option>blocks</option>
+            <option>is blocked by</option>
+            <option>relates to</option>
+            <option>duplicates</option>
+            <option>is duplicated by</option>
+            <option>clones</option>
+            <option>is cloned by</option>
+          </select>
+          <span style="font-size: 11px; color: #A7ABBB;">Shows as the reverse name on the other issue — e.g. picking "blocks" here shows "is blocked by" on PAY-150.</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Issue</label>
+          <input placeholder="Search by key or title…" style="height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; font-family: inherit; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeLink}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Link issue</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{dupOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 420px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Duplicate PAY-142</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeDuplicate}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">Creates a new issue with its own code, copying the fields below. Comments, change history and activity are never copied.</p>
+        <div onClick="{{toggleDupSubtasks}}" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+          <span style="width: 15px; height: 15px; border-radius: 4px; border: 1.5px solid {{dupSubtasksBorder}}; background: {{dupSubtasksBg}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <sc-if value="{{dupSubtasks}}" hint-placeholder-val="{{true}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="M20 6L9 17l-5-5"></path></svg></sc-if>
+          </span>
+          <span style="font-size: 13px; font-weight: 600;">Include sub-tasks (2 open, 1 done — the done one is skipped)</span>
+        </div>
+        <div onClick="{{toggleDupLinks}}" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+          <span style="width: 15px; height: 15px; border-radius: 4px; border: 1.5px solid {{dupLinksBorder}}; background: {{dupLinksBg}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <sc-if value="{{dupLinks}}" hint-placeholder-val="{{false}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="M20 6L9 17l-5-5"></path></svg></sc-if>
+          </span>
+          <span style="font-size: 13px; font-weight: 600;">Include linked issues (2)</span>
+        </div>
+        <span style="font-size: 11px; color: #A7ABBB;">The new issue links back to this one as "duplicates" automatically.</span>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeDuplicate}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Duplicate</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{moveOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 420px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Move to another project</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeMove}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Destination project</label>
+          <select style="height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; font-family: inherit; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+            <option>Growth (GRW)</option>
+            <option>Mobile App (MOB)</option>
+            <option>Marketing (MKT)</option>
+          </select>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 8px; background: #FFF8F0; border: 1px solid #F3DFB8; border-radius: 8px; padding: 10px 12px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A5A0F" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+          <span style="font-size: 12px; color: #8A5A0F;">PAY-142 becomes a new code in the destination project. The old code still works and redirects — full history, comments and activity move with it. Its 3 sub-tasks move too.</span>
+        </div>
+        <span style="font-size: 11px; color: #A7ABBB;">Blocked if the destination hasn't enabled the Story type, or you're not an admin there.</span>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeMove}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Move issue</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{convertOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 420px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Convert to Sub-task</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeConvert}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <sc-if value="{{convertBlocked}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; align-items: flex-start; gap: 8px; background: #FDEBEA; border: 1px solid #F6C8C5; border-radius: 8px; padding: 10px 12px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A9302B" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <span style="font-size: 12px; color: #A9302B;">This Task has its own sub-tasks, so it can't become a Sub-task — that would create a fourth tier. Move or remove its sub-tasks first.</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{convertAllowed}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 12px; font-weight: 600;">Parent issue</label>
+            <input placeholder="Search by key or title…" style="height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; font-family: inherit; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+            <span style="font-size: 11px; color: #A7ABBB;">Required — a Sub-task always has a parent Story, Task or Bug.</span>
+          </div>
+        </sc-if>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeConvert}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <sc-if value="{{convertAllowed}}" hint-placeholder-val="{{true}}">
+            <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Convert</div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{delOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 420px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: #A9302B;">Delete PAY-142?</h2>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">Its 3 sub-tasks are deleted too. Issues linking to it will show "issue deleted" instead. It's hidden from every list and board, but can be restored from the project's deleted-issues list.</p>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeDelete}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #F0453F; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Delete issue</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const rows = [
+      ['PAY-143', 'Write migration for compensating entry table', true, 'JD', '#FFEEE9', '#FF6A45'],
+      ['PAY-144', 'Add reversal step to payout failure handler', true, 'NP', '#FDEBEA', '#F0453F'],
+      ['PAY-145', 'Backfill reversal entries for last 30 days of failures', false, 'JD', '#FFEEE9', '#FF6A45'],
+    ];
+
+    const activityRows = [
+      { who: 'Nina Park', initials: 'NP', bg: '#FDEBEA', fg: '#F0453F', when: '10m ago', isComment: true, text: 'Reproduced this on staging — the ledger entry does get written, the reversal job just silently no-ops on a failed payout instead of compensating.', hasReactions: true },
+      { who: 'Jamie Diaz', initials: 'JD', bg: '#FFEEE9', fg: '#FF6A45', when: '1h ago', isField: true, field: 'status', from: 'To do', to: 'In progress' },
+      { who: 'Jamie Diaz', initials: 'JD', bg: '#FFEEE9', fg: '#FF6A45', when: '2h ago', isComment: true, edited: true, text: 'Picking this up — will add a compensating entry tagged with a reference back to the original, same pattern as the manual reversal script.' },
+      { who: 'Alex Lam', initials: 'AL', bg: '#EDF0FE', fg: '#4C63F5', when: 'Yesterday', isField: true, field: 'priority', from: 'Medium', to: 'High' },
+      { who: 'Sam Osei', initials: 'SO', bg: '#F1EDFF', fg: '#8B6FFF', when: 'Yesterday', isComment: true, text: 'Flagging — @Jamie this is blocking the payout reconciliation report for finance, can we prioritize?' },
+      { who: 'Alex Lam', initials: 'AL', bg: '#EDF0FE', fg: '#4C63F5', when: '2 days ago', isField: true, field: 'Story points', from: '3', to: '5' },
+      { who: 'Jamie Diaz', initials: 'JD', bg: '#FFEEE9', fg: '#FF6A45', when: '2 days ago', isField: true, field: 'assignee', from: 'Unassigned', to: 'Jamie Diaz' },
+    ];
+
+    const statusDefs = {
+      'To do': { fg: '#767B8C', bg: '#F0F1F7', next: ['In progress'] },
+      'In progress': { fg: '#8B6FFF', bg: '#F1EDFF', next: ['In review', 'To do'] },
+      'In review': { fg: '#FF9A3D', bg: '#FFF3E8', next: ['Done', 'In progress'] },
+      'Done': { fg: '#1A8F5C', bg: '#E7F9F1', next: ['In progress'] },
+    };
+    const status = this.state.status ?? 'In progress';
+    const statusMenuOpen = !!this.state.statusMenuOpen;
+    const resolutionOpen = !!this.state.resolutionOpen;
+    const pendingStatus = this.state.pendingStatus ?? null;
+
+    const tab = this.state.tab ?? 'all';
+    const reactionPickerFor = this.state.reactionPickerFor ?? null;
+    const myReactions = this.state.myReactions ?? {};
+    const activity = activityRows
+      .filter((e) => {
+        if (tab === 'comments') return e.isComment;
+        if (tab === 'history') return e.isField;
+        return true;
+      })
+      .map((e, idx) => ({
+        ...e,
+        myReaction: myReactions[idx] || null,
+        pickerOpen: reactionPickerFor === idx,
+        toggleAddReaction: () => this.setState({ reactionPickerFor: reactionPickerFor === idx ? null : idx }),
+        pickReaction: (emoji) => () => this.setState({ myReactions: { ...myReactions, [idx]: emoji }, reactionPickerFor: null }),
+      }));
+
+    const watching = this.state.watching ?? true;
+    const voted = this.state.voted ?? false;
+
+    const fileRows = [
+      ['reversal-reconciliation.csv', '48 KB', 'Nina Park', '#EDF0FE', '#4C63F5', 'M4 7V4h16v3M9 20h6M12 4v16'],
+      ['failed-payout-trace.png', '1.2 MB', 'Jamie Diaz', '#FFEEE9', '#FF6A45', 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L21 15M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2zM9 9a1 1 0 100-2 1 1 0 000 2z'],
+      ['ledger-schema-v2.pdf', '312 KB', 'Sam Osei', '#F1EDFF', '#8B6FFF', 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6'],
+    ];
+
+    const visLabel = this.state.visLabel ?? 'Everyone who can view';
+
+    const linkRows = [
+      ['is blocked by', 'bug', '#F0453F', 'PAY-139', 'Idempotency key missing lets retries double-write ledger rows', 'In progress', '#8B6FFF', '#F1EDFF'],
+      ['relates to', 'story', '#22B573', 'PAY-98', 'Payments Platform — reconciliation epic', 'To do', '#767B8C', '#F0F1F7'],
+    ];
+
+    const descFmtState = this.state.descFmt ?? { bold: false, italic: false, list: false };
+    const imgPickerOpen = !!this.state.imgPickerOpen;
+    const swatch = (on) => (on ? '#EDF0FE' : 'transparent');
+    const swatchFg = (on) => (on ? '#4C63F5' : '#767B8C');
+
+    const worklogRows = [
+      { id: 'w1', who: 'Jamie Diaz', initials: 'JD', bg: '#FFEEE9', fg: '#FF6A45', hours: '3h', date: 'Sep 20', desc: 'Traced the reversal job no-op path', mine: true },
+      { id: 'w2', who: 'Alex Lam', initials: 'AL', bg: '#EDF0FE', fg: '#4C63F5', hours: '1h 30m', date: 'Sep 19', desc: 'Paired on repro steps', mine: false },
+    ];
+    const estimateMin = 8 * 60;
+    const loggedMin = 4 * 60 + 30;
+    const remainingMin = 4 * 60;
+    const timePct = Math.min(100, Math.round((loggedMin / estimateMin) * 100));
+    const overEstimate = loggedMin > estimateMin;
+    const fmtHM = (min) => {
+      const h = Math.floor(min / 60);
+      const m = min % 60;
+      return (h ? h + 'h ' : '') + (m ? m + 'm' : (h ? '' : '0m'));
+    };
+    const logWorkOpen = !!this.state.logWorkOpen;
+    const hoursError = !!this.state.hoursError;
+    const remainMode = this.state.remainMode ?? 'auto';
+
+    const canEditVersions = true;
+    const assignableVersions = ['2.4.0', '2.5.0', '2.6.0'];
+    const fixVersions = this.state.fixVersions ?? ['2.5.0'];
+    const affectsVersions = this.state.affectsVersions ?? ['2.1.0'];
+    const archivedAssigned = ['2.1.0'];
+    const chip = (name) => ({
+      name,
+      archived: archivedAssigned.includes(name),
+      bg: archivedAssigned.includes(name) ? '#F0F1F7' : '#EDF0FE',
+      fg: archivedAssigned.includes(name) ? '#A7ABBB' : '#4C63F5',
+    });
+    const fixPickerOpen = this.state.versionPickerOpen === 'fix';
+    const affectsPickerOpen = this.state.versionPickerOpen === 'affects';
+
+    return {
+      status,
+      statusFg: statusDefs[status].fg,
+      statusBg: statusDefs[status].bg,
+      statusMenuOpen,
+      toggleStatusMenu: () => this.setState({ statusMenuOpen: !statusMenuOpen }),
+      transitions: statusDefs[status].next.map((to) => ({ to, color: statusDefs[to].fg })),
+      selectStatus: (to) => () => {
+        if (to === 'Done') {
+          this.setState({ statusMenuOpen: false, resolutionOpen: true, pendingStatus: to });
+        } else {
+          this.setState({ statusMenuOpen: false, status: to });
+        }
+      },
+      resolutionOpen,
+      cancelResolution: () => this.setState({ resolutionOpen: false, pendingStatus: null }),
+      confirmResolution: () => this.setState({ resolutionOpen: false, status: pendingStatus, pendingStatus: null }),
+      descFmt: {
+        boldBg: swatch(descFmtState.bold), boldFg: swatchFg(descFmtState.bold),
+        italicBg: swatch(descFmtState.italic), italicFg: swatchFg(descFmtState.italic),
+        listBg: swatch(descFmtState.list), listFg: swatchFg(descFmtState.list),
+      },
+      toggleBold: () => this.setState({ descFmt: { ...descFmtState, bold: !descFmtState.bold } }),
+      toggleItalic: () => this.setState({ descFmt: { ...descFmtState, italic: !descFmtState.italic } }),
+      toggleList: () => this.setState({ descFmt: { ...descFmtState, list: !descFmtState.list } }),
+      imgPickerOpen,
+      imgToggleBg: swatch(imgPickerOpen),
+      imgToggleFg: swatchFg(imgPickerOpen),
+      toggleImgPicker: () => this.setState({ imgPickerOpen: !imgPickerOpen, imgError: false }),
+      imgError: !!this.state.imgError,
+      imgEmbedded: !!this.state.imgEmbedded,
+      insertImageOk: () => this.setState({ imgEmbedded: true, imgError: false, imgPickerOpen: false }),
+      insertImageTooBig: () => this.setState({ imgError: true }),
+      removeImage: () => this.setState({ imgEmbedded: false }),
+      links: linkRows.map(([verb, type, typeBg, key, title, status, statusFg, statusBg]) => ({
+        verb, typeLetter: type === 'bug' ? 'B' : type === 'story' ? 'S' : 'T', typeBg, key, title, status, statusFg, statusBg,
+      })),
+      linkOpen: !!this.state.linkOpen,
+      openLink: () => this.setState({ linkOpen: true }),
+      closeLink: () => this.setState({ linkOpen: false }),
+      menuOpen: !!this.state.menuOpen,
+      toggleMenu: () => this.setState({ menuOpen: !this.state.menuOpen }),
+      dupOpen: !!this.state.dupOpen,
+      openDuplicate: () => this.setState({ menuOpen: false, dupOpen: true }),
+      closeDuplicate: () => this.setState({ dupOpen: false }),
+      dupSubtasks: this.state.dupSubtasks ?? true,
+      dupSubtasksBorder: (this.state.dupSubtasks ?? true) ? '#4C63F5' : '#DEE1EC',
+      dupSubtasksBg: (this.state.dupSubtasks ?? true) ? '#4C63F5' : '#fff',
+      toggleDupSubtasks: () => this.setState({ dupSubtasks: !(this.state.dupSubtasks ?? true) }),
+      dupLinks: !!this.state.dupLinks,
+      dupLinksBorder: this.state.dupLinks ? '#4C63F5' : '#DEE1EC',
+      dupLinksBg: this.state.dupLinks ? '#4C63F5' : '#fff',
+      toggleDupLinks: () => this.setState({ dupLinks: !this.state.dupLinks }),
+      moveOpen: !!this.state.moveOpen,
+      openMove: () => this.setState({ menuOpen: false, moveOpen: true }),
+      closeMove: () => this.setState({ moveOpen: false }),
+      delOpen: !!this.state.delOpen,
+      openDelete: () => this.setState({ menuOpen: false, delOpen: true }),
+      closeDelete: () => this.setState({ delOpen: false }),
+      isTask: false,
+      isSubtask: false,
+      convertOpen: !!this.state.convertOpen,
+      convertBlocked: true,
+      convertAllowed: false,
+      openConvert: () => this.setState({ menuOpen: false, convertOpen: true }),
+      closeConvert: () => this.setState({ convertOpen: false }),
+      convertToTask: () => this.setState({ menuOpen: false }),
+      attachments: fileRows.map(([name, size, uploader, bg, fg, iconPath]) => ({ name, size, uploader, bg, fg, iconPath })),
+      attachmentCount: fileRows.length,
+      visPickerOpen: !!this.state.visPickerOpen,
+      toggleVisPicker: () => this.setState({ visPickerOpen: !this.state.visPickerOpen }),
+      selectVis: (v) => () => this.setState({ visLabel: v, visPickerOpen: false }),
+      visLabel,
+      visLimited: visLabel !== 'Everyone who can view',
+      attachPreviewOn: !!this.state.attachPreviewOn,
+      toggleAttachPreview: () => this.setState({ attachPreviewOn: !this.state.attachPreviewOn }),
+      subtasks: rows.map(([key, title, done, assignee, assigneeBg, assigneeFg]) => ({
+        key, title, done,
+        doneBorder: done ? '#22B573' : '#DEE1EC',
+        doneBg: done ? '#22B573' : 'transparent',
+        textColor: done ? '#A7ABBB' : '#1B1D27',
+        strike: done ? 'line-through' : 'none',
+        assignee, assigneeBg, assigneeFg,
+      })),
+      activity,
+      tabColor: {
+        all: tab === 'all' ? '#4C63F5' : '#A7ABBB',
+        comments: tab === 'comments' ? '#4C63F5' : '#A7ABBB',
+        history: tab === 'history' ? '#4C63F5' : '#A7ABBB',
+      },
+      selectTab: (t) => () => this.setState({ tab: t }),
+      watchFill: watching ? '#EDF0FE' : 'none',
+      watchCount: watching ? 4 : 3,
+      toggleWatch: () => this.setState({ watching: !watching }),
+      voteFill: voted ? '#F0F1F7' : 'none',
+      voteCount: voted ? 3 : 2,
+      toggleVote: () => this.setState({ voted: !voted }),
+
+      timePct: timePct + '%',
+      timeBarColor: overEstimate ? '#A9302B' : '#4C63F5',
+      loggedLabel: fmtHM(loggedMin),
+      remainingLabel: fmtHM(remainingMin),
+      remainingColor: '#1B1D27',
+      estimateLabel: fmtHM(estimateMin),
+      overEstimate,
+      worklogs: worklogRows.map((w) => ({
+        id: w.id, initials: w.initials, bg: w.bg, fg: w.fg,
+        hoursLabel: w.hours, date: w.date, desc: w.desc,
+        canEdit: w.mine,
+      })),
+      deleteWorklog: () => () => {},
+
+      logWorkOpen,
+      openLogWork: () => this.setState({ logWorkOpen: true, hoursError: false, remainMode: 'auto' }),
+      closeLogWork: () => this.setState({ logWorkOpen: false }),
+      hoursVal: hoursError ? '' : '2h',
+      hoursBorder: hoursError ? '#F0453F' : '#DEE1EC',
+      hoursError,
+      toggleHoursError: () => this.setState({ hoursError: !hoursError }),
+      remainBorder: {
+        auto: remainMode === 'auto' ? '#4C63F5' : '#DEE1EC',
+        manual: remainMode === 'manual' ? '#4C63F5' : '#DEE1EC',
+        keep: remainMode === 'keep' ? '#4C63F5' : '#DEE1EC',
+      },
+      remainBg: {
+        auto: remainMode === 'auto' ? '#EDF0FE' : '#fff',
+        manual: remainMode === 'manual' ? '#EDF0FE' : '#fff',
+        keep: remainMode === 'keep' ? '#EDF0FE' : '#fff',
+      },
+      selectRemainMode: (m) => () => this.setState({ remainMode: m }),
+      confirmLogWork: () => {
+        if (hoursError) return;
+        this.setState({ logWorkOpen: false });
+      },
+
+      canEditVersions,
+      fixVersionChips: fixVersions.map(chip),
+      affectsVersionChips: affectsVersions.map(chip),
+      openVersionPicker: (which) => () => this.setState({ versionPickerOpen: this.state.versionPickerOpen === which ? null : which }),
+      fixPickerOpen,
+      affectsPickerOpen,
+      fixVersionOptions: assignableVersions.map((name) => {
+        const checked = fixVersions.includes(name);
+        return { name, checked, rowBg: checked ? '#EDF0FE' : 'transparent', checkColor: checked ? '#4C63F5' : '#DEE1EC' };
+      }),
+      affectsVersionOptions: assignableVersions.map((name) => {
+        const checked = affectsVersions.includes(name);
+        return { name, checked, rowBg: checked ? '#EDF0FE' : 'transparent', checkColor: checked ? '#4C63F5' : '#DEE1EC' };
+      }),
+      toggleFixVersion: (name) => () => {
+        const next = fixVersions.includes(name) ? fixVersions.filter((n) => n !== name) : [...fixVersions, name];
+        this.setState({ fixVersions: next });
+      },
+      toggleAffectsVersion: (name) => () => {
+        const next = affectsVersions.includes(name) ? affectsVersions.filter((n) => n !== name) : [...affectsVersions, name];
+        this.setState({ affectsVersions: next });
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

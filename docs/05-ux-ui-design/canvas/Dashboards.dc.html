@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dashboards — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px;}
+  .card:hover{border-color:#DEE1EC;}
+  .chip{font-size:12px;font-weight:600;color:#767B8C;background:#FFFFFF;border:1px solid #ECEEF6;border-radius:999px;padding:6px 12px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+  input,select,textarea{height:36px;box-sizing:border-box;padding:0 12px;font-size:13px;font-family:inherit;color:#1B1D27;background:#FAFBFE;border:1px solid #DEE1EC;border-radius:8px;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:#4C63F5!important;box-shadow:0 0 0 3px #EDF0FE}
+  .radio{display:flex;gap:10px;padding:10px 12px;border:1px solid #DEE1EC;border-radius:8px;cursor:pointer;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="Sidebar" active="dashboards" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Dashboards" search-placeholder="Search dashboards…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 32px 40px; display: flex; flex-direction: column; gap: 18px; box-sizing: border-box;">
+
+      <div style="display: flex; align-items: center;">
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Dashboards</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">Every gadget re-queries its own data at your permission level — a shared dashboard never shows you more than you can already see.</p>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{selectRole('owner')}}" class="chip" style="background: {{roleBg.owner}}; color: {{roleFg.owner}};">Viewing as: Owner (you)</div>
+        <div onClick="{{selectRole('other')}}" class="chip" style="background: {{roleBg.other}}; color: {{roleFg.other}};">Viewing as: Other member</div>
+        <div onClick="{{openCreate}}" style="height: 36px; padding: 0 16px; margin-left: 8px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Create dashboard
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;">
+        <sc-for list="{{dashboards}}" as="d" hint-placeholder-count="4">
+          <div class="card">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="width: 32px; height: 32px; border-radius: 8px; background: #EDF0FE; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
+              </div>
+              <div style="flex-grow: 1; min-width: 0;">
+                <a href="Dashboard.dc.html" style="font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                  {{d.name}}
+                  <sc-if value="{{d.isDefault}}" hint-placeholder-val="{{false}}">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#FF9A3D" stroke="#FF9A3D" stroke-width="1"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9"></polygon></svg>
+                  </sc-if>
+                </a>
+                <span style="font-size: 11px; color: #A7ABBB;">by {{d.owner}} · {{d.gadgetCount}} gadgets</span>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center;">
+              <span style="font-size: 10.5px; font-weight: 700; background: {{d.scopeBg}}; color: {{d.scopeFg}}; border-radius: 999px; padding: 3px 9px;">{{d.scopeLabel}}</span>
+              <div style="flex-grow: 1;"></div>
+              <sc-if value="{{d.canManage}}" hint-placeholder-val="{{true}}">
+                <div style="display: flex; gap: 10px;">
+                  <svg onClick="{{openShare(d.id)}}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                  <svg onClick="{{openDelete(d.id)}}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2" style="cursor:pointer;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"></path></svg>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{createOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 440px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Create dashboard</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeCreate}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Name</label>
+          <input placeholder="e.g. Sprint health">
+        </div>
+        <span style="font-size: 11px; color: #A7ABBB;">Starts private, just for you — layout and gadgets come next, sharing is a separate step.</span>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeCreate}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <a href="Dashboard.dc.html" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Create</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{shareOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 460px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Share "{{shareTarget.name}}"</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeShare}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div onClick="{{selectScope('private')}}" class="radio" style="border-color: {{scopeBorder.private}}; background: {{scopeBg2.private}};">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2" style="margin-top:1px;flex-shrink:0;"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5" fill="{{scopeDot.private}}" stroke="none"></circle></svg>
+            <div><div style="font-size: 13px; font-weight: 600;">Private</div><div style="font-size: 11px; color: #A7ABBB;">Only you can see it</div></div>
+          </div>
+          <div onClick="{{selectScope('project')}}" class="radio" style="border-color: {{scopeBorder.project}}; background: {{scopeBg2.project}};">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2" style="margin-top:1px;flex-shrink:0;"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5" fill="{{scopeDot.project}}" stroke="none"></circle></svg>
+            <div><div style="font-size: 13px; font-weight: 600;">Shared with a project</div><div style="font-size: 11px; color: #A7ABBB;">Everyone who can view Payments Platform</div></div>
+          </div>
+          <div onClick="{{selectScope('workspace')}}" class="radio" style="border-color: {{scopeBorder.workspace}}; background: {{scopeBg2.workspace}};">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2" style="margin-top:1px;flex-shrink:0;"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5" fill="{{scopeDot.workspace}}" stroke="none"></circle></svg>
+            <div><div style="font-size: 13px; font-weight: 600;">Shared with workspace</div><div style="font-size: 11px; color: #A7ABBB;">Everyone in Acme Inc</div></div>
+          </div>
+        </div>
+        <sc-if value="{{scopeIsShared}}" hint-placeholder-val="{{false}}">
+          <div onClick="{{toggleDefault}}" style="display: flex; align-items: center; gap: 10px; padding: 4px 2px; cursor: pointer;">
+            <div style="width: 34px; height: 20px; border-radius: 999px; background: {{defaultTrackBg}}; position: relative; flex-shrink: 0; transition: background 0.15s;">
+              <div style="width: 16px; height: 16px; border-radius: 999px; background: #fff; position: absolute; top: 2px; left: {{defaultThumbLeft}}; box-shadow: 0 1px 2px rgba(27,29,39,0.24); transition: left 0.15s;"></div>
+            </div>
+            <span style="font-size: 12.5px; font-weight: 600;">Set as the default dashboard for this scope</span>
+          </div>
+        </sc-if>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeShare}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div onClick="{{closeShare}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Save</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{deleteOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 420px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <sc-if value="{{deleteTargetIsDefault}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+            <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700;">Can't delete a default dashboard</h2>
+          </div>
+          <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">"{{deleteTarget.name}}" is the default dashboard for {{deleteTarget.scopeLabel}}. Set a different dashboard as default, or unset the default, before deleting this one.</p>
+          <div onClick="{{closeDelete}}" style="height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Got it</div>
+        </sc-if>
+        <sc-if value="{{deleteTargetNotDefault}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+            <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700;">Delete "{{deleteTarget.name}}"?</h2>
+          </div>
+          <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">Only the layout and any note gadgets are removed — filters and issues referenced by its gadgets aren't touched.</p>
+          <div style="display: flex; gap: 8px;">
+            <div onClick="{{closeDelete}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+            <div onClick="{{closeDelete}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #F0453F; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Delete dashboard</div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const role = this.state.role ?? 'owner';
+    const isOwner = role === 'owner';
+
+    const defs = [
+      { id: 'd1', name: 'Sprint health', owner: 'Alex Lam', gadgetCount: 6, scope: 'workspace', isDefault: true, ownedByMe: true },
+      { id: 'd2', name: 'Payments release tracker', owner: 'Jamie Diaz', gadgetCount: 4, scope: 'project', isDefault: false, ownedByMe: false },
+      { id: 'd3', name: 'My triage view', owner: 'Alex Lam', gadgetCount: 3, scope: 'private', isDefault: false, ownedByMe: true },
+      { id: 'd4', name: 'Time & capacity', owner: 'Nina Park', gadgetCount: 5, scope: 'project', isDefault: true, ownedByMe: false },
+    ];
+    const scopeStyle = {
+      private: { label: 'Private', bg: '#F0F1F7', fg: '#767B8C' },
+      project: { label: 'Shared — project', bg: '#EDF0FE', fg: '#4C63F5' },
+      workspace: { label: 'Shared — workspace', bg: '#FFF3E8', fg: '#FF9A3D' },
+    };
+    const byId = Object.fromEntries(defs.map((d) => [d.id, d]));
+
+    const createOpen = !!this.state.createOpen;
+    const shareId = this.state.shareId ?? null;
+    const shareOpen = !!shareId;
+    const scope = this.state.shareScope ?? (shareId ? byId[shareId].scope : 'private');
+    const setAsDefault = !!this.state.setAsDefault;
+    const deleteId = this.state.deleteId ?? null;
+    const deleteOpen = !!deleteId;
+
+    return {
+      roleBg: { owner: role === 'owner' ? '#4C63F5' : '#FFFFFF', other: role === 'other' ? '#4C63F5' : '#FFFFFF' },
+      roleFg: { owner: role === 'owner' ? '#fff' : '#767B8C', other: role === 'other' ? '#fff' : '#767B8C' },
+      selectRole: (r) => () => this.setState({ role: r }),
+
+      dashboards: defs
+        .filter((d) => isOwner || d.scope !== 'private' || d.ownedByMe)
+        .map((d) => {
+          const st = scopeStyle[d.scope];
+          return {
+            ...d,
+            scopeLabel: st.label,
+            scopeBg: st.bg,
+            scopeFg: st.fg,
+            canManage: isOwner && (d.ownedByMe || d.scope !== 'private'),
+          };
+        }),
+
+      createOpen,
+      openCreate: () => this.setState({ createOpen: true }),
+      closeCreate: () => this.setState({ createOpen: false }),
+
+      shareOpen,
+      shareTarget: shareId ? byId[shareId] : { name: '' },
+      openShare: (id) => () => this.setState({ shareId: id, shareScope: byId[id].scope, setAsDefault: byId[id].isDefault }),
+      closeShare: () => this.setState({ shareId: null }),
+      selectScope: (s) => () => this.setState({ shareScope: s }),
+      scopeIsShared: scope !== 'private',
+      scopeBorder: { private: scope === 'private' ? '#4C63F5' : '#DEE1EC', project: scope === 'project' ? '#4C63F5' : '#DEE1EC', workspace: scope === 'workspace' ? '#4C63F5' : '#DEE1EC' },
+      scopeBg2: { private: scope === 'private' ? '#EDF0FE' : '#fff', project: scope === 'project' ? '#EDF0FE' : '#fff', workspace: scope === 'workspace' ? '#EDF0FE' : '#fff' },
+      scopeDot: { private: scope === 'private' ? '#4C63F5' : 'transparent', project: scope === 'project' ? '#4C63F5' : 'transparent', workspace: scope === 'workspace' ? '#4C63F5' : 'transparent' },
+      setAsDefault,
+      defaultTrackBg: setAsDefault ? '#4C63F5' : '#DEE1EC',
+      defaultThumbLeft: setAsDefault ? '16px' : '2px',
+      toggleDefault: () => this.setState({ setAsDefault: !setAsDefault }),
+
+      deleteOpen,
+      deleteTarget: deleteId ? { ...byId[deleteId], scopeLabel: scopeStyle[byId[deleteId].scope].label } : { name: '', isDefault: false },
+      deleteTargetIsDefault: deleteId ? byId[deleteId].isDefault : false,
+      deleteTargetNotDefault: deleteId ? !byId[deleteId].isDefault : false,
+      openDelete: (id) => () => this.setState({ deleteId: id }),
+      closeDelete: () => this.setState({ deleteId: null }),
+    };
+  }
+}
+</script>
+</body>
+</html>

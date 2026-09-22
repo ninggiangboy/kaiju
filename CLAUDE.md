@@ -288,7 +288,8 @@ The project **has not started implementation**. Documentation only.
 | Part | Status |
 |---|---|
 | Brief, Requirement, System Design, Features & Roadmap | ✅ Complete |
-| UX/UI design, ERD, Detail design | ⬜ Not started |
+| UX/UI design | 🟨 In progress — first pass exported to [`docs/05-ux-ui-design/canvas/`](docs/05-ux-ui-design/canvas/canvas.json); the canvas on Claude Design is the editing source |
+| ERD, Detail design | ⬜ Not started |
 | `infra/`, `.github/` | ✅ Scaffolded — environment tiers, CI pipeline, and the delivery toolchain (OpenTofu, Ansible, Argo CD). Nothing applied yet: no cloud account, no cluster, no host |
 | `backend/`, `frontend/` | ⬜ Not created |
 

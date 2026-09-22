@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sign in — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  a:hover{color:#3548D4}
+  input::placeholder{color:#A7ABBB}
+  input:focus{outline:none;border-color:#4C63F5!important;box-shadow:0 0 0 3px #EDF0FE}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FFFFFF; display: flex;">
+
+  <dc-import name="AuthPanel" hint-size="360px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 48px; box-sizing: border-box;">
+    <div style="width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 24px;">
+
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 22px; line-height: 28px; font-weight: 700; color: #1B1D27;">Sign in to Kaiju</h1>
+          <p style="margin: 0; font-size: 13px; line-height: 19px; color: #767B8C;">No passwords, ever. We'll email you a one-time link and a 6-digit code.</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label for="email" style="font-size: 12px; font-weight: 600; color: #1B1D27;">Email address</label>
+          <input id="email" type="email" placeholder="you@company.com" value="{{email}}" onChange="{{setEmail}}" style="height: 36px; box-sizing: border-box; padding: 0 10px; font-size: 13px; font-family: inherit; color: #1B1D27; background: #FAFBFE; border: 1px solid {{emailBorder}}; border-radius: 8px;">
+          <sc-if value="{{showError}}" hint-placeholder-val="{{true}}">
+            <span style="font-size: 12px; color: #F0453F; display: flex; align-items: center; gap: 4px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              Enter a valid email address.
+            </span>
+          </sc-if>
+        </div>
+
+        <a href="CodeVerify.dc.html" style="height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 2px rgba(76,99,245,0.3);">
+          Send magic link
+        </a>
+
+        <p style="margin: 0; font-size: 11px; line-height: 16px; color: #A7ABBB; text-align: center;">
+          By continuing you agree to Kaiju's Terms and Privacy Policy.
+        </p>
+      </div>
+
+      <p style="margin: 0; font-size: 12px; color: #767B8C; text-align: center;">
+        New to Kaiju? Just enter your email — an account is created automatically.
+      </p>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","default":"default","options":["default","error"],"section":"Variant"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const isError = this.props.state === 'error';
+    return {
+      email: this.state.email ?? (isError ? 'not-an-email' : ''),
+      setEmail: (e) => this.setState({ email: e.target.value }),
+      showError: isError,
+      emailBorder: isError ? '#F0453F' : '#DEE1EC',
+    };
+  }
+}
+</script>
+</body>
+</html>

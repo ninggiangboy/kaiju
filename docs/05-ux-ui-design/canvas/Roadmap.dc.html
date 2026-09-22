@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Roadmap — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .chip{font-size:12px;font-weight:600;color:#767B8C;background:#FFFFFF;border:1px solid #ECEEF6;border-radius:999px;padding:6px 12px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+  .ty{width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;}
+  .grow{flex-grow:1;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="roadmap" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Roadmap" search-placeholder="Search this project…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 20px 32px; display: flex; flex-direction: column; gap: 14px; box-sizing: border-box;">
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Roadmap</h1>
+        <div class="grow"></div>
+        <div class="chip">Epic: All <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg></div>
+        <div class="chip">Status: All <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg></div>
+        <div class="chip">Assignee: Anyone <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg></div>
+        <div onClick="{{selectZoom('weeks')}}" class="chip" style="background: {{zoomBg.weeks}}; color: {{zoomFg.weeks}};">Weeks</div>
+        <div onClick="{{selectZoom('months')}}" class="chip" style="background: {{zoomBg.months}}; color: {{zoomFg.months}};">Months</div>
+        <div onClick="{{selectZoom('quarters')}}" class="chip" style="background: {{zoomBg.quarters}}; color: {{zoomFg.quarters}};">Quarters</div>
+        <div onClick="{{openShare}}" class="chip">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg>
+          Share
+        </div>
+        <div onClick="{{openExport}}" class="chip">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+          Export PNG
+        </div>
+      </div>
+
+      <sc-if value="{{cycleMsg}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; align-items: center; gap: 8px; background: #FEF0EF; border: 1px solid #F6C8C5; border-radius: 8px; padding: 8px 12px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2.4" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <span style="font-size: 12px; color: #F0453F; flex-grow: 1;">{{cycleMsg}}</span>
+          <svg onClick="{{dismissCycle}}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2.4" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+      </sc-if>
+
+      <div style="background: #FFFFFF; border: 1px solid #ECEEF6; border-radius: 12px; overflow: hidden;">
+        <div style="display: flex; border-bottom: 1px solid #ECEEF6;">
+          <div style="width: 220px; flex-shrink: 0; padding: 10px 14px; font-size: 10.5px; font-weight: 700; color: #A7ABBB; text-transform: uppercase; background: #FAFBFE;">Epic</div>
+          <div style="flex-grow: 1; display: flex; background: #FAFBFE;">
+            <sc-for list="{{months}}" as="m" hint-placeholder-count="4">
+              <div style="flex-grow: 1; padding: 10px 8px; font-size: 10.5px; font-weight: 700; color: #A7ABBB; text-align: center; border-left: 1px solid #ECEEF6;">{{m}}</div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display: flex;">
+          <div style="width: 220px; flex-shrink: 0;">
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+              <div style="height: 46px; box-sizing: border-box; padding: 10px 14px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #F5F6FA; border-top: 1px solid #F5F6FA;">
+                <span class="ty" style="background: #B8790F;">E</span>
+                <a href="EpicDetail.dc.html" style="font-size: 12px; font-weight: 700; color: #1B1D27; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{r.title}}</a>
+                <sc-if value="{{r.conflict}}" hint-placeholder-val="{{false}}">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2.4" title="Schedule conflict"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <div style="flex-grow: 1; position: relative; height: {{trackHeight}};">
+            <div style="position: absolute; inset: 0; display: flex;">
+              <sc-for list="{{months}}" as="m" hint-placeholder-count="4"><div style="flex-grow: 1; border-left: 1px solid #F5F6FA;"></div></sc-for>
+            </div>
+            <svg style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;" viewBox="{{depViewBox}}" preserveAspectRatio="none">
+              <defs>
+                <marker id="rdmArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#F0453F"></path></marker>
+              </defs>
+              <path d="{{depPath}}" stroke="#F0453F" stroke-width="1.4" fill="none" marker-end="url(#rdmArrow)" vector-effect="non-scaling-stroke"></path>
+            </svg>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+              <div onClick="{{pickEpic(r.id)}}" style="position: absolute; top: {{r.top}}; height: 24px; left: {{r.left}}; width: {{r.width}}; background: {{r.barBg}}; border-radius: 6px; display: flex; align-items: center; padding: 0 8px; cursor: pointer; box-sizing: border-box; outline: {{r.outline}};">
+                <span style="font-size: 10.5px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden;">{{r.rangeLabel}}</span>
+                <div class="grow"></div>
+                <svg onClick="{{grabEnd(r.id)}}" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" style="cursor: ew-resize; flex-shrink: 0;"><path d="M9 6l6 6-6 6"></path></svg>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{resizeMode}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex;">
+            <div style="width: 220px; flex-shrink: 0;"></div>
+            <div style="flex-grow: 1; display: flex; padding: 6px 0;">
+              <sc-for list="{{resizeSlots}}" as="rs" hint-placeholder-count="4">
+                <div onClick="{{dropEnd(rs.month)}}" style="flex-grow: 1; text-align: center; cursor: pointer;">
+                  <span style="font-size: 9.5px; font-weight: 700; color: #4C63F5; border: 1px dashed #4C63F5; border-radius: 6px; padding: 3px 6px;">set end</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div>
+        <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Not yet planned</span>
+        <div style="background: #FFFFFF; border: 1px solid #ECEEF6; border-radius: 12px; margin-top: 6px;">
+          <sc-for list="{{unplanned}}" as="u" hint-placeholder-count="2">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-top: 1px solid #F5F6FA;">
+              <span class="ty" style="background: #B8790F;">E</span>
+              <a href="EpicDetail.dc.html" style="font-size: 12.5px; font-weight: 700; color: #1B1D27;">{{u.title}}</a>
+              <span style="font-size: 11px; color: #A7ABBB;">{{u.reason}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <span style="font-size: 11px; color: #767B8C;">Bar color identifies each epic — hover an epic's row to trace it across the timeline</span>
+        <span style="font-size: 11px; color: #767B8C;"><span style="color:#F0453F;">●</span> Schedule conflict with a blocker</span>
+        <span style="font-size: 11px; color: #A7ABBB;">Dates are inferred from child issue due dates — dragging the end handle edits the farthest child's due date, not a separate roadmap date. Only the end can be dragged; there's no "start date" field on an issue to write to.</span>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{shareOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 460px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Share this view</h2>
+          <div class="grow"></div>
+          <svg onClick="{{closeShare}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="height: 36px; border: 1px solid #DEE1EC; border-radius: 8px; display: flex; align-items: center; padding: 0 10px; background: #FAFBFE;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #767B8C; overflow: hidden; white-space: nowrap;">app.kaiju.dev/PAY/roadmap?zoom=months&amp;status=all</span>
+        </div>
+        <span style="font-size: 11px; color: #A7ABBB;">The filter state lives on the URL — nothing is saved as an object. Whoever opens it still needs their own permission to view this project.</span>
+        <div onClick="{{closeShare}}" style="height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Copy link</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{exportOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 420px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Export PNG</h2>
+          <div class="grow"></div>
+          <svg onClick="{{closeExport}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">Captures exactly the view currently on screen — this zoom level and these filters.</p>
+        <div style="display: flex; gap: 8px;">
+          <div onClick="{{closeExport}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div onClick="{{closeExport}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Export</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const zoom = this.state.zoom ?? 'months';
+    const selected = this.state.selectedEpic;
+    const resizeMode = !!this.state.resizeMode;
+
+    const MONTHS = ['Sep', 'Oct', 'Nov', 'Dec'];
+    const colW = 100 / MONTHS.length;
+
+    const epicDefs = [
+      { id: 'e1', key: 'PAY-98', title: 'Payout reversal & reconciliation', startCol: 0.1, endCol: 1.6, conflict: false, blocks: ['e2'] },
+      { id: 'e2', key: 'PAY-70', title: 'Merchant payout dashboard', startCol: 1.0, endCol: 2.4, conflict: true, blocks: [] },
+      { id: 'e3', key: 'PAY-50', title: 'Card issuing: limits & controls', startCol: -0.6, endCol: 0.3, conflict: false, blocks: [] },
+    ];
+
+    const rowH = 46;
+    // Epics are told apart by color; conflict always overrides with danger red.
+    const epicPalette = ['#4C63F5', '#8B6FFF', '#0EA5E9', '#14B8A6', '#FF9A3D', '#B8790F'];
+    const rows = epicDefs.map((e, idx) => ({
+      id: e.id,
+      title: e.title,
+      top: idx * rowH + 11 + 'px',
+      left: Math.max(0, e.startCol) * colW + '%',
+      width: (Math.min(MONTHS.length, e.endCol) - Math.max(0, e.startCol)) * colW + '%',
+      barBg: e.conflict ? '#F0453F' : epicPalette[idx % epicPalette.length],
+      rangeLabel: e.key,
+      conflict: e.conflict,
+      outline: selected === e.id ? '2px solid #1B1D27' : 'none',
+    }));
+    const trackH = epicDefs.length * rowH;
+
+    const e1 = epicDefs[0];
+    const e2 = epicDefs[1];
+    const x1 = Math.min(MONTHS.length, e1.endCol) * colW;
+    const y1 = 0 * rowH + 23;
+    const x2 = Math.max(0, e2.startCol) * colW;
+    const y2 = 1 * rowH + 23;
+
+    return {
+      trackHeight: trackH + 'px',
+      depViewBox: `0 0 100 ${trackH}`,
+      depPath: `M${x1} ${y1} C ${(x1 + x2) / 2} ${y1}, ${(x1 + x2) / 2} ${y2}, ${x2 - 2} ${y2}`,
+      zoomBg: {
+        weeks: zoom === 'weeks' ? '#4C63F5' : '#FFFFFF',
+        months: zoom === 'months' ? '#4C63F5' : '#FFFFFF',
+        quarters: zoom === 'quarters' ? '#4C63F5' : '#FFFFFF',
+      },
+      zoomFg: {
+        weeks: zoom === 'weeks' ? '#fff' : '#767B8C',
+        months: zoom === 'months' ? '#fff' : '#767B8C',
+        quarters: zoom === 'quarters' ? '#fff' : '#767B8C',
+      },
+      selectZoom: (z) => () => this.setState({ zoom: z }),
+
+      months: MONTHS,
+      rows,
+
+      pickEpic: (id) => () => {
+        if (!selected) { this.setState({ selectedEpic: id }); return; }
+        if (selected === id) { this.setState({ selectedEpic: null }); return; }
+        if (selected === 'e2' && id === 'e1') {
+          this.setState({ selectedEpic: null, cycleMsg: 'Can\'t link PAY-70 → blocks → PAY-98: PAY-98 already blocks PAY-70, so this would create a cycle (PAY-98 → PAY-70 → PAY-98).' });
+          return;
+        }
+        this.setState({ selectedEpic: null, cycleMsg: null });
+      },
+      cycleMsg: this.state.cycleMsg,
+      dismissCycle: () => this.setState({ cycleMsg: null }),
+
+      resizeMode,
+      grabEnd: (id) => (e) => { this.setState({ resizeMode: true, resizingEpic: id }); },
+      resizeSlots: MONTHS.map((m) => ({ month: m })),
+      dropEnd: () => () => this.setState({ resizeMode: false, resizingEpic: null }),
+
+      unplanned: [
+        { title: 'Ledger v2 migration', reason: 'No child issues yet' },
+        { title: 'Internal tooling cleanup', reason: 'No child issue has a due date' },
+      ],
+
+      shareOpen: !!this.state.shareOpen,
+      openShare: () => this.setState({ shareOpen: true }),
+      closeShare: () => this.setState({ shareOpen: false }),
+      exportOpen: !!this.state.exportOpen,
+      openExport: () => this.setState({ exportOpen: true }),
+      closeExport: () => this.setState({ exportOpen: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

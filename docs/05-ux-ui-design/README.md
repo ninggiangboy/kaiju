@@ -1,13 +1,54 @@
 # 05 — UX/UI Design
 
-**Trạng thái: ⬜ Chưa bắt đầu**
+**Trạng thái: 🟨 Đang làm** — đã có bản thiết kế đầu tiên, xem [canvas](#bản-thiết-kế-canvas)
 
-Phần này sẽ chứa thiết kế trải nghiệm và giao diện. Hiện chưa bắt đầu vì các
-quyết định về kiến trúc và luồng nghiệp vụ được ưu tiên chốt trước.
+Phần này chứa thiết kế trải nghiệm và giao diện.
+
+> **Changed (2026-09-23):** trước đây trạng thái là "⬜ Chưa bắt đầu", với lý do
+> các quyết định về kiến trúc và luồng nghiệp vụ được ưu tiên chốt trước. Bản
+> thiết kế đầu tiên đã được làm trên một canvas Claude Design và export vào
+> [`canvas/`](canvas/canvas.json).
 
 **Liên quan:** [Brief](../01-brief/) · [Use cases](../03-features/usecases/) · [Frontend design](../04-system-design/frontend.md)
 
 ---
+
+## Bản thiết kế (canvas)
+
+Nguồn gốc là canvas **"Kaiju — UI Design"** trên Claude Design
+(`https://claude.ai/artifact/JcWbyXU4J3QD5sdMC254eQ`). Thư mục [`canvas/`](canvas/canvas.json)
+là bản export các file nội dung của canvas đó:
+
+| File | Nội dung |
+|---|---|
+| [`canvas/canvas.json`](canvas/canvas.json) | Chỉ mục: vị trí, kích thước, tiêu đề từng artboard, và các nhóm (ghi chú `title1`) gắn với use case / phase |
+| [`canvas/ds/kaiju/tokens.json`](canvas/ds/kaiju/tokens.json) | Design token: màu, typography (Manrope / Space Grotesk / JetBrains Mono), spacing, radius, shadow |
+| `canvas/*.dc.html` | Mỗi file là một màn hình hoặc một thành phần dùng chung (`Sidebar`, `ProjectSidebar`, `TopBar`, `AuthPanel`, được nhúng bằng `<dc-import>`) |
+
+Các nhóm màn hình, theo `notes` trong `canvas.json`:
+
+- Design system, component, pattern local-first và khung dùng chung — `Foundations`, `Components`, `Patterns`
+- Đăng nhập & onboarding — UC-AUTH, UC-INV
+- Workspace & member — UC-WSP, UC-INV
+- Project — UC-PRJ
+- Workflow (Phase 5), custom field & screen (Phase 6), search (Phase 7), board
+  (Phase 8), sprint (Phase 9), roadmap (Phase 10), time tracking (Phase 11),
+  version & release (Phase 12), dashboard (Phase 13), automation (Phase 14),
+  bulk & import/export (Phase 15), integration & public API (Phase 16)
+
+Về cách dùng các file này:
+
+- File `.dc.html` là định dạng của Claude Design, không phải HTML chạy độc lập:
+  dòng `<script src="./support.js">` trỏ tới runtime của canvas, runtime đó
+  **không** nằm trong repo. Muốn xem hoặc sửa trực quan thì mở canvas gốc; bản
+  trong repo dùng để đọc, review diff và làm nguồn tham chiếu khi implement.
+- Canvas là nơi sửa chính. Sau khi sửa trên canvas, export lại vào `canvas/`
+  để bản trong repo không bị lệch.
+- Dữ liệu trong màn hình (tên người, số liệu, token mẫu) là dữ liệu minh hoạ.
+
+> **Chưa chốt:** `tokens.json` hiện chỉ có theme sáng và viết dưới dạng hex, trong
+> khi ràng buộc bên dưới yêu cầu token theme của shadcn/ui kèm chế độ tối. Cần
+> quyết định cách ánh xạ các token này sang biến CSS của shadcn và bổ sung theme tối.
 
 ## Sẽ chứa gì
 

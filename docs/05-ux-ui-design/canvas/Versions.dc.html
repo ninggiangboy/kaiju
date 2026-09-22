@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Versions — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .chip{font-size:12px;font-weight:600;color:#767B8C;background:#FFFFFF;border:1px solid #ECEEF6;border-radius:999px;padding:6px 12px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;overflow:hidden;}
+  .row{display:grid;grid-template-columns:28px 1.6fr 1fr 1fr 100px 90px 110px;align-items:center;padding:12px 20px;border-bottom:1px solid #F5F6FA;}
+  .row:last-child{border-bottom:none;}
+  input,select,textarea{height:36px;box-sizing:border-box;padding:0 12px;font-size:13px;font-family:inherit;color:#1B1D27;background:#FAFBFE;border:1px solid #DEE1EC;border-radius:8px;}
+  textarea{height:64px;padding:10px 12px;resize:none;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:#4C63F5!important;box-shadow:0 0 0 3px #EDF0FE}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="releases" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Versions" search-placeholder="Search this project…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 24px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px;">
+
+      <div style="display: flex; align-items: center;">
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Versions</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">Plan releases, track fix-version progress, and archive versions you no longer ship.</p>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{selectRole('member')}}" class="chip" style="background: {{roleBg.member}}; color: {{roleFg.member}};">Viewing as: Member</div>
+        <div onClick="{{selectRole('admin')}}" class="chip" style="background: {{roleBg.admin}}; color: {{roleFg.admin}};">Viewing as: Project admin</div>
+        <sc-if value="{{isAdmin}}" hint-placeholder-val="{{true}}">
+          <div onClick="{{openCreate}}" style="height: 36px; padding: 0 16px; margin-left: 8px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Create version
+          </div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{isMember}}" hint-placeholder-val="{{false}}">
+        <span style="font-size: 11px; color: #A7ABBB;">Create, edit, archive and delete are project-admin only — you can view and open releases.</span>
+      </sc-if>
+
+      <div class="card">
+        <div class="row" style="background: #FAFBFE; padding: 10px 20px;">
+          <span></span>
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Version</span>
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase; text-align: right;">Start date</span>
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase; text-align: right;">Release date</span>
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Status</span>
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase; text-align: right;">Issues</span>
+          <span></span>
+        </div>
+        <sc-for list="{{versions}}" as="v" hint-placeholder-count="5">
+          <div class="row">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <svg onClick="{{moveUp(v.id)}}" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="{{v.upColor}}" stroke-width="3" style="cursor:pointer;"><path d="M5 15l7-7 7 7"></path></svg>
+              <svg onClick="{{moveDown(v.id)}}" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="{{v.downColor}}" stroke-width="3" style="cursor:pointer;"><path d="M19 9l-7 7-7-7"></path></svg>
+            </div>
+            <div style="min-width: 0;">
+              <a href="Release.dc.html" style="font-size: 13.5px; font-weight: 700;">{{v.name}}</a>
+              <div style="font-size: 11px; color: #A7ABBB; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{v.description}}</div>
+            </div>
+            <span style="font-size: 11px; color: #767B8C; text-align: right;">{{v.start}}</span>
+            <span style="font-size: 11px; color: #767B8C; text-align: right;">{{v.release}}</span>
+            <span style="font-size: 11px; font-weight: 700; background: {{v.statusBg}}; color: {{v.statusFg}}; border-radius: 999px; padding: 3px 9px; width: fit-content;">{{v.statusLabel}}</span>
+            <span style="font-size: 12px; font-weight: 700; text-align: right;">{{v.issues}}</span>
+            <sc-if value="{{isAdmin}}" hint-placeholder-val="{{true}}">
+              <div style="display: flex; gap: 10px; justify-self: end;">
+                <svg onClick="{{openEdit(v.id)}}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"></path></svg>
+                <sc-if value="{{v.archived}}" hint-placeholder-val="{{false}}">
+                  <svg onClick="{{restoreVersion(v.id)}}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22B573" stroke-width="2" style="cursor:pointer;"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 102.13-9.36L1 10"></path></svg>
+                </sc-if>
+                <sc-if value="{{v.canArchive}}" hint-placeholder-val="{{true}}">
+                  <svg onClick="{{archiveVersion(v.id)}}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+                </sc-if>
+                <svg onClick="{{openDelete(v.id)}}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2" style="cursor:pointer;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"></path></svg>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{createOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 460px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">{{editTitle}}</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeCreate}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Name</label>
+          <input placeholder="e.g. 2.7.0" value="{{formName}}">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Description</label>
+          <textarea placeholder="What ships in this version…"></textarea>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 12px; font-weight: 600;">Start date <span style="font-weight: 500; color: #A7ABBB;">(optional)</span></label>
+            <input value="{{formStart}}">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 12px; font-weight: 600;">Release date <span style="font-weight: 500; color: #A7ABBB;">(optional)</span></label>
+            <input onClick="{{toggleDateError}}" value="{{formRelease}}" style="border-color: {{releaseBorder}}!important;">
+          </div>
+        </div>
+        <sc-if value="{{dateError}}" hint-placeholder-val="{{false}}">
+          <span style="font-size: 11px; color: #F0453F; margin-top: -8px;">Release date can't be before the start date.</span>
+        </sc-if>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeCreate}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div onClick="{{saveVersion}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">{{saveLabel}}</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{deleteOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 440px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700;">Delete "{{deleteTarget.name}}"?</h2>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">{{deleteTarget.issues}} issues reference this as a fix or affects version. Choose what happens to them before deleting.</p>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div onClick="{{selectReassignMode('unassign')}}" class="radio" style="display: flex; gap: 10px; padding: 10px 12px; border: 1px solid {{unassignBorder}}; background: {{unassignBg}}; border-radius: 8px; cursor: pointer;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2" style="margin-top:1px;flex-shrink:0;"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5" fill="{{unassignDot}}" stroke="none"></circle></svg>
+            <span style="font-size: 13px; font-weight: 600;">Remove this version from those issues</span>
+          </div>
+          <div onClick="{{selectReassignMode('move')}}" class="radio" style="display: flex; gap: 10px; padding: 10px 12px; border: 1px solid {{moveBorder}}; background: {{moveBg}}; border-radius: 8px; cursor: pointer;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="2" style="margin-top:1px;flex-shrink:0;"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5" fill="{{moveDot}}" stroke="none"></circle></svg>
+            <div style="display: flex; align-items: center; gap: 8px; flex-grow: 1;">
+              <span style="font-size: 13px; font-weight: 600;">Move them to</span>
+              <select style="height: 28px; flex-grow: 1;">
+                <option>2.5.0</option>
+                <option>2.6.0</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeDelete}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #F0453F; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Delete version</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const role = this.state.role ?? 'admin';
+    const isAdmin = role === 'admin';
+
+    const defs = [
+      { id: 'v1', name: '2.3.0', description: 'Card issuing limits GA.', start: 'Jul 1, 2026', release: 'Jul 28, 2026', status: 'released', issues: 14, order: 0 },
+      { id: 'v2', name: '2.4.0', description: 'Payout reconciliation fixes.', start: 'Aug 1, 2026', release: 'Aug 25, 2026', status: 'released', issues: 9, order: 1 },
+      { id: 'v3', name: '2.5.0', description: 'Merchant payout dashboard.', start: 'Sep 1, 2026', release: 'Sep 30, 2026', status: 'unreleased', issues: 11, order: 2 },
+      { id: 'v4', name: '2.6.0', description: 'Webhook replay & retries.', start: '—', release: 'Oct 20, 2026', status: 'unreleased', issues: 3, order: 3 },
+      { id: 'v5', name: '2.1.0', description: 'Initial ledger release.', start: 'May 1, 2026', release: 'May 20, 2026', status: 'archived', issues: 22, order: 4 },
+    ];
+    const order = this.state.order ?? defs.map((d) => d.id);
+    const byId = Object.fromEntries(defs.map((d) => [d.id, d]));
+    const statusStyle = {
+      unreleased: { label: 'Unreleased', bg: '#EDF0FE', fg: '#4C63F5' },
+      released: { label: 'Released', bg: '#E7F9F1', fg: '#1A8F5C' },
+      archived: { label: 'Archived', bg: '#F0F1F7', fg: '#767B8C' },
+    };
+
+    const createOpen = !!this.state.createOpen;
+    const editId = this.state.editId ?? null;
+    const editing = editId ? byId[editId] : null;
+    const formRelease = this.state.formRelease ?? (editing ? editing.release : '');
+    const formStart = this.state.formStart ?? (editing ? editing.start : '');
+    const dateError = !!this.state.dateError;
+
+    const deleteOpen = !!this.state.deleteOpen;
+    const deleteId = this.state.deleteId ?? null;
+    const mode = this.state.reassignMode ?? 'unassign';
+
+    return {
+      roleBg: { member: role === 'member' ? '#4C63F5' : '#FFFFFF', admin: role === 'admin' ? '#4C63F5' : '#FFFFFF' },
+      roleFg: { member: role === 'member' ? '#fff' : '#767B8C', admin: role === 'admin' ? '#fff' : '#767B8C' },
+      selectRole: (r) => () => this.setState({ role: r }),
+      isAdmin,
+      isMember: !isAdmin,
+
+      versions: order.map((id, idx) => {
+        const v = byId[id];
+        const st = statusStyle[v.status];
+        return {
+          ...v,
+          statusLabel: st.label,
+          statusBg: st.bg,
+          statusFg: st.fg,
+          archived: v.status === 'archived',
+          canArchive: v.status !== 'archived',
+          upColor: idx === 0 ? '#DEE1EC' : '#767B8C',
+          downColor: idx === order.length - 1 ? '#DEE1EC' : '#767B8C',
+        };
+      }),
+      moveUp: (id) => () => {
+        const i = order.indexOf(id);
+        if (i <= 0) return;
+        const next = [...order];
+        [next[i - 1], next[i]] = [next[i], next[i - 1]];
+        this.setState({ order: next });
+      },
+      moveDown: (id) => () => {
+        const i = order.indexOf(id);
+        if (i < 0 || i >= order.length - 1) return;
+        const next = [...order];
+        [next[i + 1], next[i]] = [next[i], next[i + 1]];
+        this.setState({ order: next });
+      },
+
+      createOpen: createOpen || !!editId,
+      editTitle: editId ? 'Edit version' : 'Create version',
+      saveLabel: editId ? 'Save changes' : 'Create',
+      formName: editing ? editing.name : '',
+      formStart,
+      formRelease,
+      dateError,
+      releaseBorder: dateError ? '#F0453F' : '#DEE1EC',
+      toggleDateError: () => this.setState({ dateError: !dateError }),
+      openCreate: () => this.setState({ createOpen: true, editId: null, formStart: '', formRelease: '', dateError: false }),
+      openEdit: (id) => () => this.setState({ editId: id, formStart: null, formRelease: null, dateError: false }),
+      closeCreate: () => this.setState({ createOpen: false, editId: null, dateError: false }),
+      saveVersion: () => {
+        if (dateError) return;
+        this.setState({ createOpen: false, editId: null });
+      },
+
+      archiveVersion: (id) => () => {},
+      restoreVersion: (id) => () => {},
+
+      deleteOpen,
+      deleteTarget: deleteId ? byId[deleteId] : { name: '', issues: 0 },
+      openDelete: (id) => () => this.setState({ deleteOpen: true, deleteId: id }),
+      closeDelete: () => this.setState({ deleteOpen: false }),
+      selectReassignMode: (m) => () => this.setState({ reassignMode: m }),
+      unassignBorder: mode === 'unassign' ? '#4C63F5' : '#DEE1EC',
+      unassignBg: mode === 'unassign' ? '#EDF0FE' : '#fff',
+      unassignDot: mode === 'unassign' ? '#4C63F5' : 'transparent',
+      moveBorder: mode === 'move' ? '#4C63F5' : '#DEE1EC',
+      moveBg: mode === 'move' ? '#EDF0FE' : '#fff',
+      moveDot: mode === 'move' ? '#4C63F5' : 'transparent',
+    };
+  }
+}
+</script>
+</body>
+</html>

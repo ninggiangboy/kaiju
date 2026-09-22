@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Local-first UI patterns — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:20px;}
+  .label{font-size:11px;font-weight:700;color:#4C63F5;text-transform:uppercase;letter-spacing:.04em;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .pulse{animation:pulse 1.4s ease-in-out infinite;}
+  .skel{background:linear-gradient(90deg,#F0F1F7 25%,#F7F8FB 37%,#F0F1F7 63%);background-size:400% 100%;animation:sk 1.4s ease infinite;border-radius:6px;}
+  @keyframes sk{0%{background-position:100% 0}100%{background-position:0 0}}
+  kbd{font-family:'JetBrains Mono',monospace;font-size:11px;background:#F0F1F7;border:1px solid #E2E4EE;border-radius:4px;padding:2px 6px;color:#1B1D27;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1520px; box-sizing: border-box; background: #FAFBFE; padding: 40px; display: flex; flex-direction: column; gap: 32px;">
+
+  <div>
+    <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700;">Local-first UI patterns</h1>
+    <p style="margin: 4px 0 0; font-size: 13px; color: #767B8C; max-width: 640px;">Every mutation is optimistic. These are the recurring states a local-first, realtime app needs — used the same way on every screen, never invented per-feature.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 20px;">
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Sync &amp; mutation status</span>
+      <p style="margin: 0; font-size: 12px; color: #767B8C;">Lives in the top bar, right side. Never a spinner — a small status pill that only appears when there's something to say.</p>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="width: 90px; font-size: 11px; color: #A7ABBB;">Synced</span>
+          <span style="font-size: 12px; color: #A7ABBB;">— nothing shown. This is the default state.</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="width: 90px; font-size: 11px; color: #A7ABBB;">Sending</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #EDF0FE;">
+            <span class="pulse" style="width: 6px; height: 6px; border-radius: 999px; background: #4C63F5;"></span>
+            <span style="font-size: 11px; font-weight: 700; color: #4C63F5;">Syncing…</span>
+          </span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="width: 90px; font-size: 11px; color: #A7ABBB;">Offline</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #FFF8F0;">
+            <span class="pulse" style="width: 6px; height: 6px; border-radius: 999px; background: #E39A2A;"></span>
+            <span style="font-size: 11px; font-weight: 700; color: #8A5A0F;">Offline · 3 changes queued</span>
+          </span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="width: 90px; font-size: 11px; color: #A7ABBB;">Rejected</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #FDEBEA;">
+            <span style="width: 6px; height: 6px; border-radius: 999px; background: #F0453F;"></span>
+            <span style="font-size: 11px; font-weight: 700; color: #A9302B;">1 change couldn't save · Details</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Offline banner</span>
+      <p style="margin: 0; font-size: 12px; color: #767B8C;">Being offline is not an error — neutral tone, not danger. Reserved for a full scope reconnect, not shown for a single slow request.</p>
+      <div style="background: #FFF8F0; border: 1px solid #F5E2C0; border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 10px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A5A0F" stroke-width="2"><path d="M1 1l22 22"></path><path d="M16.72 11.06A10.94 10.94 0 0119 12.55"></path><path d="M5 12.55a10.94 10.94 0 015.17-2.39"></path><path d="M10.71 5.05A16 16 0 0122.58 9"></path><path d="M1.42 9a15.91 15.91 0 014.7-2.88"></path><path d="M8.53 16.11a6 6 0 016.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+        <span style="font-size: 12px; color: #8A5A0F; flex-grow: 1;">You're offline. Your changes are saved on this device and will sync when you're back.</span>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Rejected mutation toast</span>
+      <p style="margin: 0; font-size: 12px; color: #767B8C;">The optimistic change rolls back and a toast explains why, bottom-left, actionable and dismissible.</p>
+      <div style="background: #fff; border: 1px solid #ECEEF6; border-radius: 10px; padding: 14px; display: flex; gap: 10px; box-shadow: 0 8px 20px rgba(27,29,39,0.08); width: fit-content;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 12px; font-weight: 700;">Couldn't change role</span>
+          <span style="font-size: 12px; color: #767B8C;">Acme Inc needs at least one owner. Choose someone else first.</span>
+          <span style="font-size: 12px; font-weight: 700; color: #4C63F5;">Dismiss</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Loading — never a spinner</span>
+      <p style="margin: 0; font-size: 12px; color: #767B8C;">A scope that's bootstrapping shows a skeleton shaped like the real content; the rest of the app stays usable.</p>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="skel" style="width: 30px; height: 30px; border-radius: 999px;"></div>
+          <div class="skel" style="width: 160px; height: 12px;"></div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="skel" style="width: 30px; height: 30px; border-radius: 999px;"></div>
+          <div class="skel" style="width: 200px; height: 12px;"></div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="skel" style="width: 30px; height: 30px; border-radius: 999px;"></div>
+          <div class="skel" style="width: 130px; height: 12px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Empty state</span>
+      <p style="margin: 0; font-size: 12px; color: #767B8C;">Icon, one line of fact, one line of guidance, and — when the user can act — a primary button.</p>
+      <div style="border: 1px dashed #DEE1EC; border-radius: 10px; padding: 28px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="1.6"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
+        <span style="font-size: 13px; font-weight: 700;">No pending invites</span>
+        <span style="font-size: 12px; color: #767B8C;">Everyone you've invited has joined.</span>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Error state</span>
+      <p style="margin: 0; font-size: 12px; color: #767B8C;">Inline for a single field; page-level only when a whole scope genuinely can't load.</p>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <div style="height: 36px; border: 1px solid #F0453F; border-radius: 8px; background: #fff;"></div>
+          <span style="font-size: 11px; color: #F0453F;">This slug is already taken.</span>
+        </div>
+        <div style="background: #FDEBEA; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 12px; color: #A9302B; flex-grow: 1;">Couldn't load this workspace.</span>
+          <span style="font-size: 12px; font-weight: 700; color: #A9302B;">Retry</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px;">
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Keyboard shortcuts — Phase 1</span>
+      <p style="margin: 0; font-size: 12px; color: #767B8C;">Leader-key convention (press G, then a letter) reserved from the start so later phases extend it instead of inventing a second scheme.</p>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 12px;">Open quick switch (workspaces, members)</span><kbd>⌘ K</kbd></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 12px;">Go to Members</span><span><kbd>G</kbd> <kbd>M</kbd></span></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 12px;">Go to Workspace settings</span><span><kbd>G</kbd> <kbd>S</kbd></span></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 12px;">Focus search</span><kbd>/</kbd></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 12px;">Close dialog / panel</span><kbd>Esc</kbd></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 12px;">Show all shortcuts</span><kbd>?</kbd></div>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+      <span class="label">Responsive</span>
+      <p style="margin: 0; font-size: 12px; color: #767B8C;">Desktop is the primary target and where every screen above is designed. Tablet and phone get a reading and basic-action layout, not a redesign.</p>
+      <div style="display: flex; gap: 16px; align-items: flex-end;">
+        <div style="width: 90px; height: 130px; border: 2px solid #DEE1EC; border-radius: 10px; display: flex; flex-direction: column; padding: 8px; gap: 6px; box-sizing: border-box;">
+          <div style="height: 14px; display: flex; align-items: center; gap: 4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></div>
+          <div class="skel" style="height: 8px;"></div>
+          <div class="skel" style="height: 8px; width: 70%;"></div>
+          <div class="skel" style="height: 8px; width: 85%;"></div>
+        </div>
+        <span style="font-size: 11px; color: #767B8C; max-width: 220px;">Sidebar collapses behind a menu icon; content becomes a single scrolling column; the sync/offline indicator stays visible at all sizes.</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1520}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

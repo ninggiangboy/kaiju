@@ -1,0 +1,629 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "AppShell.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Workspace home",
+      "w": 1440,
+      "x": 0,
+      "y": 5470
+    },
+    "AuditLog.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Audit log",
+      "w": 1440,
+      "x": 6080,
+      "y": 8827
+    },
+    "AuthPanel.dc.html": {
+      "h": 900,
+      "title": "Shared: Auth panel",
+      "w": 360,
+      "x": 6120,
+      "y": 1740
+    },
+    "Board.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Board",
+      "w": 1440,
+      "x": 1520,
+      "y": 12747
+    },
+    "CodeVerify.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Check your email",
+      "w": 1440,
+      "x": 1520,
+      "y": 4029
+    },
+    "Components.dc.html": {
+      "h": 1600,
+      "title": "Components",
+      "w": 1440,
+      "x": 1520,
+      "y": 1740
+    },
+    "CustomFields.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Custom fields",
+      "w": 1440,
+      "x": 4560,
+      "y": 10787
+    },
+    "EpicDetail.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Epic detail",
+      "w": 1440,
+      "x": 0,
+      "y": 9807
+    },
+    "Foundations.dc.html": {
+      "h": 1400,
+      "title": "Foundations",
+      "w": 1440,
+      "x": 0,
+      "y": 1740
+    },
+    "InviteAccept.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Accept invite",
+      "w": 1440,
+      "x": 4560,
+      "y": 4029
+    },
+    "IssueDetail.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Issue detail",
+      "w": 1440,
+      "x": 6080,
+      "y": 6867
+    },
+    "Issues.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Issues",
+      "w": 1440,
+      "x": 4560,
+      "y": 6867
+    },
+    "LinkTypes.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Issue link types",
+      "w": 1440,
+      "x": 4560,
+      "y": 8827
+    },
+    "Login.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Sign in",
+      "w": 1440,
+      "x": 0,
+      "y": 4029
+    },
+    "MemberProfile.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Your profile",
+      "w": 1440,
+      "x": 3040,
+      "y": 8827
+    },
+    "Members.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Members",
+      "w": 1440,
+      "x": 1520,
+      "y": 5470
+    },
+    "Onboarding.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Onboarding",
+      "w": 1440,
+      "x": 3040,
+      "y": 4029
+    },
+    "Patterns.dc.html": {
+      "h": 1520,
+      "title": "Local-first UI patterns",
+      "w": 1440,
+      "x": 3040,
+      "y": 1740
+    },
+    "PermissionSchemes.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Permission schemes",
+      "w": 1440,
+      "x": 0,
+      "y": 8827
+    },
+    "ProjectChangeLog.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Project change log",
+      "w": 1440,
+      "x": 3040,
+      "y": 7847
+    },
+    "ProjectComponents.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Project components",
+      "w": 1440,
+      "x": 1520,
+      "y": 7847
+    },
+    "ProjectDeletedIssues.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Deleted issues",
+      "w": 1440,
+      "x": 4560,
+      "y": 7847
+    },
+    "ProjectFields.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Project fields",
+      "w": 1440,
+      "x": 6080,
+      "y": 10787
+    },
+    "ProjectHome.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Project home",
+      "w": 1440,
+      "x": 3040,
+      "y": 6867
+    },
+    "ProjectIssueTypes.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Project issue types",
+      "w": 1440,
+      "x": 6080,
+      "y": 7847
+    },
+    "ProjectMembers.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Project members",
+      "w": 1440,
+      "x": 0,
+      "y": 7847
+    },
+    "ProjectNotifications.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Project notifications",
+      "w": 1440,
+      "x": 1520,
+      "y": 9807
+    },
+    "ProjectSettings.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Project settings",
+      "w": 1440,
+      "x": 1520,
+      "y": 6867
+    },
+    "Roadmap.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Roadmap",
+      "w": 1440,
+      "x": 6080,
+      "y": 12747
+    },
+    "ProjectSidebar.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Shared: Project sidebar",
+      "w": 232,
+      "x": 4872,
+      "y": 1740
+    },
+    "Release.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Release",
+      "w": 1440,
+      "x": 10640,
+      "y": 12747
+    },
+    "Dashboards.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Dashboards",
+      "w": 1440,
+      "x": 12160,
+      "y": 12747
+    },
+    "Dashboard.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Dashboard",
+      "w": 1440,
+      "x": 13680,
+      "y": 12747
+    },
+    "Projects.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Projects",
+      "w": 1440,
+      "x": 0,
+      "y": 6867
+    },
+    "ScreenSchemes.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Screens",
+      "w": 1440,
+      "x": 1520,
+      "y": 11767
+    },
+    "Search.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Search",
+      "w": 1440,
+      "x": 0,
+      "y": 12747
+    },
+    "Sidebar.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Shared: Sidebar",
+      "w": 232,
+      "x": 4560,
+      "y": 1740
+    },
+    "SprintBacklog.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Sprint backlog",
+      "w": 1440,
+      "x": 3040,
+      "y": 12747
+    },
+    "SprintReports.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Sprint reports",
+      "w": 1440,
+      "x": 4560,
+      "y": 12747
+    },
+    "TimeReports.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Time reports",
+      "w": 1440,
+      "x": 7600,
+      "y": 12747
+    },
+    "Versions.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Versions",
+      "w": 1440,
+      "x": 9120,
+      "y": 12747
+    },
+    "TopBar.dc.html": {
+      "h": 56,
+      "is_interactive": true,
+      "title": "Shared: Top bar",
+      "w": 1440,
+      "x": 4560,
+      "y": 2720
+    },
+    "WorkflowEditor.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Workflows",
+      "w": 1440,
+      "x": 1520,
+      "y": 10787
+    },
+    "WorkflowSchemes.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Workflow schemes",
+      "w": 1440,
+      "x": 3040,
+      "y": 10787
+    },
+    "WorkspaceSettings.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Workspace settings",
+      "w": 1440,
+      "x": 1520,
+      "y": 8827
+    },
+    "Automations.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Automation rules",
+      "w": 1440,
+      "x": 0,
+      "y": 13767
+    },
+    "AutomationEditor.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Automation editor",
+      "w": 1440,
+      "x": 1520,
+      "y": 13767
+    },
+    "ImportWizard.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Import issues",
+      "w": 1440,
+      "x": 0,
+      "y": 14787
+    },
+    "ExportPanel.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Export project",
+      "w": 1440,
+      "x": 1520,
+      "y": 14787
+    },
+    "BulkActionBar.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Bulk actions",
+      "w": 1440,
+      "x": 3040,
+      "y": 14787
+    },
+    "ApiTokens.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "API tokens",
+      "w": 1440,
+      "x": 0,
+      "y": 15807
+    },
+    "Webhooks.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Webhooks",
+      "w": 1440,
+      "x": 1520,
+      "y": 15807
+    },
+    "SsoSettings.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Single sign-on",
+      "w": 1440,
+      "x": 3040,
+      "y": 15807
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-09-20T00:00:00Z",
+    "v": 1
+  },
+  "designSystems": [
+    {
+      "artifact": "https://claude.ai/artifact/Enf86cT6umauGbidzjFiAN",
+      "copiedAt": "2026-09-20T00:00:00Z",
+      "namespace": "kaiju",
+      "title": "Kaiju",
+      "version": null
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "n1": {
+      "kind": "title1",
+      "maxW": 6000,
+      "text": "Sign-in & onboarding — UC-AUTH, UC-INV",
+      "w": 240,
+      "x": 0,
+      "y": 3769
+    },
+    "n2": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Workspace & members — UC-WSP, UC-INV",
+      "w": 240,
+      "x": 0,
+      "y": 5210
+    },
+    "n3": {
+      "kind": "title1",
+      "maxW": 6000,
+      "text": "Design system, components & shared shell — Sidebar/TopBar are the same file on every screen above",
+      "w": 240,
+      "x": 0,
+      "y": 1480
+    },
+    "n4": {
+      "kind": "title1",
+      "maxW": 4560,
+      "text": "Project — UC-PRJ",
+      "w": 240,
+      "x": 0,
+      "y": 6607
+    },
+    "n5": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Workflow — UC-WKF (Phase 5)",
+      "w": 240,
+      "x": 1520,
+      "y": 10527
+    },
+    "n6": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Custom field & screen — UC-FLD (Phase 6)",
+      "w": 240,
+      "x": 4560,
+      "y": 10527
+    },
+    "n7": {
+      "kind": "title1",
+      "maxW": 1440,
+      "text": "Search — UC-SRC (Phase 7)",
+      "w": 240,
+      "x": 0,
+      "y": 12487
+    },
+    "n8": {
+      "kind": "title1",
+      "maxW": 1440,
+      "text": "Board — UC-BRD (Phase 8)",
+      "w": 240,
+      "x": 1520,
+      "y": 12487
+    },
+    "n9": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Sprint & Scrum — UC-SPR (Phase 9)",
+      "w": 240,
+      "x": 3040,
+      "y": 12487
+    },
+    "n10": {
+      "kind": "title1",
+      "maxW": 1440,
+      "text": "Roadmap & Timeline — UC-RDM (Phase 10)",
+      "w": 240,
+      "x": 6080,
+      "y": 12487
+    },
+    "n11": {
+      "kind": "title1",
+      "maxW": 1440,
+      "text": "Time tracking — UC-TIM (Phase 11)",
+      "w": 240,
+      "x": 7600,
+      "y": 12487
+    },
+    "n12": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Version & Release — UC-VER (Phase 12)",
+      "w": 240,
+      "x": 9120,
+      "y": 12487
+    },
+    "n13": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Dashboard & Report — UC-DSH (Phase 13)",
+      "w": 240,
+      "x": 12160,
+      "y": 12487
+    },
+    "n14": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Automation — UC-AUT (Phase 14)",
+      "w": 240,
+      "x": 0,
+      "y": 13507
+    },
+    "n15": {
+      "kind": "title1",
+      "maxW": 4560,
+      "text": "Bulk & Import/Export — UC-BLK (Phase 15)",
+      "w": 240,
+      "x": 0,
+      "y": 14527
+    },
+    "n16": {
+      "kind": "title1",
+      "maxW": 4560,
+      "text": "Integration & Public API — UC-INT (Phase 16)",
+      "w": 240,
+      "x": 0,
+      "y": 15547
+    }
+  },
+  "order": [
+    "Login.dc.html",
+    "CodeVerify.dc.html",
+    "Onboarding.dc.html",
+    "InviteAccept.dc.html",
+    "AppShell.dc.html",
+    "Members.dc.html",
+    "Projects.dc.html",
+    "ProjectHome.dc.html",
+    "Issues.dc.html",
+    "IssueDetail.dc.html",
+    "ProjectMembers.dc.html",
+    "ProjectComponents.dc.html",
+    "ProjectChangeLog.dc.html",
+    "ProjectDeletedIssues.dc.html",
+    "ProjectIssueTypes.dc.html",
+    "ProjectSettings.dc.html",
+    "PermissionSchemes.dc.html",
+    "WorkspaceSettings.dc.html",
+    "MemberProfile.dc.html",
+    "LinkTypes.dc.html",
+    "EpicDetail.dc.html",
+    "ProjectNotifications.dc.html",
+    "AuditLog.dc.html",
+    "WorkflowEditor.dc.html",
+    "WorkflowSchemes.dc.html",
+    "CustomFields.dc.html",
+    "ProjectFields.dc.html",
+    "ScreenSchemes.dc.html",
+    "Search.dc.html",
+    "Board.dc.html",
+    "SprintBacklog.dc.html",
+    "SprintReports.dc.html",
+    "Roadmap.dc.html",
+    "TimeReports.dc.html",
+    "Versions.dc.html",
+    "Release.dc.html",
+    "Dashboards.dc.html",
+    "Dashboard.dc.html",
+    "Foundations.dc.html",
+    "Components.dc.html",
+    "Patterns.dc.html",
+    "Sidebar.dc.html",
+    "ProjectSidebar.dc.html",
+    "TopBar.dc.html",
+    "AuthPanel.dc.html",
+    "Automations.dc.html",
+    "AutomationEditor.dc.html",
+    "ImportWizard.dc.html",
+    "ExportPanel.dc.html",
+    "BulkActionBar.dc.html",
+    "ApiTokens.dc.html",
+    "Webhooks.dc.html",
+    "SsoSettings.dc.html"
+  ],
+  "pages": [],
+  "title": "Kaiju — UI Design"
+}

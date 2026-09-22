@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Project notifications — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .navitem{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13px;font-weight:600;color:#767B8C;cursor:pointer;}
+  .navitem.active{background:#EDF0FE;color:#4C63F5;}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px;}
+  .toggle{width:34px;height:20px;border-radius:999px;background:#DEE1EC;position:relative;cursor:pointer;flex-shrink:0;}
+  .toggle.on{background:#4C63F5;}
+  .toggle .knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:999px;background:#fff;transition:left .15s;}
+  .toggle.on .knob{left:16px;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="settings" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Settings / Notifications" search-placeholder="Search…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 32px 40px; box-sizing: border-box;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+        <div style="width: 40px; height: 40px; border-radius: 10px; background: #FFEEE9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: #FF6A45;">PAY</span>
+        </div>
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Payments Platform settings</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">Software project · Open in workspace · Led by Jamie Diaz</p>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 24px; align-items: flex-start;">
+        <div style="width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0;">
+          <a href="ProjectSettings.dc.html" class="navitem">Details</a>
+          <a href="ProjectIssueTypes.dc.html" class="navitem">Issue types</a>
+          <a href="ProjectFields.dc.html" class="navitem">Fields</a>
+          <a href="ScreenSchemes.dc.html" class="navitem">Screens</a>
+          <a href="ProjectMembers.dc.html" class="navitem">Members</a>
+          <a href="ProjectComponents.dc.html" class="navitem">Components</a>
+          <a href="PermissionSchemes.dc.html" class="navitem">Permission scheme</a>
+          <a href="ProjectChangeLog.dc.html" class="navitem">Change log</a>
+          <div class="navitem active">Notifications</div>
+        </div>
+
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 16px; max-width: 640px;">
+          <p style="margin: 0; font-size: 12px; color: #767B8C;">These override your personal defaults (set in <a href="MemberProfile.dc.html">your profile</a>) just for Payments Platform — useful for a project that's noisier or quieter than the rest of your work.</p>
+
+          <div class="card">
+            <div style="display: flex; align-items: center;">
+              <span style="font-size: 13px; font-weight: 700;">Use my personal defaults</span>
+              <div style="flex-grow: 1;"></div>
+              <div onClick="{{toggleOverride}}" class="toggle {{overrideCls}}"><div class="knob"></div></div>
+            </div>
+            <span style="font-size: 11px; color: #A7ABBB;">Off means the toggles below apply only in this project, instead of whatever you set for every project.</span>
+          </div>
+
+          <sc-if value="{{showOverrides}}" hint-placeholder-val="{{false}}">
+            <div class="card">
+              <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+                <div style="display: flex; align-items: center;">
+                  <span style="font-size: 13px; font-weight: 600;">{{r.label}}</span>
+                  <div style="flex-grow: 1;"></div>
+                  <div onClick="{{r.toggle}}" class="toggle {{r.cls}}"><div class="knob"></div></div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const override = !!this.state.override;
+    const on = this.state.on ?? { assigned: true, mentioned: true, watching: true, digest: false };
+    const defs = [
+      ['assigned', 'Email when assigned an issue in this project'],
+      ['mentioned', 'Email when mentioned in this project'],
+      ['watching', 'Email when an issue I watch here changes'],
+      ['digest', 'Include this project in my daily digest'],
+    ];
+    return {
+      overrideCls: override ? 'on' : '',
+      toggleOverride: () => this.setState({ override: !override }),
+      showOverrides: override,
+      rows: defs.map(([key, label]) => ({
+        label,
+        cls: on[key] ? 'on' : '',
+        toggle: () => this.setState({ on: { ...on, [key]: !on[key] } }),
+      })),
+    };
+  }
+}
+</script>
+</body>
+</html>

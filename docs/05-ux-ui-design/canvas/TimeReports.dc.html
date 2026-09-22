@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Time reports — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .chip{font-size:12px;font-weight:600;color:#767B8C;background:#FFFFFF;border:1px solid #ECEEF6;border-radius:999px;padding:6px 12px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:18px;}
+  select,input{height:32px;box-sizing:border-box;padding:0 10px;font-size:12.5px;font-family:inherit;color:#1B1D27;background:#FFFFFF;border:1px solid #DEE1EC;border-radius:7px;}
+  .row{display:flex;align-items:center;gap:10px;height:38px;padding:0 4px;border-top:1px solid #F5F6FA;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="backlog" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Time reports" search-placeholder="Search this project…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 24px 40px; display: flex; flex-direction: column; gap: 16px; box-sizing: border-box;">
+
+      <div style="display: flex; align-items: center;">
+        <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Time reports</h1>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{selectRole('member')}}" class="chip" style="background: {{roleBg.member}}; color: {{roleFg.member}};">Viewing as: Member</div>
+        <div onClick="{{selectRole('admin')}}" class="chip" style="background: {{roleBg.admin}}; color: {{roleFg.admin}};">Viewing as: Project admin</div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <select style="width: 200px;"><option>Group by: Person</option><option>Group by: Date</option></select>
+        <select style="width: 160px;"><option>Last 14 days</option><option>This month</option><option>Custom range</option></select>
+        <sc-if value="{{isAdmin}}" hint-placeholder-val="{{false}}">
+          <select style="width: 200px;"><option>Person: Everyone</option><option>Person: Jamie Diaz</option><option>Person: Alex Lam</option></select>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{isMember}}" hint-placeholder-val="{{true}}">
+        <span style="font-size: 11px; color: #A7ABBB;">You're seeing only your own logged time — project admins see everyone's.</span>
+      </sc-if>
+
+      <div class="card">
+        <span style="font-size: 13px; font-weight: 700;">Logged time by person</span>
+        <svg width="100%" height="150" viewBox="0 0 560 150" style="margin-top: 10px;">
+          <line x1="0" y1="130" x2="560" y2="130" stroke="#DEE1EC"></line>
+          <sc-for list="{{barRows}}" as="b" hint-placeholder-count="3">
+            <rect x="{{b.x}}" y="{{b.y}}" width="60" height="{{b.h}}" rx="4" fill="{{b.color}}"></rect>
+            <text x="{{b.labelX}}" y="{{b.labelY}}" font-size="10" font-weight="700" font-family="Manrope, sans-serif" text-anchor="middle" fill="#1B1D27">{{b.hoursLabel}}</text>
+          </sc-for>
+        </svg>
+        <div style="display: flex; gap: 30px; margin-top: 4px;">
+          <sc-for list="{{people}}" as="p" hint-placeholder-count="3">
+            <span style="font-size: 10px; color: #A7ABBB; width: 60px; text-align: center;">{{p.name}}</span>
+          </sc-for>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 6px;">
+          <span style="font-size: 13px; font-weight: 700;">Worklog detail</span>
+          <div style="flex-grow: 1;"></div>
+          <span style="font-size: 11px; color: #A7ABBB;">{{totalLabel}} total across {{entryCount}} entries</span>
+        </div>
+        <div class="row" style="font-size: 10.5px; font-weight: 700; color: #A7ABBB; text-transform: uppercase; border-top: none;">
+          <span style="width: 100px;">Person</span>
+          <span style="width: 70px;">Issue</span>
+          <span style="flex-grow: 1;">Description</span>
+          <span style="width: 80px;">Date</span>
+          <span style="width: 70px; text-align: right;">Time</span>
+        </div>
+        <sc-for list="{{entries}}" as="e" hint-placeholder-count="4">
+          <div class="row">
+            <span style="width: 100px; font-size: 12px; font-weight: 600;">{{e.who}}</span>
+            <a href="IssueDetail.dc.html" style="width: 70px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 700; color: #4C63F5;">{{e.key}}</a>
+            <span style="flex-grow: 1; font-size: 12px; color: #767B8C; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{e.desc}}</span>
+            <span style="width: 80px; font-size: 11.5px; color: #767B8C;">{{e.date}}</span>
+            <span style="width: 70px; font-size: 12px; font-weight: 700; text-align: right;">{{e.hours}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const role = this.state.role ?? 'member';
+    const isAdmin = role === 'admin';
+
+    // A single hue ramp (not fixed per-name colors) so this scales past 3 people without running out of distinct colors.
+    const personPalette = ['#4C63F5', '#8B6FFF', '#0EA5E9', '#14B8A6', '#FF9A3D', '#B8790F'];
+    const peopleDefs = [
+      { name: 'Jamie Diaz', hoursNum: 5 },
+      { name: 'Alex Lam', hoursNum: 1.5 },
+      { name: 'Nina Park', hoursNum: 4 },
+    ].map((p, idx) => ({ ...p, color: personPalette[idx % personPalette.length] }));
+    const allEntries = [
+      { who: 'Jamie Diaz', key: 'PAY-142', desc: 'Traced the reversal job no-op path', date: 'Sep 20', hours: '3h' },
+      { who: 'Alex Lam', key: 'PAY-142', desc: 'Paired on repro steps', date: 'Sep 19', hours: '1h 30m' },
+      { who: 'Jamie Diaz', key: 'PAY-139', desc: 'Fixed polling backoff', date: 'Sep 18', hours: '2h' },
+      { who: 'Nina Park', key: 'PAY-141', desc: 'Webhook replay test', date: 'Sep 17', hours: '4h' },
+    ];
+    const entries = isAdmin ? allEntries : allEntries.filter((e) => e.who === 'Jamie Diaz');
+    const totalMin = entries.reduce((sum, e) => {
+      const m = e.hours.match(/(\d+)h(?:\s+(\d+)m)?/);
+      return sum + (m ? parseInt(m[1]) * 60 + (m[2] ? parseInt(m[2]) : 0) : 0);
+    }, 0);
+    const visiblePeople = isAdmin ? peopleDefs : peopleDefs.filter((p) => p.name === 'Jamie Diaz');
+
+    return {
+      roleBg: { member: role === 'member' ? '#4C63F5' : '#FFFFFF', admin: role === 'admin' ? '#4C63F5' : '#FFFFFF' },
+      roleFg: { member: role === 'member' ? '#fff' : '#767B8C', admin: role === 'admin' ? '#fff' : '#767B8C' },
+      selectRole: (r) => () => this.setState({ role: r }),
+      isAdmin,
+      isMember: !isAdmin,
+
+      people: visiblePeople,
+      barRows: visiblePeople.map((p, idx) => {
+        const maxHours = 6;
+        const h = (p.hoursNum / maxHours) * 100;
+        const x = 60 + idx * 150;
+        return {
+          x, y: 130 - h, h, color: p.color,
+          labelX: x + 30, labelY: 130 - h - 6,
+          hoursLabel: (p.hoursNum % 1 === 0 ? p.hoursNum : p.hoursNum.toFixed(1)) + 'h',
+        };
+      }),
+
+      entries,
+      entryCount: entries.length,
+      totalLabel: Math.floor(totalMin / 60) + 'h ' + (totalMin % 60) + 'm',
+    };
+  }
+}
+</script>
+</body>
+</html>

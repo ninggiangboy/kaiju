@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Project home — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px;}
+  .row{display:grid;grid-template-columns:1.6fr 1fr 1fr 90px;align-items:center;padding:10px 0;border-bottom:1px solid #F5F6FA;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px;">
+
+  <dc-import name="ProjectSidebar" active="summary" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform" search-placeholder="Search this project…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; box-sizing: border-box;">
+
+      <div style="padding: 24px 40px; display: flex; flex-direction: column; gap: 20px;">
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; border-radius: 10px; background: #FFEEE9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: #FF6A45;">PAY</span>
+          </div>
+          <div style="flex-grow: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 700;">Payments Platform</h1>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF6A45" stroke="#FF6A45" stroke-width="1.6"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">Software project · Only invited people · Led by Jamie Diaz</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;">
+          <div class="card" style="gap: 4px;">
+            <span style="font-size: 12px; color: #767B8C; font-weight: 600;">Open issues</span>
+            <span style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700;">14</span>
+          </div>
+          <div class="card" style="gap: 4px;">
+            <span style="font-size: 12px; color: #767B8C; font-weight: 600;">Done this week</span>
+            <span style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; color: #1A8F5C;">6</span>
+          </div>
+          <div class="card" style="gap: 4px;">
+            <span style="font-size: 12px; color: #767B8C; font-weight: 600;">Members</span>
+            <span style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700;">7</span>
+          </div>
+          <div class="card" style="gap: 4px;">
+            <span style="font-size: 12px; color: #767B8C; font-weight: 600;">Components</span>
+            <span style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700;">3</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; align-items: start;">
+
+          <div class="card">
+            <h2 style="margin: 0; font-size: 14px; font-weight: 700;">Recent activity</h2>
+            <sc-for list="{{activity}}" as="e" hint-placeholder-count="5">
+              <div style="display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #F5F6FA;">
+                <div style="width: 22px; height: 22px; border-radius: 999px; background: {{e.bg}}; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: {{e.fg}}; flex-shrink: 0; margin-top: 1px;">{{e.initials}}</div>
+                <div style="flex-grow: 1; min-width: 0;">
+                  <span style="font-size: 12px;"><b>{{e.who}}</b> {{e.what}}</span>
+                  <div style="font-size: 11px; color: #A7ABBB; margin-top: 1px;">{{e.when}}</div>
+                </div>
+              </div>
+            </sc-for>
+            <a href="ProjectChangeLog.dc.html" style="font-size: 12px; font-weight: 700; align-self: flex-start;">View full change log →</a>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="card">
+              <div style="display: flex; align-items: center;">
+                <h2 style="margin: 0; font-size: 14px; font-weight: 700;">Components</h2>
+                <div style="flex-grow: 1;"></div>
+                <a href="#" style="font-size: 12px; font-weight: 700;">Manage</a>
+              </div>
+              <sc-for list="{{components}}" as="c" hint-placeholder-count="3">
+                <div style="display: flex; align-items: center; gap: 10px; padding: 6px 0;">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: {{c.dot}}; flex-shrink: 0;"></span>
+                  <span style="font-size: 12px; font-weight: 700; flex-grow: 1;">{{c.name}}</span>
+                  <span style="font-size: 11px; color: #767B8C;">{{c.lead}}</span>
+                  <span style="font-size: 11px; color: #A7ABBB; width: 44px; text-align: right;">{{c.issues}} iss.</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <a href="Issues.dc.html" style="display: block;">
+              <div class="card" style="flex-direction: row; align-items: center; gap: 12px; padding: 16px 20px; cursor: pointer;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4C63F5" stroke-width="1.8" style="flex-shrink:0;"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                <div style="flex-grow: 1;">
+                  <span style="font-size: 13px; font-weight: 700; color: #1B1D27;">View all 14 issues</span>
+                  <div style="font-size: 11px; color: #767B8C;">Table view with configurable columns</div>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.4"><path d="M9 6l6 6-6 6"></path></svg>
+              </div>
+            </a>
+
+            <div class="card" style="border-style: dashed; align-items: center; text-align: center; gap: 8px; padding: 24px 20px;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="1.6"><rect x="3" y="3" width="7" height="18" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
+              <span style="font-size: 13px; font-weight: 700;">Backlog &amp; board are next</span>
+              <span style="font-size: 11px; color: #767B8C; max-width: 260px;">Phase 9 groups these issues into sprints; Phase 8 turns them into a Kanban board with WIP limits and swimlanes.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const activityRows = [
+      ['Jamie Diaz', 'JD', '#FFEEE9', '#FF6A45', 'archived the "Refunds v1" component', '2h ago'],
+      ['Alex Lam', 'AL', '#EDF0FE', '#4C63F5', 'changed visibility from Open to Only invited people', 'Yesterday, 4:12 PM'],
+      ['Sam Osei', 'SO', '#F1EDFF', '#8B6FFF', 'added Nina Park as a project member', '2 days ago'],
+      ['Jamie Diaz', 'JD', '#FFEEE9', '#FF6A45', 'changed the permission scheme to "Engineering — restricted"', '3 days ago'],
+      ['Priya Rao', 'PR', '#E7F9F1', '#1A8F5C', 'renamed the project from "Payments" to "Payments Platform"', '5 days ago'],
+    ];
+    const componentRows = [
+      ['Ledger', '#4C63F5', 'Jamie Diaz', 6],
+      ['Card issuing', '#FF6A45', 'Nina Park', 4],
+      ['Payouts', '#8B6FFF', 'Sam Osei', 4],
+    ];
+    return {
+      activity: activityRows.map(([who, initials, bg, fg, what, when]) => ({ who, initials, bg, fg, what, when })),
+      components: componentRows.map(([name, dot, lead, issues]) => ({ name, dot, lead, issues })),
+    };
+  }
+}
+</script>
+</body>
+</html>

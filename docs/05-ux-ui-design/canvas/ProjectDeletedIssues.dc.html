@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Deleted issues — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .row{display:grid;grid-template-columns:26px 70px 1fr 130px 90px;align-items:center;gap:12px;height:48px;padding:0 20px;border-bottom:1px solid #F5F6FA;}
+  .row:last-child{border-bottom:none;}
+  .ty{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;opacity:0.55;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="issues" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Issues / Deleted" search-placeholder="Search this project…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 24px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px;">
+
+      <div>
+        <a href="Issues.dc.html" style="font-size: 12px; font-weight: 700; color: #767B8C; display: flex; align-items: center; gap: 4px; width: fit-content; margin-bottom: 8px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2.4"><path d="M15 18l-6-6 6-6"></path></svg>
+          Back to Issues
+        </a>
+        <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Deleted issues</h1>
+        <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C;">Hidden from every list and board, but still in the database — restore any time before it's gone for good.</p>
+      </div>
+
+      <div style="background: #FFFFFF; border: 1px solid #ECEEF6; border-radius: 12px; overflow: hidden;">
+        <div class="row" style="height: 36px; background: #FAFBFE;">
+          <span></span>
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Key</span>
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Title</span>
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Deleted</span>
+          <span></span>
+        </div>
+        <sc-for list="{{issues}}" as="i" hint-placeholder-count="4">
+          <div class="row">
+            <span class="ty" style="background: {{i.typeBg}};">{{i.typeLetter}}</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #A7ABBB; text-decoration: line-through;">{{i.key}}</span>
+            <div style="min-width: 0;">
+              <span style="font-size: 13px; font-weight: 600; color: #A7ABBB; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">{{i.title}}</span>
+              <sc-if value="{{i.hadSubtasks}}" hint-placeholder-val="{{false}}">
+                <span style="font-size: 10.5px; color: #C3C6D4;">{{i.subtaskCount}} sub-tasks deleted with it</span>
+              </sc-if>
+            </div>
+            <span style="font-size: 12px; color: #767B8C;">{{i.deletedInfo}}</span>
+            <div onClick="{{openRestore(i.key)}}" style="height: 28px; padding: 0 12px; border-radius: 7px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; width: fit-content;">Restore</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{restoreOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 400px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700;">Restore {{restoreTarget}}?</h2>
+        <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">Reappears in every list and board immediately, with its full history intact.</p>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeRestore}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Restore</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const rows = [
+      ['PAY-118', 'task', '#4C63F5', 'Retry queue cleanup script — superseded by outbox job', 'Sam Osei · 4 days ago', false, 0],
+      ['PAY-104', 'bug', '#F0453F', 'Duplicate webhook on retry (old repro, fixed differently)', 'Jamie Diaz · 2 weeks ago', false, 0],
+      ['PAY-91', 'story', '#22B573', 'Legacy payout CSV export', 'Nina Park · 3 weeks ago', true, 2],
+    ];
+    return {
+      issues: rows.map(([key, type, typeBg, title, deletedInfo, hadSubtasks, subtaskCount]) => ({
+        key, typeLetter: type === 'bug' ? 'B' : type === 'story' ? 'S' : 'T', typeBg, title, deletedInfo, hadSubtasks, subtaskCount,
+      })),
+      restoreOpen: !!this.state.restoreOpen,
+      restoreTarget: this.state.restoreTarget ?? '',
+      openRestore: (key) => () => this.setState({ restoreOpen: true, restoreTarget: key }),
+      closeRestore: () => this.setState({ restoreOpen: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

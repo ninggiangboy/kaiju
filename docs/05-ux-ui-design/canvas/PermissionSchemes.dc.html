@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Permission schemes — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .navitem{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13px;font-weight:600;color:#767B8C;cursor:pointer;}
+  .navitem.active{background:#EDF0FE;color:#4C63F5;}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;overflow:hidden;}
+  .row{display:grid;grid-template-columns:1.6fr 1fr 1fr 70px;align-items:center;padding:12px 20px;border-bottom:1px solid #F5F6FA;}
+  .row:last-child{border-bottom:none;}
+  table{border-collapse:collapse;width:100%;}
+  th,td{text-align:left;font-size:12px;padding:8px 10px;border-bottom:1px solid #F5F6FA;}
+  th{font-size:11px;font-weight:700;color:#A7ABBB;text-transform:uppercase;}
+  .cb{width:15px;height:15px;border-radius:4px;border:1.5px solid #DEE1EC;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;}
+  .cb.on{background:#4C63F5;border-color:#4C63F5;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="Sidebar" active="settings" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Workspace settings / Permission schemes" search-placeholder="Search…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 32px 40px; box-sizing: border-box;">
+      <div style="display: flex; align-items: center; margin-bottom: 20px;">
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Permission schemes</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C; max-width: 560px;">Each scheme maps a role in a project to a set of permissions. Editing a scheme changes every project that uses it — right away.</p>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{openCreate}}" style="height: 36px; padding: 0 16px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Create scheme
+        </div>
+      </div>
+
+      <div class="card" style="max-width: 820px;">
+        <div class="row" style="background: #FAFBFE; padding: 10px 20px;">
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Scheme</span>
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Roles</span>
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Used by</span>
+          <span></span>
+        </div>
+        <sc-for list="{{schemes}}" as="s" hint-placeholder-count="4">
+          <div class="row" onClick="{{openEdit(s.name)}}" style="cursor: pointer;">
+            <div>
+              <div style="font-size: 13px; font-weight: 700;">{{s.name}}</div>
+              <div style="font-size: 11px; color: #A7ABBB;">{{s.description}}</div>
+            </div>
+            <span style="font-size: 12px; color: #767B8C;">{{s.roles}} roles</span>
+            <span style="font-size: 12px; color: #767B8C;">{{s.projectCount}} projects</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.4"><path d="M9 6l6 6-6 6"></path></svg>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{editOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 640px; max-height: 720px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">{{editTarget}}</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeEdit}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+
+        <sc-if value="{{editUsedByOthers}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; align-items: flex-start; gap: 8px; background: #FFF8F0; border: 1px solid #F3DFB8; border-radius: 8px; padding: 10px 12px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A5A0F" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+            <span style="font-size: 12px; color: #8A5A0F;">Used by <b>{{editProjectCount}} other projects</b>. Saving changes the effective permissions in all of them immediately.</span>
+          </div>
+        </sc-if>
+
+        <div style="overflow: auto; border: 1px solid #ECEEF6; border-radius: 8px;">
+          <table>
+            <tr>
+              <th style="min-width:180px;">Permission</th>
+              <th style="text-align:center;">Admin</th>
+              <th style="text-align:center;">Contributor</th>
+              <th style="text-align:center;">Viewer</th>
+            </tr>
+            <sc-for list="{{permissions}}" as="p" hint-placeholder-count="9">
+              <tr>
+                <td style="font-weight: 600;">{{p.label}}</td>
+                <td style="text-align:center;"><span class="cb on"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="M20 6L9 17l-5-5"></path></svg></span></td>
+                <td style="text-align:center;"><span class="cb {{p.contributorCls}}"><sc-if value="{{p.contributor}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="M20 6L9 17l-5-5"></path></svg></sc-if></span></td>
+                <td style="text-align:center;"><span class="cb {{p.viewerCls}}"><sc-if value="{{p.viewer}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="M20 6L9 17l-5-5"></path></svg></sc-if></span></td>
+              </tr>
+            </sc-for>
+          </table>
+        </div>
+        <span style="font-size: 11px; color: #A7ABBB;">Admin always has every permission and can't be edited here.</span>
+
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeEdit}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Save changes</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{createOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 420px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Create scheme</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeCreate}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Name</label>
+          <input placeholder="e.g. Support desk scheme" style="height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; font-family: inherit; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Start from</label>
+          <select style="height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; font-family: inherit; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+            <option>Default project scheme</option>
+            <option>Blank — no permissions granted</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeCreate}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Create</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const schemeRows = [
+      ['Default project scheme', 'Used by new projects unless changed.', 3, 6],
+      ['Engineering — restricted', 'Contributors can’t delete issues or edit workflow.', 3, 1],
+      ['Support desk scheme', 'Viewers can comment; contributors can’t change priority.', 3, 2],
+    ];
+    const permRows = [
+      ['View issues', true, true],
+      ['Create issues', true, false],
+      ['Edit issues', true, false],
+      ['Delete issues', false, false],
+      ['Assign people', true, false],
+      ['Perform status transitions', true, false],
+      ['Administer workflow', false, false],
+      ['Administer board', false, false],
+      ['Manage sprints', false, false],
+    ];
+    return {
+      schemes: schemeRows.map(([name, description, roles, projectCount]) => ({ name, description, roles, projectCount })),
+      permissions: permRows.map(([label, contributor, viewer]) => ({
+        label, contributor, viewer,
+        contributorCls: contributor ? 'on' : '',
+        viewerCls: viewer ? 'on' : '',
+      })),
+      editOpen: !!this.state.editOpen,
+      editTarget: this.state.editTarget ?? '',
+      editProjectCount: this.state.editProjectCount ?? 0,
+      editUsedByOthers: (this.state.editProjectCount ?? 0) > 1,
+      openEdit: (name) => () => {
+        const row = schemeRows.find((r) => r[0] === name);
+        this.setState({ editOpen: true, editTarget: name, editProjectCount: row ? row[3] : 0 });
+      },
+      closeEdit: () => this.setState({ editOpen: false }),
+      createOpen: !!this.state.createOpen,
+      openCreate: () => this.setState({ createOpen: true }),
+      closeCreate: () => this.setState({ createOpen: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

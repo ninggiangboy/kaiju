@@ -20,7 +20,8 @@ infrastructure and pipeline needed to run it.
 | Brief, requirements, system design, features and roadmap | Complete |
 | `infra/`, `.github/` | Scaffolded — four environment tiers, CI, and the delivery toolchain (OpenTofu, Ansible, Argo CD). Nothing applied: no cloud account, no cluster, no host |
 | `backend/`, `frontend/` | Not created |
-| UX/UI design, data model, detail design | Not started |
+| UX/UI design | In progress — first pass of every screen, exported from the design canvas into [`docs/05-ux-ui-design/canvas/`](docs/05-ux-ui-design/canvas/canvas.json) |
+| Data model, detail design | Not started |
 
 Next on the roadmap: the [data model](docs/06-erd/), then
 [Phase 0](docs/03-features/roadmap.md#phase-0--nền-tảng).

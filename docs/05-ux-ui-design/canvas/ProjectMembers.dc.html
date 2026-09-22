@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Project members — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;overflow:hidden;}
+  .row{display:grid;grid-template-columns:1.6fr 1fr 1fr 90px;align-items:center;padding:12px 20px;border-bottom:1px solid #F5F6FA;}
+  .row:last-child{border-bottom:none;}
+  input,select{height:36px;box-sizing:border-box;padding:0 12px;font-size:13px;font-family:inherit;color:#1B1D27;background:#FAFBFE;border:1px solid #DEE1EC;border-radius:8px;}
+  input:focus,select:focus{outline:none;border-color:#4C63F5!important;box-shadow:0 0 0 3px #EDF0FE}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="members" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Members" search-placeholder="Search this project…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 24px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px;">
+
+      <div style="display: flex; align-items: center;">
+        <div>
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Members</h1>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C; display: flex; align-items: center; gap: 6px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2.4"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15 15 0 010 20 15 15 0 010-20z"></path></svg>
+            Open in workspace — every workspace member can view this project
+          </p>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div onClick="{{openAdd}}" style="height: 36px; padding: 0 16px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Add members
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row" style="background: #FAFBFE; padding: 10px 20px;">
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Member</span>
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Project role</span>
+          <span style="font-size: 11px; font-weight: 700; color: #A7ABBB; text-transform: uppercase;">Added</span>
+          <span></span>
+        </div>
+        <sc-for list="{{members}}" as="m" hint-placeholder-count="6">
+          <div class="row">
+            <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+              <div style="width: 28px; height: 28px; border-radius: 999px; background: {{m.bg}}; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: {{m.fg}}; flex-shrink: 0;">{{m.initials}}</div>
+              <div style="min-width: 0;">
+                <div style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{m.name}}</div>
+                <div style="font-size: 11px; color: #A7ABBB;">{{m.email}}</div>
+              </div>
+            </div>
+            <span style="font-size: 12px; font-weight: 700; color: {{m.roleColor}};">{{m.role}}</span>
+            <span style="font-size: 12px; color: #767B8C;">{{m.added}}</span>
+            <sc-if value="{{m.isLead}}" hint-placeholder-val="{{false}}">
+              <span style="font-size: 11px; color: #A7ABBB;">Lead — reassign to remove</span>
+            </sc-if>
+            <sc-if value="{{m.canRemove}}" hint-placeholder-val="{{true}}">
+              <span style="font-size: 12px; font-weight: 700; color: #F0453F; cursor: pointer; justify-self: start;">Remove</span>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{addOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 480px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Add members</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeAdd}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">From workspace, or invite by email</label>
+          <input placeholder="Search people or type an email…">
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 2px; max-height: 160px; overflow: auto;">
+          <div style="display: flex; align-items: center; gap: 10px; padding: 8px 4px; border-radius: 8px; cursor: pointer;">
+            <div style="width: 24px; height: 24px; border-radius: 999px; background: #F1EDFF; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #8B6FFF;">MK</div>
+            <span style="font-size: 12px; font-weight: 600; flex-grow: 1;">Mika Kobayashi</span>
+            <span style="font-size: 11px; color: #A7ABBB;">Not a member yet</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 8px 4px; border-radius: 8px; cursor: pointer;">
+            <div style="width: 24px; height: 24px; border-radius: 999px; background: #E7F9F1; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #1A8F5C;">DT</div>
+            <span style="font-size: 12px; font-weight: 600; flex-grow: 1;">Dana Torres</span>
+            <span style="font-size: 11px; color: #A7ABBB;">Invite pending — will be added on accept</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Project role</label>
+          <select>
+            <option>Contributor</option>
+            <option>Admin</option>
+            <option>Viewer</option>
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeAdd}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Add</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const rows = [
+      ['Jamie Diaz', 'JD', '#FFEEE9', '#FF6A45', 'jamie@acme.co', 'Lead', '#FF6A45', 'Sep 12, 2026', true, false],
+      ['Alex Lam', 'AL', '#EDF0FE', '#4C63F5', 'alex@acme.co', 'Admin', '#4C63F5', 'Sep 12, 2026', false, true],
+      ['Nina Park', 'NP', '#FDEBEA', '#F0453F', 'nina@acme.co', 'Contributor', '#767B8C', 'Sep 14, 2026', false, true],
+      ['Sam Osei', 'SO', '#F1EDFF', '#8B6FFF', 'sam@acme.co', 'Contributor', '#767B8C', 'Sep 15, 2026', false, true],
+      ['Priya Rao', 'PR', '#E7F9F1', '#1A8F5C', 'priya@acme.co', 'Contributor', '#767B8C', 'Sep 18, 2026', false, true],
+      ['Owen Fields', 'OF', '#FFF8F0', '#B8790F', 'owen@acme.co', 'Viewer', '#767B8C', 'Sep 19, 2026', false, true],
+    ];
+    return {
+      members: rows.map(([name, initials, bg, fg, email, role, roleColor, added, isLead, canRemove]) => ({
+        name, initials, bg, fg, email, role, roleColor, added, isLead, canRemove,
+      })),
+      addOpen: !!this.state.addOpen,
+      openAdd: () => this.setState({ addOpen: true }),
+      closeAdd: () => this.setState({ addOpen: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

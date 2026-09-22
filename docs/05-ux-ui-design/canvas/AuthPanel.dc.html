@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Auth panel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&amp;family=Manrope:wght@500;600&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;color:#1B1D27;-webkit-font-smoothing:antialiased}
+</style>
+</helmet>
+<div style="width: 360px; height: 900px; box-sizing: border-box; background: #4C63F5; padding: 48px 40px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+
+  <div style="position: absolute; top: -60px; right: -60px; width: 220px; height: 220px; border-radius: 999px; background: rgba(255,255,255,0.06);"></div>
+  <div style="position: absolute; bottom: -90px; left: -50px; width: 260px; height: 260px; border-radius: 999px; background: rgba(255,255,255,0.05);"></div>
+
+  <div style="position: relative; display: flex; align-items: center; gap: 10px;">
+    <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.16); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+      <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; color: #fff;">K</span>
+    </div>
+    <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; color: #fff;">Kaiju</span>
+  </div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 20px;">
+    <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 26px; line-height: 32px; font-weight: 700; color: #fff;">Local-first, so nothing waits on the network.</h2>
+    <p style="margin: 0; font-size: 14px; line-height: 20px; color: rgba(255,255,255,0.75);">Every change lands on your device first, then syncs to the rest of your team the moment you're back online — no spinners, no lost work.</p>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 4px;">
+      <div style="display: flex; align-items: flex-start; gap: 10px;">
+        <div style="width: 20px; height: 20px; border-radius: 999px; background: rgba(255,255,255,0.16); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6L9 17l-5-5"></path></svg>
+        </div>
+        <span style="font-size: 13px; line-height: 19px; color: rgba(255,255,255,0.9);">Magic-link sign-in — Kaiju has no passwords, anywhere</span>
+      </div>
+      <div style="display: flex; align-items: flex-start; gap: 10px;">
+        <div style="width: 20px; height: 20px; border-radius: 999px; background: rgba(255,255,255,0.16); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6L9 17l-5-5"></path></svg>
+        </div>
+        <span style="font-size: 13px; line-height: 19px; color: rgba(255,255,255,0.9);">Optimistic by default — a change appears instantly and only rolls back if the server rejects it</span>
+      </div>
+      <div style="display: flex; align-items: flex-start; gap: 10px;">
+        <div style="width: 20px; height: 20px; border-radius: 999px; background: rgba(255,255,255,0.16); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6L9 17l-5-5"></path></svg>
+        </div>
+        <span style="font-size: 13px; line-height: 19px; color: rgba(255,255,255,0.9);">One local writer across every open tab, so your data never disagrees with itself</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 10px;">
+    <div style="height: 1px; background: rgba(255,255,255,0.15);"></div>
+    <span style="font-size: 12px; color: rgba(255,255,255,0.55);">Workspace → Project — nothing to configure above that.</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":360,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

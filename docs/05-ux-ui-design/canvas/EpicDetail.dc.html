@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Epic detail — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;}
+  .field-label{font-size:11px;font-weight:700;color:#A7ABBB;text-transform:uppercase;letter-spacing:0.03em;}
+  .field-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F5F6FA;}
+  .field-row:last-child{border-bottom:none;}
+  .ty{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="issues" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Issues / PAY-98" search-placeholder="Search this project…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 24px 40px; box-sizing: border-box;">
+      <div style="display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start;">
+
+        <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #767B8C;">
+            <a href="Issues.dc.html">Issues</a>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2.4"><path d="M9 6l6 6-6 6"></path></svg>
+            <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700;">PAY-98</span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="ty" style="background: #B8790F;">E</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: #767B8C;">PAY-98</span>
+          </div>
+
+          <input value="Payments Platform — reconciliation epic" style="border: none; outline: none; background: transparent; font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: #1B1D27; padding: 0; width: 100%; box-sizing: border-box;">
+
+          <div class="card">
+            <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #1B1D27;">
+              Everything needed so the ledger, payout and reconciliation report agree with each other at all times — including the compensating-entry work for failed payouts.
+            </p>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h2 style="margin: 0; font-size: 13px; font-weight: 700;">Hierarchy</h2>
+              <span style="font-size: 11px; color: #A7ABBB;">{{doneCount}} of {{totalCount}} done</span>
+              <div style="flex-grow: 1;"></div>
+              <span onClick="{{openAdd}}" style="font-size: 12px; font-weight: 700; color: #4C63F5; cursor: pointer;">+ Add child issue</span>
+            </div>
+            <div style="height: 6px; background: #F0F1F7; border-radius: 999px; overflow: hidden;">
+              <div style="height: 100%; width: {{pct}}%; background: #22B573;"></div>
+            </div>
+
+            <div class="card" style="padding: 4px 12px; gap: 0;">
+              <sc-for list="{{children}}" as="c" hint-placeholder-count="3">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #F5F6FA;">
+                    <svg onClick="{{toggleExpand(c.key)}}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="3" style="cursor:pointer;flex-shrink:0;transform:{{c.chevRot}};transition:transform .12s;"><path d="M9 6l6 6-6 6"></path></svg>
+                    <span style="width: 15px; height: 15px; border-radius: 4px; border: 1.5px solid {{c.doneBorder}}; background: {{c.doneBg}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                      <sc-if value="{{c.done}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="M20 6L9 17l-5-5"></path></svg></sc-if>
+                    </span>
+                    <span class="ty" style="width: 17px; height: 17px; font-size: 9px; background: {{c.typeBg}};">{{c.typeLetter}}</span>
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: #A7ABBB;">{{c.key}}</span>
+                    <span style="font-size: 12.5px; font-weight: 600; flex-grow: 1; color: {{c.textColor}}; text-decoration: {{c.strike}};">{{c.title}}</span>
+                    <span style="font-size: 10px; color: #A7ABBB;">{{c.subDone}}/{{c.subTotal}} sub-tasks</span>
+                    <div style="width: 18px; height: 18px; border-radius: 999px; background: {{c.assigneeBg}}; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: {{c.assigneeFg}};">{{c.assignee}}</div>
+                  </div>
+                  <sc-if value="{{c.expanded}}" hint-placeholder-val="{{false}}">
+                    <sc-for list="{{c.subtasks}}" as="s" hint-placeholder-count="2">
+                      <div style="display: flex; align-items: center; gap: 10px; padding: 8px 0 8px 41px; border-bottom: 1px solid #F5F6FA;">
+                        <span style="width: 13px; height: 13px; border-radius: 4px; border: 1.5px solid {{s.doneBorder}}; background: {{s.doneBg}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                          <sc-if value="{{s.done}}"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="M20 6L9 17l-5-5"></path></svg></sc-if>
+                        </span>
+                        <span class="ty" style="width: 14px; height: 14px; font-size: 8px; background: #8B6FFF;">ST</span>
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 700; color: #A7ABBB;">{{s.key}}</span>
+                        <span style="font-size: 12px; font-weight: 600; flex-grow: 1; color: {{s.textColor}}; text-decoration: {{s.strike}};">{{s.title}}</span>
+                      </div>
+                    </sc-for>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <span style="font-size: 11px; color: #A7ABBB;">Three tiers max — Epic → Story/Task/Bug → Sub-task. A child issue's own sub-tasks show here too, indented.</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="card" style="gap: 0;">
+            <div class="field-row" style="align-items: flex-start; flex-direction: column; gap: 8px;">
+              <span class="field-label">Status</span>
+              <div style="height: 34px; border-radius: 8px; background: #F1EDFF; display: flex; align-items: center; padding: 0 12px; gap: 8px; cursor: pointer; width: 100%; box-sizing: border-box;">
+                <span style="width: 7px; height: 7px; border-radius: 999px; background: #8B6FFF;"></span>
+                <span style="font-size: 12px; font-weight: 700; color: #8B6FFF; flex-grow: 1;">In progress</span>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8B6FFF" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg>
+              </div>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Owner</span>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div style="width: 20px; height: 20px; border-radius: 999px; background: #EDF0FE; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #4C63F5;">AL</div>
+                <span style="font-size: 12px; font-weight: 600;">Alex Lam</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Reporter</span>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div style="width: 20px; height: 20px; border-radius: 999px; background: #EDF0FE; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #4C63F5;">AL</div>
+                <span style="font-size: 12px; font-weight: 600;">Alex Lam</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Due date</span>
+              <span style="font-size: 12px; font-weight: 600;">Oct 24, 2026</span>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: flex-start; gap: 8px; background: #FFF8F0; border: 1px solid #F3DFB8; border-radius: 8px; padding: 10px 12px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A5A0F" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+            <span style="font-size: 12px; color: #8A5A0F;">Removing this Epic doesn't delete its children — they just lose the parent link and keep everything else.</span>
+          </div>
+
+          <div class="card" style="gap: 6px;">
+            <div style="display: flex; justify-content: space-between;"><span class="field-label">Created</span><span style="font-size: 11px; color: #767B8C;">Aug 19, 2026</span></div>
+            <div style="display: flex; justify-content: space-between;"><span class="field-label">Updated</span><span style="font-size: 11px; color: #767B8C;">2h ago</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{addOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 440px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700;">Add child issue</h2>
+          <div style="flex-grow: 1;"></div>
+          <svg onClick="{{closeAdd}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2" style="cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Story, Task or Bug</label>
+          <input placeholder="Search by key or title, any project…" style="height: 36px; box-sizing: border-box; padding: 0 12px; font-size: 13px; font-family: inherit; background: #FAFBFE; border: 1px solid #DEE1EC; border-radius: 8px;">
+          <span style="font-size: 11px; color: #A7ABBB;">Not limited to this project — an issue from Mobile App or Growth can be a child here too.</span>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 8px; background: #F5F6FA; border: 1px solid #ECEEF6; border-radius: 8px; padding: 10px 12px;">
+          <span style="font-size: 11px; color: #767B8C; line-height: 1.5;">Rejected if it would create a loop (the issue you pick already has this Epic as one of its own descendants), or if it's a Sub-task — Sub-tasks can't have children of their own.</span>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeAdd}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Add as child</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const childRows = [
+      { key: 'PAY-142', title: 'Ledger entry reversal on failed payout', done: false, type: 'story', typeBg: '#22B573', typeLetter: 'S', assignee: 'JD', assigneeBg: '#FFEEE9', assigneeFg: '#FF6A45',
+        subtasks: [
+          { key: 'PAY-143', title: 'Write migration for compensating entry table', done: true },
+          { key: 'PAY-144', title: 'Add reversal step to payout failure handler', done: true },
+          { key: 'PAY-145', title: 'Backfill reversal entries for last 30 days of failures', done: false },
+        ] },
+      { key: 'PAY-139', title: 'Idempotency key missing lets retries double-write ledger rows', done: false, type: 'bug', typeBg: '#F0453F', typeLetter: 'B', assignee: 'NP', assigneeBg: '#FDEBEA', assigneeFg: '#F0453F', subtasks: [] },
+      { key: 'PAY-121', title: 'Add reconciliation report export to finance', done: true, type: 'task', typeBg: '#4C63F5', typeLetter: 'T', assignee: 'AL', assigneeBg: '#EDF0FE', assigneeFg: '#4C63F5',
+        subtasks: [
+          { key: 'PAY-122', title: 'Design CSV schema with finance', done: true },
+        ] },
+    ];
+
+    const expanded = this.state.expanded ?? { 'PAY-142': true };
+
+    const children = childRows.map((c) => {
+      const subDone = c.subtasks.filter((s) => s.done).length;
+      return {
+        key: c.key, title: c.title, done: c.done, typeBg: c.typeBg, typeLetter: c.typeLetter, assignee: c.assignee, assigneeBg: c.assigneeBg, assigneeFg: c.assigneeFg,
+        doneBorder: c.done ? '#22B573' : '#DEE1EC',
+        doneBg: c.done ? '#22B573' : 'transparent',
+        textColor: c.done ? '#A7ABBB' : '#1B1D27',
+        strike: c.done ? 'line-through' : 'none',
+        subDone, subTotal: c.subtasks.length,
+        expanded: !!expanded[c.key],
+        chevRot: expanded[c.key] ? 'rotate(90deg)' : 'rotate(0deg)',
+        subtasks: c.subtasks.map((s) => ({
+          key: s.key, title: s.title, done: s.done,
+          doneBorder: s.done ? '#22B573' : '#DEE1EC',
+          doneBg: s.done ? '#22B573' : 'transparent',
+          textColor: s.done ? '#A7ABBB' : '#1B1D27',
+          strike: s.done ? 'line-through' : 'none',
+        })),
+      };
+    });
+
+    const totalCount = children.length;
+    const doneCount = children.filter((c) => c.done).length;
+
+    return {
+      children,
+      totalCount,
+      doneCount,
+      pct: totalCount ? Math.round((doneCount / totalCount) * 100) : 0,
+      toggleExpand: (key) => () => this.setState({ expanded: { ...expanded, [key]: !expanded[key] } }),
+      addOpen: !!this.state.addOpen,
+      openAdd: () => this.setState({ addOpen: true }),
+      closeAdd: () => this.setState({ addOpen: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

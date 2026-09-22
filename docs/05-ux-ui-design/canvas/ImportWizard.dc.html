@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Import issues — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .step{display:flex;align-items:center;gap:8px;}
+  .stepdot{width:22px;height:22px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+  .stepline{width:32px;height:2px;flex-shrink:0;}
+  .fieldsel{height:32px;box-sizing:border-box;padding:0 10px;font-size:12.5px;font-family:inherit;color:#1B1D27;background:#fff;border:1px solid #DEE1EC;border-radius:7px;}
+  .pill{font-size:10.5px;font-weight:700;border-radius:999px;padding:2px 8px;width:fit-content;}
+  th{text-align:left;font-size:10.5px;font-weight:700;color:#767B8C;text-transform:uppercase;letter-spacing:.03em;padding:8px 10px;border-bottom:1px solid #ECEEF6;}
+  td{font-size:12.5px;padding:9px 10px;border-bottom:1px solid #F5F6FA;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="ProjectSidebar" active="settings" project-key="PAY" project-name="Payments Platform" project-bg="#FFEEE9" project-fg="#FF6A45" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Payments Platform / Import issues" search-placeholder="Search…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; display: flex; justify-content: center; padding: 32px 40px; box-sizing: border-box;">
+      <div style="width: 100%; max-width: 880px; display: flex; flex-direction: column; gap: 20px;">
+
+        <div style="display: flex; align-items: center;">
+          <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Import issues</h1>
+        </div>
+
+        <div style="display: flex; align-items: center;">
+          <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+            <div class="step">
+              <div class="stepdot" style="background: {{s.bg}}; color: {{s.fg}};">{{s.n}}</div>
+              <span style="font-size: 12px; font-weight: 700; color: {{s.labelColor}}; margin-right: 4px;">{{s.label}}</span>
+            </div>
+            <div class="stepline" style="background: {{s.lineColor}};"></div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{isUpload}}" hint-placeholder-val="{{true}}">
+          <div style="background: #fff; border: 1px solid #ECEEF6; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="border: 1.5px dashed #DEE1EC; border-radius: 10px; padding: 44px 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="1.6"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <span style="font-size: 13px; font-weight: 700;">Drop a CSV file here, or browse</span>
+              <span style="font-size: 11.5px; color: #767B8C;">payments-backlog-export.csv · 842 rows detected</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" checked="" disabled="" style="width: 15px; height: 15px;">
+              <span style="font-size: 12px; color: #767B8C;">Admin-only action — only workspace and project admins can import issues.</span>
+            </div>
+            <div style="display: flex; justify-content: flex-end;">
+              <div onClick="{{goMapping}}" style="height: 36px; padding: 0 18px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; cursor: pointer;">Continue</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{isMapping}}" hint-placeholder-val="{{false}}">
+          <div style="background: #fff; border: 1px solid #ECEEF6; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+            <span style="font-size: 12.5px; font-weight: 700;">Map your columns to Kaiju fields</span>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{mappingRows}}" as="m" hint-placeholder-count="6">
+                <div style="display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 8px; background: #FAFBFE;">
+                  <span style="width: 200px; font-size: 12.5px; font-weight: 600; flex-shrink: 0;">{{m.column}}</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A7ABBB" stroke-width="2" style="flex-shrink:0;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                  <select class="fieldsel" style="width: 200px;"><option>{{m.mapped}}</option></select>
+                  <sc-if value="{{m.warn}}"><span style="font-size: 11px; color: #B8790F;">{{m.warn}}</span></sc-if>
+                </div>
+              </sc-for>
+              <div style="display: flex; align-items: center; gap: 8px; padding: 8px 10px;">
+                <span style="font-size: 11.5px; color: #A7ABBB;">2 unmatched columns ("Internal ID", "Legacy status") will be ignored on import.</span>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+              <div onClick="{{goUpload}}" style="height: 36px; padding: 0 16px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; cursor: pointer;">Back</div>
+              <div onClick="{{goPreview}}" style="height: 36px; padding: 0 18px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; cursor: pointer;">Run dry-run preview</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{isPreview}}" hint-placeholder-val="{{false}}">
+          <div style="background: #fff; border: 1px solid #ECEEF6; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <span style="font-size: 12.5px; font-weight: 700;">Dry-run result — nothing has been imported yet</span>
+              <div style="flex-grow: 1;"></div>
+              <span class="pill" style="color:#16A34A;background:#E7F9F1;">829 ready</span>
+              <span class="pill" style="color:#A9302B;background:#FDEBEA;">13 errors</span>
+            </div>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr><th>Row</th><th>Summary</th><th>Type</th><th>Status</th></tr>
+              <sc-for list="{{previewRows}}" as="p" hint-placeholder-count="6">
+                <tr>
+                  <td style="font-family:'JetBrains Mono',monospace;color:#767B8C;">{{p.row}}</td>
+                  <td>{{p.summary}}</td>
+                  <td>{{p.type}}</td>
+                  <td><span class="pill" style="color: {{p.fg}}; background: {{p.bg}};">{{p.status}}</span></td>
+                </tr>
+              </sc-for>
+            </table>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" style="width: 15px; height: 15px;">
+              <span style="font-size: 12px; color: #767B8C;">Stop the whole import if any row fails (all-or-nothing). Otherwise valid rows import and errors are reported per row.</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+              <div onClick="{{goMapping}}" style="height: 36px; padding: 0 16px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; cursor: pointer;">Back to mapping</div>
+              <div onClick="{{goDone}}" style="height: 36px; padding: 0 18px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; cursor: pointer;">Import 829 issues</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{isDone}}" hint-placeholder-val="{{false}}">
+          <div style="background: #fff; border: 1px solid #ECEEF6; border-radius: 12px; padding: 32px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span style="font-size: 15px; font-weight: 700;">829 issues imported, 13 skipped</span>
+            <span style="font-size: 12px; color: #767B8C; max-width: 380px;">Skipped rows kept their original row number so you can fix and re-run just those — re-importing is safe even if some rows already succeeded.</span>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+              <div style="height: 34px; padding: 0 16px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; cursor: pointer;">Download error report (13 rows)</div>
+              <a href="Issues.dc.html" style="height: 34px; padding: 0 16px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 12.5px; font-weight: 700; display: flex; align-items: center;">Go to Issues</a>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const step = this.state.step ?? 'upload';
+    const order = ['upload', 'mapping', 'preview', 'done'];
+    const idx = order.indexOf(step);
+    const labels = ['Upload', 'Map columns', 'Dry-run preview', 'Import'];
+    return {
+      isUpload: step === 'upload',
+      isMapping: step === 'mapping',
+      isPreview: step === 'preview',
+      isDone: step === 'done',
+      goUpload: () => this.setState({ step: 'upload' }),
+      goMapping: () => this.setState({ step: 'mapping' }),
+      goPreview: () => this.setState({ step: 'preview' }),
+      goDone: () => this.setState({ step: 'done' }),
+      steps: labels.map((label, i) => ({
+        n: i < idx ? '✓' : i + 1,
+        label,
+        bg: i <= idx ? '#4C63F5' : '#ECEEF6',
+        fg: i <= idx ? '#fff' : '#A7ABBB',
+        labelColor: i <= idx ? '#1B1D27' : '#A7ABBB',
+        lineColor: i < idx ? '#4C63F5' : '#ECEEF6',
+      })),
+      mappingRows: [
+        ['Summary', 'Summary', null],
+        ['Issue Type', 'Type', null],
+        ['Priority', 'Priority', null],
+        ['Assignee Email', 'Assignee', null],
+        ['Status', 'Status', 'Values map to your current workflow — unmatched values default to the first status'],
+        ['Due Date', 'Due date', null],
+      ].map(([column, mapped, warn]) => ({ column, mapped, warn })),
+      previewRows: [
+        ['4', 'Refund webhook retries exhausted', 'Bug', 'Ready', '#16A34A', '#E7F9F1'],
+        ['5', 'Add 3-DS challenge screen', 'Story', 'Ready', '#16A34A', '#E7F9F1'],
+        ['9', '(missing required field: Summary)', '—', 'Error', '#A9302B', '#FDEBEA'],
+        ['14', 'Ledger export timing out', 'Bug', 'Ready', '#16A34A', '#E7F9F1'],
+        ['22', 'Type "Defect" does not exist', '—', 'Error', '#A9302B', '#FDEBEA'],
+        ['31', 'Support payout batching', 'Epic', 'Ready', '#16A34A', '#E7F9F1'],
+      ].map(([row, summary, type, status, fg, bg]) => ({ row, summary, type, status, fg, bg })),
+    };
+  }
+}
+</script>
+</body>
+</html>

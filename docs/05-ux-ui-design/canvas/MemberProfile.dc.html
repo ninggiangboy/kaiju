@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Your profile — Kaiju</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap">
+<style>
+  body{margin:0;font-family:"Manrope",system-ui,sans-serif;background:#FAFBFE;color:#1B1D27;-webkit-font-smoothing:antialiased}
+  a{color:#4C63F5;text-decoration:none}
+  .card{background:#FFFFFF;border:1px solid #ECEEF6;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px;}
+  label{font-size:12px;font-weight:600;}
+  input,select{height:36px;box-sizing:border-box;padding:0 12px;font-size:13px;font-family:inherit;color:#1B1D27;background:#FAFBFE;border:1px solid #DEE1EC;border-radius:8px;}
+  input:focus,select:focus{outline:none;border-color:#4C63F5!important;box-shadow:0 0 0 3px #EDF0FE}
+  .toggle{width:34px;height:20px;border-radius:999px;background:#DEE1EC;position:relative;cursor:pointer;flex-shrink:0;}
+  .toggle.on{background:#4C63F5;}
+  .toggle .knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:999px;background:#fff;transition:left .15s;}
+  .toggle.on .knob{left:16px;}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FAFBFE; display: flex; font-size: 14px; position: relative; overflow: hidden;">
+
+  <dc-import name="Sidebar" active="settings" hint-size="232px,900px"></dc-import>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0;">
+    <dc-import name="TopBar" crumb="Acme Inc / Your profile" search-placeholder="Search…" sync-state="synced" hint-size="100%,56px"></dc-import>
+
+    <div style="flex-grow: 1; overflow: auto; padding: 32px 40px; box-sizing: border-box;">
+      <div style="margin-bottom: 24px;">
+        <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700;">Your profile in Acme Inc</h1>
+        <p style="margin: 2px 0 0; font-size: 12px; color: #767B8C; max-width: 560px;">Your name, avatar and preferences here only apply to this workspace — each workspace you're in keeps its own profile.</p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px;">
+
+        <div class="card">
+          <h2 style="margin: 0; font-size: 14px; font-weight: 700;">Identity</h2>
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 56px; height: 56px; border-radius: 999px; background: #EDF0FE; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #4C63F5; flex-shrink: 0;">AL</div>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <div style="height: 30px; padding: 0 12px; border-radius: 7px; border: 1px solid #DEE1EC; font-size: 12px; font-weight: 700; color: #1B1D27; display: flex; align-items: center; cursor: pointer; width: fit-content;">Change avatar</div>
+              <span style="font-size: 11px; color: #A7ABBB;">JPG or PNG, up to 2 MB</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label>Display name</label>
+            <input value="Alex Lam">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label>Email</label>
+            <input value="alex@acme.co" disabled="" style="color: #A7ABBB;">
+            <span style="font-size: 11px; color: #A7ABBB;">Tied to your account, not this workspace — change it from account settings.</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 style="margin: 0; font-size: 14px; font-weight: 700;">Locale</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label>Timezone</label>
+              <select>
+                <option>(GMT+7) Bangkok, Hanoi, Jakarta</option>
+                <option>(GMT+0) London</option>
+                <option>(GMT-8) Los Angeles</option>
+              </select>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label>Language</label>
+              <select>
+                <option>English</option>
+                <option>Tiếng Việt</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 style="margin: 0; font-size: 14px; font-weight: 700;">Notifications</h2>
+          <div style="display: flex; align-items: center;">
+            <div><span style="font-size: 13px; font-weight: 600;">Email when assigned an issue</span></div>
+            <div style="flex-grow: 1;"></div>
+            <div class="toggle on"><div class="knob"></div></div>
+          </div>
+          <div style="display: flex; align-items: center;">
+            <div><span style="font-size: 13px; font-weight: 600;">Email when mentioned</span></div>
+            <div style="flex-grow: 1;"></div>
+            <div class="toggle on"><div class="knob"></div></div>
+          </div>
+          <div style="display: flex; align-items: center;">
+            <div><span style="font-size: 13px; font-weight: 600;">Daily digest</span></div>
+            <div style="flex-grow: 1;"></div>
+            <div class="toggle"><div class="knob"></div></div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="height: 36px; padding: 0 16px; border-radius: 8px; background: #4C63F5; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; cursor: pointer;">Save changes</div>
+          <div style="height: 36px; padding: 0 16px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; cursor: pointer;">Apply to all workspaces</div>
+        </div>
+        <span style="font-size: 11px; color: #A7ABBB; margin-top: -8px;">"Apply to all workspaces" writes these values into every workspace profile you have — it doesn't create a shared reference, so future changes here won't follow.</span>
+
+        <div class="card">
+          <h2 style="margin: 0; font-size: 14px; font-weight: 700;">Active sessions</h2>
+          <sc-for list="{{sessions}}" as="s" hint-placeholder-count="3">
+            <div style="display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #F5F6FA;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#767B8C" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="2"></rect><line x1="2" y1="16" x2="22" y2="16"></line></svg>
+              <div style="margin-left: 10px;">
+                <div style="font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                  {{s.device}}
+                  <sc-if value="{{s.current}}" hint-placeholder-val="{{false}}"><span style="font-size: 10px; font-weight: 700; color: #1A8F5C; background: #E7F9F1; border-radius: 999px; padding: 2px 7px;">This device</span></sc-if>
+                </div>
+                <div style="font-size: 11px; color: #A7ABBB;">{{s.location}} · active {{s.when}}</div>
+              </div>
+              <div style="flex-grow: 1;"></div>
+              <sc-if value="{{s.current}}" hint-placeholder-val="{{false}}"><span style="font-size: 11px; color: #C3C6D4;">Current session</span></sc-if>
+              <sc-if value="{{s.revoked}}" hint-placeholder-val="{{false}}"><span style="font-size: 11px; color: #A7ABBB;">Signed out</span></sc-if>
+              <sc-if value="{{s.canRevoke}}" hint-placeholder-val="{{false}}">
+                <div onClick="{{s.revoke}}" style="font-size: 12px; font-weight: 700; color: #F0453F; cursor: pointer;">Sign out</div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <div class="card" style="border-color: #FDEBEA;">
+          <h2 style="margin: 0; font-size: 14px; font-weight: 700; color: #A9302B;">Danger zone</h2>
+
+          <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #F5F6FA;">
+            <div>
+              <div style="font-size: 13px; font-weight: 700;">Leave Acme Inc</div>
+              <div style="font-size: 11px; color: #767B8C; margin-top: 2px;">You lose access to every project here immediately.</div>
+            </div>
+            <div style="flex-grow: 1;"></div>
+            <div onClick="{{openLeave}}" style="height: 34px; padding: 0 14px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; cursor: pointer; white-space: nowrap;">Leave workspace…</div>
+          </div>
+
+          <div style="display: flex; align-items: center; padding: 10px 0 0;">
+            <div>
+              <div style="font-size: 13px; font-weight: 700; color: #A9302B;">Delete your account</div>
+              <div style="font-size: 11px; color: #767B8C; margin-top: 2px;">Removes you from every workspace you're in, everywhere — not just Acme Inc.</div>
+            </div>
+            <div style="flex-grow: 1;"></div>
+            <div onClick="{{openDeleteAccount}}" style="height: 34px; padding: 0 14px; border-radius: 8px; background: #F0453F; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; cursor: pointer; white-space: nowrap;">Delete account…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{leaveOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 420px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: #A9302B;">Leave Acme Inc?</h2>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">You're removed from all 6 projects here right away. Someone with access can re-invite you later, but nothing about your old assignments is restored automatically.</p>
+        <sc-if value="{{isSoleOwner}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; align-items: flex-start; gap: 8px; background: #FFF8F0; border: 1px solid #F3DFB8; border-radius: 8px; padding: 10px 12px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A5A0F" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+            <span style="font-size: 12px; color: #8A5A0F;">You're the only owner. Transfer ownership first — a workspace can't be left without one.</span>
+          </div>
+        </sc-if>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeLeave}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #F0453F; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Leave workspace</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{deleteAccountOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: rgba(27,29,39,0.38); display: flex; align-items: center; justify-content: center; z-index: 20;">
+      <div style="width: 440px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(27,29,39,0.24); padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F0453F" stroke-width="2"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: #A9302B;">Delete your account?</h2>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: #767B8C; line-height: 1.5;">You're removed from Acme Inc and every other workspace you belong to. Issues you reported or were assigned keep your name on them — people don't disappear from history, just from being reachable.</p>
+        <sc-if value="{{isSoleOwnerAnywhere}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; align-items: flex-start; gap: 8px; background: #FFF8F0; border: 1px solid #F3DFB8; border-radius: 8px; padding: 10px 12px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A5A0F" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L14.71 3.86a2 2 0 00-3.42 0z"></path></svg>
+            <span style="font-size: 12px; color: #8A5A0F;">You own Acme Inc alone. Transfer ownership there before you can delete your account.</span>
+          </div>
+        </sc-if>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600;">Type <b>delete my account</b> to confirm</label>
+          <input placeholder="delete my account">
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <div onClick="{{closeDeleteAccount}}" style="flex-grow: 1; height: 36px; border-radius: 8px; background: #fff; border: 1px solid #DEE1EC; color: #1B1D27; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;">Cancel</div>
+          <div style="flex-grow: 1; height: 36px; border-radius: 8px; background: #F0453F; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">Delete account</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const revoked = this.state.revoked ?? {};
+    const rows = [
+      ['Chrome on macOS', 'Hanoi, VN', 'now', true, 0],
+      ['Safari on iPhone', 'Hanoi, VN', '2h ago', false, 1],
+      ['Chrome on Windows', 'Da Nang, VN', '3 days ago', false, 2],
+    ];
+    return {
+      sessions: rows.map(([device, location, when, current, idx]) => ({
+        device, location, when, current,
+        revoked: !!revoked[idx],
+        canRevoke: !current && !revoked[idx],
+        revoke: () => this.setState({ revoked: { ...revoked, [idx]: true } }),
+      })),
+      leaveOpen: !!this.state.leaveOpen,
+      openLeave: () => this.setState({ leaveOpen: true }),
+      closeLeave: () => this.setState({ leaveOpen: false }),
+      isSoleOwner: true,
+      deleteAccountOpen: !!this.state.deleteAccountOpen,
+      openDeleteAccount: () => this.setState({ deleteAccountOpen: true }),
+      closeDeleteAccount: () => this.setState({ deleteAccountOpen: false }),
+      isSoleOwnerAnywhere: true,
+    };
+  }
+}
+</script>
+</body>
+</html>
