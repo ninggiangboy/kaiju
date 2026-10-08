@@ -11,7 +11,7 @@
 # not re-download every dependency.
 
 # ---------- Build stage ----------
-FROM eclipse-temurin:26-jdk-alpine AS build
+FROM eclipse-temurin:27-jdk-alpine AS build
 WORKDIR /src
 
 # Copy the declarations first: this layer only rebuilds when dependencies change.
@@ -24,7 +24,7 @@ COPY backend/ .
 RUN ./gradlew --no-daemon clean bootJar -x test
 
 # ---------- Runtime stage ----------
-FROM eclipse-temurin:26-jre-alpine AS runtime
+FROM eclipse-temurin:27-jre-alpine AS runtime
 
 RUN addgroup -S kaiju && adduser -S kaiju -G kaiju
 WORKDIR /app
